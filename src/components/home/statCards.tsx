@@ -16,11 +16,11 @@ const StatCard = ({icon,heading,total,percentage,growth}:statCardsProp) => {
    
 
     return (
-        <div className="container flex  bg-gray-700  p-4 rounded-2xl gap-2">
+        <div className="container flex card p-4 rounded-2xl gap-2">
             <div className="flex flex-col flex-3 gap-2">
-                <h1>{heading}</h1>
-                <h3 className="text-xl sm:text-2xl md:text-3xl">{total}</h3>
-                <hr />
+                <h1 className="text-gray-300">{heading}</h1>
+                <h3 className="text-xl sm:text-2xl md:text-3xl text-white">{total}</h3>
+                <div className="flex h-0.5  bg-gradient-to-r from-[#2c2c2c93] via-gray-500 to-[#2c2c2c93"></div>
                 <div className="flex gap-2 items-center " >
                     
                     {
@@ -32,7 +32,7 @@ const StatCard = ({icon,heading,total,percentage,growth}:statCardsProp) => {
                 </div>
             </div>
             <div className="statIcon flex h-full s items-center justify-center">
-                <div className="p-2 rounded-2xl bg-indigo-500/40">
+                <div className=" rounded-full border-1 border-gray-200 p-3 bg-gray-200/40">
                     {icons[icon]({size:30})}
                 </div>
 

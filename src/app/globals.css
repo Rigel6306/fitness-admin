@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -122,9 +123,42 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-[#121212] text-foreground;
   }
   html {
     @apply font-sans;
   }
+  .card{
+    @apply bg-[#2c2c2c93];
+  }
+
+  .text-heading {
+    @apply text-[#E0E0E0]
+  }
+  .text-sub{
+    @apply text-[#B0B0B0]
+  }
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #000000;
+    border-radius: 10px;
+    margin: 10;
+    padding: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #ede9e9;
 }

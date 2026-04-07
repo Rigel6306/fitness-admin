@@ -1,8 +1,9 @@
+
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
+import { UserContextWrapper } from "../context/userContext";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -26,11 +27,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={` h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <nav className="flex h-20 items-center text-md backdrop-blur-2xl bg-gray-200/10 justify-between px-10 ">
-          <div className="heading"><h1>Superbody Gym</h1></div>
+        <nav className="flex sticky top-0 h-20 items-center text-md backdrop-blur-2xl text-[#E4E4E4] bg-[#5954542f] justify-between px-10 ">
+          <div className="heading text-2xl"><h1>Superbody Gym</h1></div>
           
           <div className="linksContainer flex gap-10 ">
             <Link  href="/">Home</Link>
@@ -39,8 +40,16 @@ export default function RootLayout({
             
           </div>
         </nav>
+    <UserContextWrapper>
 
-        {children}</body>
+
+   
+        {children}
+
+
+         </UserContextWrapper>
+        
+        </body>
     </html>
   );
 }

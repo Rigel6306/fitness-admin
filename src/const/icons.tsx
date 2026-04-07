@@ -1,11 +1,13 @@
 import { LuUsers ,LuDollarSign} from "react-icons/lu";
-import { FaArrowUpShortWide } from "react-icons/fa6";
+import { FaArrowUpShortWide,FaMoneyCheckDollar  } from "react-icons/fa6";
+import { FcMoneyTransfer } from "react-icons/fc";
+import { GiTakeMyMoney } from "react-icons/gi";
 import { GiPayMoney } from "react-icons/gi";
 const icons = {
-    user:(props:any)=> <LuUsers  {...props}/>,
-    dollor:(props:any)=><LuDollarSign {...props}/>,
-    delayedPayments:(props:any)=><GiPayMoney {...props} />,
-    attendence:(props:any)=><FaArrowUpShortWide {...props} />
+    user:(props:any)=> <LuUsers  color="#ffff" {...props}/>,
+    dollor:(props:any)=><FaMoneyCheckDollar  color="#ffff" {...props}/>,
+    delayedPayments:(props:any)=><GiTakeMyMoney  color="#ffff" {...props} />,
+    attendence:(props:any)=><FaArrowUpShortWide color="#ffff" {...props} />
 }
 
 export default icons
