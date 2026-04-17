@@ -133,10 +133,10 @@
   }
 
   .text-heading {
-    @apply text-[#E0E0E0]
+    @apply text-[#E0E0E0] font-semibold
   }
   .text-sub{
-    @apply text-[#B0B0B0]
+    @apply text-[#B0B0B0] font-semibold
   }
 }
 

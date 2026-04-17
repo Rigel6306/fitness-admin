@@ -5,7 +5,7 @@ import { ChartPieSimple } from "../components/ui/chart/PieChart";
 
 export default function Home() {
   return (
-    <div className="flex flex-col h-screen px-10 bg-[#07020b]" >
+    <div className="flex flex-col pb-10 px-10 bg-[#07020b]" >
       {/* heading */}
       <div className="flex flex-col my-10">
         <h1 className="font-semibold text-3xl text-[#E0E0E0] ">Dashboard</h1>

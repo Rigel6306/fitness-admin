@@ -9,7 +9,7 @@ const useUserClientContext = () => {
     throw new Error("useUserClientContext must be used within a UserContext.Provider");
   }
 
-  console.log("Use Context",context)
+
   return context;
 };
 

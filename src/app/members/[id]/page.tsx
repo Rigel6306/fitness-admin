@@ -1,13 +1,13 @@
-
+import { IoIosArrowBack } from "react-icons/io";
 
 import MemberDetails from "./MemberDetails";
 const UserDetails = async ({params}:{params:Promise<{id:string}>}) => {
     const {id} = await params
-    console.log("User Id", id)
+
     return ( 
-        <div className="container">
-            <h1 className="text-white">Hello {id}</h1>
-            <MemberDetails/>
+        <div className="flex flex-col  pt-4 pb-10 px-10 bg-[#07020b] ">
+          
+            <MemberDetails id={id}/>
         </div>
      );
 }

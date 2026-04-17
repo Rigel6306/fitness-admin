@@ -4,7 +4,7 @@
 import { createContext, useEffect, useState } from "react";
 import { getCollection } from "@/util/getCollection";
 
-export const UserContext = createContext(null);
+export const UserContext = createContext<any[]>([]);
 
 
 
@@ -21,7 +21,7 @@ export const UserContextWrapper = ({children}: {children: React.ReactNode})=>{
             setUsers(userList)
         }
         else {
-            console.log("User List Fetch Uncessefull")
+            
             return Error("User List Fetch Uncessefull")
         }
 
@@ -35,12 +35,11 @@ export const UserContextWrapper = ({children}: {children: React.ReactNode})=>{
 
     },[])
 
-    console.log("User List", users)
-    const userData:any = [];
+    
 
 
     return (
-        <UserContext.Provider value={userData}>
+        <UserContext.Provider value={users}>
             {children}
         </UserContext.Provider>
     )
