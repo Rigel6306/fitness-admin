@@ -10,31 +10,36 @@ import { FaSackDollar } from "react-icons/fa6";
 import { FaChalkboardUser } from "react-icons/fa6";
 import Link from "next/link";
 import { useState } from "react";
-
-import OverviewCard from "@/src/components/members/OverviewCard";
-import Analytics from "@/src/components/members/Analytics";
-import WorkoutSchedule from "@/src/components/members/WorkoutSchedule";
+//lazy loaded the components to preserve state and only loads when needed  
+const OverviewCard = React.lazy(() => import("@/src/components/members/OverviewCard"))
+const Analytics = React.lazy(() => import('@/src/components/members/Analytics'));
+const WorkoutSchedule = React.lazy(() => import("@/src/components/members/WorkoutSchedule"));
+import React from "react";
 
 
 const MemberDetails = ({ id }) => {
 
-    
 
-    const  [type,setType] = useState("overview")
+
+    const [type, setType] = useState("overview")
 
     const data = useUserClientContext()
 
+    const userData = data.find(item => item.data.membershipNumber === id)
 
+    const handleNavClick = (type: string) => {
 
-    const handleNavClick = (type:string)=>{
-        
         setType(type)
 
 
     }
+    // Improved Scalability of the component rendering logic
+    const components = {
+        overview: <OverviewCard userInfo={userData.data} />,
+        workout: <WorkoutSchedule />,
+        analytics: <Analytics />
+    };
 
-
-    const userData = data.find(item => item.data.membershipNumber === id)
     console.log("user Data", userData)
 
     return (
@@ -52,7 +57,7 @@ const MemberDetails = ({ id }) => {
                         <div className="subHeading text-[#B0B0B0]"  >Mebership Number {userData.data.membershipNumber}</div>
                     </div>
                 </div>
-
+                {/* Actoon Btns */}
                 <div className="actionBtns flex gap-4">
                     <div className="edit gap-2 flex cursor-pointer items-center justify-center bg-[#4d4d4e44] px-4 h-10 rounded-sm">
                         <BiSolidEdit />
@@ -65,10 +70,10 @@ const MemberDetails = ({ id }) => {
                 </div>
 
             </div>
-        {/* Cards at heading  */}
+            {/* Cards at heading  */}
             <div className="flex  gap-20 mt-10  ">
                 <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-30">
-                    <FaChalkboardUser size={50}/>
+                    <FaChalkboardUser size={50} />
                     <div className="flex flex-col">
                         <div className="heading text-xl md:text-2xl font-semibold">
                             <p>Membership</p>
@@ -78,8 +83,8 @@ const MemberDetails = ({ id }) => {
                         </div>
                     </div>
                 </div>
-               <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-30">
-                   <MdOutlineSportsGymnastics size={50} className="text-[#4cddbbb2]"/>
+                <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-30">
+                    <MdOutlineSportsGymnastics size={50} className="text-[#4cddbbb2]" />
                     <div className="flex flex-col">
                         <div className="heading text-xl md:text-2xl font-semibold">
                             <p>Active Status</p>
@@ -90,7 +95,7 @@ const MemberDetails = ({ id }) => {
                     </div>
                 </div>
                 <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-30">
-                    <CgCalendarToday size={50}/>
+                    <CgCalendarToday size={50} />
                     <div className="flex flex-col">
                         <div className="heading text-xl md:text-2xl font-semibold">
                             <p>Join Date</p>
@@ -101,7 +106,7 @@ const MemberDetails = ({ id }) => {
                     </div>
                 </div>
                 <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-30">
-                   <FaSackDollar size={40} />
+                    <FaSackDollar size={40} />
                     <div className="flex flex-col">
                         <div className="heading text-xl md:text-2xl font-semibold">
                             <p>Payment</p>
@@ -116,30 +121,27 @@ const MemberDetails = ({ id }) => {
             {/* btnList */}
 
             <div className="btnCOntainer flex gap-2 bg-[#4d4d4e44]  rounded-4xl py-2  w-fit px-2 mt-10 justify-center">
-                <div 
-                onClick={()=>{handleNavClick("overview")}}
-                className={` btn p-2 rounded-4xl ${ type==="overview"?"bg-[#bec5cb44]":'' } cursor-pointer font-semibold`}>
+                <div
+                    onClick={() => { handleNavClick("overview") }}
+                    className={` btn p-2 rounded-4xl ${type === "overview" ? "bg-[#bec5cb44]" : ''} cursor-pointer font-semibold`}>
                     <p>Overview</p>
                 </div>
                 <div
-                 onClick={()=>{handleNavClick("workout")}}
-                className={`btn p-2 rounded-4xl  ${ type==="workout"?"bg-[#bec5cb44]":'' }  cursor-pointer font-semibold`}>
+                    onClick={() => { handleNavClick("workout") }}
+                    className={`btn p-2 rounded-4xl  ${type === "workout" ? "bg-[#bec5cb44]" : ''}  cursor-pointer font-semibold`}>
                     <p>Workout Schedule</p>
                 </div>
                 <div
-                 onClick={()=>{handleNavClick("analytics")}}
-                 className={`btn p-2 rounded-4xl  ${ type==="analytics"?"bg-[#bec5cb44]":'' } cursor-pointer font-semibold`}>
+                    onClick={() => { handleNavClick("analytics") }}
+                    className={`btn p-2 rounded-4xl  ${type === "analytics" ? "bg-[#bec5cb44]" : ''} cursor-pointer font-semibold`}>
                     <p>Analytics</p>
                 </div>
             </div>
             {/* Main Content section */}
 
-              
-           {type === "overview" && <OverviewCard userInfo={userData.data}/>}
-           {type === "workout" && <WorkoutSchedule/>}
-           {type === "analytics" && <Analytics/>}
 
-            
+            {components[type]}
+
         </div>
     );
 }
