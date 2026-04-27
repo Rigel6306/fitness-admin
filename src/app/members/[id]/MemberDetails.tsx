@@ -3,147 +3,167 @@ import { IoIosArrowBack } from "react-icons/io";
 import useUserClientContext from "@/src/hooks/useUserClientContext";
 import { BiSolidEdit } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
-import { FcPackage } from "react-icons/fc";
 import { MdOutlineSportsGymnastics } from "react-icons/md";
 import { CgCalendarToday } from "react-icons/cg";
 import { FaSackDollar } from "react-icons/fa6";
 import { FaChalkboardUser } from "react-icons/fa6";
 import Link from "next/link";
 import { useState } from "react";
-//lazy loaded the components to preserve state and only loads when needed  
+import React from "react";
+
+// lazy loaded components
 const OverviewCard = React.lazy(() => import("@/src/components/members/OverviewCard"))
 const Analytics = React.lazy(() => import('@/src/components/members/Analytics'));
 const WorkoutSchedule = React.lazy(() => import("@/src/components/members/WorkoutSchedule"));
-import React from "react";
 
+type ComponentType = 'overview' | 'workout' | 'analytics';
+type MemberDetailsProps = { id: string };
 
-const MemberDetails = ({ id }) => {
+const MemberDetails = ({ id }: MemberDetailsProps) => {
+  const [type, setType] = useState<ComponentType>("overview");
+  const data = useUserClientContext();
 
+  const userData = data.find(item => item.data.membershipNumber === id);
 
+  const handleNavClick = (type: ComponentType) => {
+    setType(type);
+  };
 
-    const [type, setType] = useState("overview")
-
-    const data = useUserClientContext()
-
-    const userData = data.find(item => item.data.membershipNumber === id)
-
-    const handleNavClick = (type: string) => {
-
-        setType(type)
-
-
-    }
-    // Improved Scalability of the component rendering logic
-    const components = {
-        overview: <OverviewCard userInfo={userData.data} />,
-        workout: <WorkoutSchedule />,
-        analytics: <Analytics />
-    };
-
-    console.log("user Data", userData)
-
+  // userData not available, Fallback
+  if (!userData) {
     return (
-
-        <div className=" flex flex-col   text-white ">
-
-            {/* Header */}
-            <div className="flex justify-between">
-                <div className="flex items-center gap-10">
-                    <Link href={"/members"} className="bckBtn flex items-center justify-center bg-[#4d4d4e44] rounded-md p-2 h-10 cursor-pointer">
-                        <IoIosArrowBack color="white" size={24} />
-                    </Link >
-                    <div className="memberHeadingContainer">
-                        <div className="memberHeading text-2xl font-semibold">{userData.data.name}</div>
-                        <div className="subHeading text-[#B0B0B0]"  >Mebership Number {userData.data.membershipNumber}</div>
-                    </div>
-                </div>
-                {/* Actoon Btns */}
-                <div className="actionBtns flex gap-4">
-                    <div className="edit gap-2 flex cursor-pointer items-center justify-center bg-[#4d4d4e44] px-4 h-10 rounded-sm">
-                        <BiSolidEdit />
-                        <p className="font-semibold">Edit</p>
-                    </div>
-                    <div className="delete cursor-pointer   gap-2 flex items-center justify-center bg-[#313b4542] px-4 h-10 rounded-sm">
-                        <MdDelete color='crimson' />
-                        <p className="text-[#d67e7f] font-semibold">Delete</p>
-                    </div>
-                </div>
-
-            </div>
-            {/* Cards at heading  */}
-            <div className="flex  gap-20 mt-10  ">
-                <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-30">
-                    <FaChalkboardUser size={50} />
-                    <div className="flex flex-col">
-                        <div className="heading text-xl md:text-2xl font-semibold">
-                            <p>Membership</p>
-                        </div>
-                        <div className="subheading">
-                            <p>{userData.data.packageName}</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-30">
-                    <MdOutlineSportsGymnastics size={50} className="text-[#4cddbbb2]" />
-                    <div className="flex flex-col">
-                        <div className="heading text-xl md:text-2xl font-semibold">
-                            <p>Active Status</p>
-                        </div>
-                        <div className="subheading">
-                            <p className="bg-[#4cddbbb2] text-sm w-fit px-1 font-semibold text-[#fbfdfc] text-center rounded-sm">Active</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-30">
-                    <CgCalendarToday size={50} />
-                    <div className="flex flex-col">
-                        <div className="heading text-xl md:text-2xl font-semibold">
-                            <p>Join Date</p>
-                        </div>
-                        <div className="subheading">
-                            <p>{userData.data.registerdAt.toDate().toLocaleDateString()}</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-30">
-                    <FaSackDollar size={40} />
-                    <div className="flex flex-col">
-                        <div className="heading text-xl md:text-2xl font-semibold">
-                            <p>Payment</p>
-                        </div>
-                        <div className="subheading">
-                            <p className="bg-[#4cddbbb2] text-sm w-fit px-1 font-semibold text-[#fbfdfc] text-center rounded-sm">Completed</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* btnList */}
-
-            <div className="btnCOntainer flex gap-2 bg-[#4d4d4e44]  rounded-4xl py-2  w-fit px-2 mt-10 justify-center">
-                <div
-                    onClick={() => { handleNavClick("overview") }}
-                    className={` btn p-2 rounded-4xl ${type === "overview" ? "bg-[#bec5cb44]" : ''} cursor-pointer font-semibold`}>
-                    <p>Overview</p>
-                </div>
-                <div
-                    onClick={() => { handleNavClick("workout") }}
-                    className={`btn p-2 rounded-4xl  ${type === "workout" ? "bg-[#bec5cb44]" : ''}  cursor-pointer font-semibold`}>
-                    <p>Workout Schedule</p>
-                </div>
-                <div
-                    onClick={() => { handleNavClick("analytics") }}
-                    className={`btn p-2 rounded-4xl  ${type === "analytics" ? "bg-[#bec5cb44]" : ''} cursor-pointer font-semibold`}>
-                    <p>Analytics</p>
-                </div>
-            </div>
-            {/* Main Content section */}
-
-
-            {components[type]}
-
-        </div>
+      <div className="flex flex-col text-white p-6">
+        <p className="text-lg font-semibold">Loading member details...</p>
+        <Link href="/members" className="mt-4 underline text-blue-400">
+          Back to Members
+        </Link>
+      </div>
     );
-}
+  }
+
+  const components = {
+    overview: <OverviewCard userInfo={userData.data} />,
+    workout: <WorkoutSchedule />,
+    analytics: <Analytics />
+  };
+
+  return (
+    <div className="flex flex-col text-white">
+      {/* Header */}
+      <div className="flex justify-between">
+        <div className="flex items-center gap-10">
+          <Link
+            href={"/members"}
+            className="bckBtn flex items-center justify-center bg-[#4d4d4e44] rounded-md p-2 h-10 cursor-pointer"
+          >
+            <IoIosArrowBack color="white" size={24} />
+          </Link>
+          <div className="memberHeadingContainer">
+            <div className="memberHeading text-2xl font-semibold">
+              {userData.data.name}
+            </div>
+            <div className="subHeading text-[#B0B0B0]">
+              Membership Number {userData.data.membershipNumber}
+            </div>
+          </div>
+        </div>
+        {/* Action Btns */}
+        <div className="actionBtns flex gap-4">
+          <div className="edit gap-2 flex cursor-pointer items-center justify-center bg-[#4d4d4e44] px-4 h-10 rounded-sm">
+            <BiSolidEdit />
+            <p className="font-semibold">Edit</p>
+          </div>
+          <div className="delete cursor-pointer gap-2 flex items-center justify-center bg-[#313b4542] px-4 h-10 rounded-sm">
+            <MdDelete color="crimson" />
+            <p className="text-[#d67e7f] font-semibold">Delete</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Cards */}
+      <div className="flex gap-20 mt-10">
+        <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-25">
+          <FaChalkboardUser size={45} />
+          <div className="flex flex-col">
+            <div className="heading text-xl font-semibold">
+              <p>Membership</p>
+            </div>
+            <div className="subheading">
+              <p>{userData.data.packageName}</p>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-25">
+          <MdOutlineSportsGymnastics size={45} className="text-[#4cddbbb2]" />
+          <div className="flex flex-col">
+            <div className="heading text-xl font-semibold">
+              <p>Active Status</p>
+            </div>
+            <div className="subheading">
+              <p className="bg-[#4cddbbb2] text-sm w-fit px-1 font-semibold text-[#fbfdfc] text-center rounded-sm">
+                Active
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-25">
+          <CgCalendarToday size={45} />
+          <div className="flex flex-col">
+            <div className="heading text-xl font-semibold">
+              <p>Join Date</p>
+            </div>
+            <div className="subheading">
+              <p>{userData.data.registerdAt.toDate().toLocaleDateString()}</p>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-25">
+          <FaSackDollar size={30} />
+          <div className="flex flex-col">
+            <div className="heading text-xl font-semibold">
+              <p>Payment</p>
+            </div>
+            <div className="subheading">
+              <p className="bg-[#4cddbbb2] text-sm w-fit px-1 font-semibold text-[#fbfdfc] text-center rounded-sm">
+                Completed
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* btnList */}
+      <div className="btnCOntainer flex gap-2 bg-[#4d4d4e44] rounded-4xl py-2 w-fit px-2 mt-10 justify-center">
+        <div
+          onClick={() => handleNavClick("overview")}
+          className={`btn p-2 rounded-4xl ${
+            type === "overview" ? "bg-[#bec5cb44]" : ""
+          } cursor-pointer font-semibold`}
+        >
+          <p>Overview</p>
+        </div>
+        <div
+          onClick={() => handleNavClick("workout")}
+          className={`btn p-2 rounded-4xl ${
+            type === "workout" ? "bg-[#bec5cb44]" : ""
+          } cursor-pointer font-semibold`}
+        >
+          <p>Workout Schedule</p>
+        </div>
+        <div
+          onClick={() => handleNavClick("analytics")}
+          className={`btn p-2 rounded-4xl ${
+            type === "analytics" ? "bg-[#bec5cb44]" : ""
+          } cursor-pointer font-semibold`}
+        >
+          <p>Analytics</p>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      {components[type]}
+    </div>
+  );
+};
 
 export default MemberDetails;

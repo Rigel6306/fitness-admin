@@ -1,5 +1,5 @@
 'use client'
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaFilter } from "react-icons/fa6";
 import { RiSearch2Line } from "react-icons/ri";
 import { CiMobile1, CiMail } from "react-icons/ci";
@@ -30,10 +30,15 @@ const Members = () => {
         setFilterdUsers(filterdList)
 
     }
+
     const router = useRouter()
+
     const handleClick = (id) => {
         router.push(`/members/${id}`)
     }
+
+
+    
     return (
 
         <div className=" flex flex-col h-[115vh] px-10 bg-[#07020b] pb-10">
@@ -78,38 +83,38 @@ const Members = () => {
                     {/* Table Body */}
                     <div className="flex flex-col w-full h-100 ">
                         {filterdUsers ?
-                                filterdUsers.map((user, i) => (
-                                    <div key={i}
-                                        onClick={() => { handleClick(user.data.membershipNumber) }}
-                                        className="flex m-2 rounded-md p-2  text-white gap-10 items-center justify-start  py-4 px-10  hover:bg-[#93949536] cursor-pointer">
-                                        {/* Member details */}
-                                        <div className="flex flex-1 items-center gap-4">
-                                            <div className="avatar flex items-center justify-center h-10 w-10 rounded-full bg-gray-300">
-                                                <p className="text-black font-semibold font-">{user.data.name.slice(0, 2).toUpperCase()}</p>
-                                            </div>
-                                            <div className="info">
-                                                <p className="flex-2 text-heading  text-[1rem] font-semibold">{user.data.name}</p>
-                                                <p className="text-sub">{user.data.membershipNumber}</p>
-                                            </div>
+                            filterdUsers.map((user, i) => (
+                                <div key={i}
+                                    onClick={() => { handleClick(user.data.membershipNumber) }}
+                                    className="flex m-2 rounded-md p-2  text-white gap-10 items-center justify-start  py-4 px-10  hover:bg-[#93949536] cursor-pointer">
+                                    {/* Member details */}
+                                    <div className="flex flex-1 items-center gap-4">
+                                        <div className="avatar flex items-center justify-center h-10 w-10 rounded-full bg-gray-300">
+                                            <p className="text-black font-semibold font-">{user.data.name.slice(0, 2).toUpperCase()}</p>
                                         </div>
-                                        {/* Contact */}
-                                        <div className="flex flex-col flex-1 items-center ">
-                                            <div className="mobile flex gap-2 items-center w-full">
-                                                <CiMobile1 />
-                                                <p className="text-heading ">{user.data.contactNumber}</p>
-                                            </div>
-                                            <div className="email flex items-center w-full gap-2">
-                                                <CiMail />
-                                                <p className="text-sub">{user.data.email}</p>
-                                            </div>
+                                        <div className="info">
+                                            <p className="flex-2 text-heading  text-[1rem] font-semibold">{user.data.name}</p>
+                                            <p className="text-sub">{user.data.membershipNumber}</p>
                                         </div>
-                                        <p className="flex-1 xl:flex-1">{user.data.packageName ? user.data.packageName : "Membership"}</p>
-                                        <p className={`flex-1 max-w-20 text-center rounded-3xl font-semibold ${user.data.status ? "text-green-700 bg-green-200 " : 'text-red-700 bg-red-200'}`}>{user.data.status ? `${user.data.status ? "Active" : "Inactive"}` : "status"}</p>
-                                        <p className="flex-1">{user.data.registerdAt.toDate().toLocaleDateString()}</p>
-                                        <p className="w-15 pe-2 text-end"><PiDotsNineBold size={25} /></p>
                                     </div>
-                                ))
-                                : <h1>Loading</h1>
+                                    {/* Contact */}
+                                    <div className="flex flex-col flex-1 items-center ">
+                                        <div className="mobile flex gap-2 items-center w-full">
+                                            <CiMobile1 />
+                                            <p className="text-heading ">{user.data.contactNumber}</p>
+                                        </div>
+                                        <div className="email flex items-center w-full gap-2">
+                                            <CiMail />
+                                            <p className="text-sub">{user.data.email}</p>
+                                        </div>
+                                    </div>
+                                    <p className="flex-1 xl:flex-1">{user.data.packageName ? user.data.packageName : "Membership"}</p>
+                                    <p className={`flex-1 max-w-20 text-center rounded-3xl font-semibold ${user.data.status ? "text-green-700 bg-green-200 " : 'text-red-700 bg-red-200'}`}>{user.data.status ? `${user.data.status ? "Active" : "Inactive"}` : "status"}</p>
+                                    <p className="flex-1">{user.data.registerdAt.toDate().toLocaleDateString()}</p>
+                                    <p className="w-15 pe-2 text-end"><PiDotsNineBold size={25} /></p>
+                                </div>
+                            ))
+                            : <h1>Loading</h1>
                         }
                     </div>
                 </div>
