@@ -1,8 +1,12 @@
 'use client'
 import CustomTabsWithTooltips from "@/src/components/ui/tabsCard";
 import { error } from "console";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from 'zod'
+import { updateScheduleData } from "@/util/updateDoc";
+import { addScheduleDoc } from "@/util/addSchedule";
+import { updateSchedule } from "@/util/updateSchedule";
+
 type Exercise = {
   id: number;
   name: string;
@@ -18,6 +22,8 @@ type WorkoutDay = {
 type Props = {
   isModalOpen: boolean;
   setIsModalOpen: (open: boolean) => void;
+  userId: string;
+  editingSchedule?: any;
 };
 
 
@@ -31,8 +37,7 @@ type workoutPlanInfo = {
 
 }
 
-const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userSchedule }: Props) => {
-  if (!isModalOpen) return null;
+const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userId, editingSchedule }: Props) => {
   const [validationError, setValidationError] = useState<string | undefined>()
   const [workoutDayList, setWorkoutDayList] = useState<WorkoutDay[]>([]);
   const [workoutPlanInfo, setWorkoutPlanInfo] = useState<workoutPlanInfo>({
@@ -54,6 +59,54 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userSchedule }: Props) 
     { name: 'Core', selected: false },
     { name: 'Cardio', selected: false },
   ]);
+
+  // Initialize form when editing a schedule
+  useEffect(() => {
+    if (editingSchedule) {
+      setWorkoutPlanInfo({
+        title: editingSchedule.title || '',
+        frequency: editingSchedule.frequency || '',
+        duration: editingSchedule.duration || '',
+        focus: editingSchedule.focus || [],
+        workoutsCount: editingSchedule.workoutsCount || 0,
+        workouts: editingSchedule.workouts || []
+      });
+      setWorkoutDayList(editingSchedule.workouts || []);
+     
+      // Update focus list with selected items
+      setFocusList(prev =>
+        prev.map(focus => ({
+          ...focus,
+          selected: editingSchedule.focus?.includes(focus.name) || false
+        }))
+      );
+    }
+
+     if(!editingSchedule){
+        setWorkoutPlanInfo([])
+        setWorkoutDayList([])
+        setFocusList([
+    { name: 'Shoulders', selected: false },
+    { name: 'Chest', selected: false },
+    { name: 'Tricep', selected: false },
+    { name: 'Biceps', selected: false },
+    { name: 'Forearms', selected: false },
+    { name: 'Back', selected: false },
+    { name: 'Legs', selected: false },
+    { name: 'Core', selected: false },
+    { name: 'Cardio', selected: false },
+  ])
+      }
+  }, [editingSchedule, isModalOpen]);
+
+  const handleCancle = ()=>{
+  
+    setIsModalOpen(false) 
+ 
+  }
+
+  console.log("At Add Schedule Modal", editingSchedule, workoutPlanInfo,workoutDayList)
+  if (!isModalOpen) return null;
 
   // Toggle focus area selection
   const handleFocusSelect = (index: number) => {
@@ -148,38 +201,37 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userSchedule }: Props) 
 
 
 
-  const handleConfirm = () => {
-    // setWorkoutPlanInfo(prev => ({
-    //   ...prev,
-    //   schedule: [...workoutDayList],
-    //   workoutsCount: workoutDayList.length > 0
-    //     ? workoutDayList.reduce((acc, day) => acc + day.schedule.length, 0)
-    //     : 0,
-    //   focus: focusList.filter(item => item.selected).map(item => item.name),
-    // }));
-
-     const plan = {
-    ...workoutPlanInfo,
-    workouts: workoutDayList,
-    focus: focusList.filter(f => f.selected).map(f => f.name),
-  }
-  console.log("workout plan: ",plan)
+  const handleConfirm = async () => {
+    const plan = {
+      ...workoutPlanInfo,
+      workouts: workoutDayList,
+      focus: focusList.filter(f => f.selected).map(f => f.name),
+    }
+    console.log("workout plan: ", plan)
     const result = workoutPlanSchema.safeParse(plan);
     if (!result.success) {
       setValidationError(result.error.issues[0].message)
-      console.log("Validation errors:", result.error.issues[0].message);
-      return;  
-    }else{
+      return;
+    } else {
 
       setValidationError('')
     }
-    
+
     console.log("Valid plan:", result.data);
+
+    // Handle edit vs add
+    if (editingSchedule?.id) {
+      await updateSchedule(userId, editingSchedule.id, plan);
+    } else {
+      await addScheduleDoc(userId, plan);
+    }
+
+    setIsModalOpen(false)
+
   };
 
 
-  console.log(workoutDayList)
-  console.log(workoutPlanInfo)
+
   return (
     <div className="fixed inset-0 bg-gray-600/30 flex items-center justify-center z-50">
       <div className="bg-[#000000]/50 w-[90vw] max-w-4xl h-[90vh] rounded-2xl p-6 shadow-lg flex flex-col backdrop-blur-xl overflow-hidden">
@@ -187,8 +239,8 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userSchedule }: Props) 
         {/* Header */}
         <div className="flex justify-between items-start mb-4">
           <div>
-            <p className="text-heading text-lg mt-2">Add Workout Schedule</p>
-            <p className="text-sub text-sm">Create a comprehensive workout program</p>
+            <p className="text-heading text-lg mt-2">{editingSchedule?.id ? "Edit Workout Schedule" : "Add Workout Schedule"}</p>
+            <p className="text-sub text-sm">{editingSchedule?.id ? "Update your workout program" : "Create a comprehensive workout program"}</p>
           </div>
           <button
             onClick={() => setIsModalOpen(false)}
@@ -300,7 +352,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userSchedule }: Props) 
                         placeholder="Reps (e.g. 12,10,8,6)"
                         value={exercise.reps.join(",")}
                         onChange={(e) =>
-                          handleExerciseChange(dayIndex, exerciseIndex, "reps", e.target.value.split(","))
+                          handleExerciseChange(dayIndex, exerciseIndex, "reps", e.target.value.split(/[,\s]+/))
                         }
                         className="bg-[#000000cb] rounded px-2 py-1 text-white"
                       />
@@ -336,8 +388,8 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userSchedule }: Props) 
           {validationError && <div className=" flex flex-1 items-center justify-center rounded-md bg-[#8e909322]">
             <p className="text-[#f31936] font-bold">{validationError}</p>
           </div>}
-          <div className="confirm  p-2 bg-[#3ce7c2c0] rounded-lg cursor-pointer" onClick={handleConfirm}><p>Confirm</p></div>
-          <div onClick={() => { setIsModalOpen(false) }} className="cancle p-2 bg-[#474547db] rounded-lg cursor-pointer"><p>Cancle</p></div>
+          <div className="confirm  p-2 bg-[#3ce7c2c0] rounded-lg cursor-pointer" onClick={handleConfirm}><p>{editingSchedule?.id ? "Update" : "Confirm"}</p></div>
+          <div onClick={handleCancle} className="cancle p-2 bg-[#474547db] rounded-lg cursor-pointer"><p>Cancle</p></div>
         </div>
 
       </div>

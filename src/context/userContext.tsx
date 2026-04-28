@@ -1,8 +1,7 @@
 'use client'
 
 import { createContext, useEffect, useState } from "react";
-import { getCollection } from "@/util/getCollection";
-
+import { subscribeToCollection } from "@/util/getCollection";
 interface User {
   id: string
   data: any
@@ -15,17 +14,13 @@ export const UserContextWrapper = ({ children }: { children: React.ReactNode }) 
   const [err, setErr] = useState<string | null>(null);
   const [users, setUsers] = useState<User[]>([]);
 
-  const getData = async () => {
-    try {
-      await getCollection(setUsers, setErr, setIsLoading);
-    } catch {
-      setErr("User list fetch unsuccessful");
-    }
-  };
-
   useEffect(() => {
-    getData();
-  }, []);
+  const unsubscribe = subscribeToCollection(setUsers, setErr, setIsLoading)
+
+  return () => unsubscribe() 
+}, [])
+
+
 
   return (
     <UserContext.Provider value={users}>

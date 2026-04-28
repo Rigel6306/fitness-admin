@@ -1,32 +1,38 @@
-import { collection, getDocs, DocumentData } from 'firebase/firestore'
-import { db } from '@/services/firebase'
-import { Dispatch, SetStateAction } from 'react'
+import { collection, onSnapshot, DocumentData,updateDoc } from "firebase/firestore"
+import { db } from "@/services/firebase"
+import { Dispatch, SetStateAction } from "react"
 
 interface User {
   id: string
   data: DocumentData
 }
 
-export const getCollection = async (
+export const subscribeToCollection = (
   setUsers: Dispatch<SetStateAction<User[]>>,
-  setErr: Dispatch<SetStateAction<string | null>>, // allow error messages
+  setErr: Dispatch<SetStateAction<string | null>>,
   setIsLoading: Dispatch<SetStateAction<boolean>>
 ) => {
-  try {
-    setIsLoading(true)
-    setErr(null)
+  const colRef = collection(db, "users")
 
-    const qSnapshot = await getDocs(collection(db, 'users'))
+  setIsLoading(true)
+  setErr(null)
 
-    const userList: User[] = qSnapshot.docs.map(doc => ({
-      id: doc.id,
-      data: doc.data()
-    }))
+  const unsubscribe = onSnapshot(
+    colRef,
+    snapshot => {
+      const userList: User[] = snapshot.docs.map(doc => ({
+        id: doc.id,
+        data: doc.data(),
+      }))
+      setUsers(userList)
+      setIsLoading(false)
+    },
+    error => {
+      setErr(error.message ?? "Unknown error")
+      setIsLoading(false)
+    }
+  )
 
-    setUsers(userList)
-  } catch (err: any) {
-    setErr(err.message ?? 'Unknown error')
-  } finally {
-    setIsLoading(false)
-  }
+
+  return unsubscribe
 }
