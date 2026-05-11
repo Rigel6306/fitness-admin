@@ -6,10 +6,12 @@ import { CiMobile1, CiMail } from "react-icons/ci";
 import { PiDotsNineBold } from "react-icons/pi";
 import { useRouter } from "next/navigation";
 import useUserClientContext from "@/src/hooks/useUserClientContext";
+import AddNewMemberModal from "./addNewMemberModal";
 const Members = () => {
 
 
     const [filterdUsers, setFilterdUsers] = useState([])
+    const [isModalOpen, setIsModalOpen] = useState(false)
     const userData = useUserClientContext();
     const getUserData = async () => {
 
@@ -41,13 +43,15 @@ const Members = () => {
     
     return (
 
-        <div className=" flex flex-col h-[115vh] px-10 bg-[#07020b] pb-10">
+        <div className=" flex flex-col h-[115vh] px-10 bg-[#07020b] pb-10 text-white">
             <div className="heading flex justify-between items-center  my-10">
                 <div className="headingTextContainer flex flex-col">
                     <h1 className="text-3xl font-semibold text-[#E0E0E0]">Members</h1>
                     <p className="text-[#B0B0B0]">Manage your gym members and there memberships</p>
                 </div>
-                <div className="addMemberBtn hover:bg-gray-700  hover:scale-101 transition-colors cursor-pointer max-h-15 flex items-center justify-center max-w-50 bg-[#E0E0E0] rounded-2xl p-2">
+                <div 
+                onClick={()=>setIsModalOpen(true)}
+                className="flex p-2 font-semibold bg-[#2f2f2fe8]  items-center justify-center rounded-xl cursor-pointer hover:bg-[#98989888]">
                     <p className="font-bold ">+ Add Member</p>
                 </div>
             </div>
@@ -60,7 +64,7 @@ const Members = () => {
                         <RiSearch2Line className="m-1 " color="gray" />
                         <input type="text" name="" id="" onChange={(e) => handleChange(e)} className="text-gray-200 border-0 w-full" placeholder="Member name or mobile number" />
                     </div>
-                    <div className="flex  px-2 items-center justify-between bg-gray-200 rounded-md ">
+                    <div className="flex  px-2 items-center justify-between bg-gray-200 rounded-md text-black">
                         <FaFilter />
                         <select name="status" id="" className="h-full-200 p-2 ">
                             <option value="all">All status</option>
@@ -110,7 +114,7 @@ const Members = () => {
                                     </div>
                                     <p className="flex-1 xl:flex-1">{user.data.packageName ? user.data.packageName : "Membership"}</p>
                                     <p className={`flex-1 max-w-20 text-center rounded-3xl font-semibold ${user.data.status ? "text-green-700 bg-green-200 " : 'text-red-700 bg-red-200'}`}>{user.data.status ? `${user.data.status ? "Active" : "Inactive"}` : "status"}</p>
-                                    <p className="flex-1">{user.data.registerdAt.toDate().toLocaleDateString()}</p>
+                                    <p className="flex-1">{user.data.registerdAt?user.data.registerdAt.toDate().toLocaleDateString():''}</p>
                                     <p className="w-15 pe-2 text-end"><PiDotsNineBold size={25} /></p>
                                 </div>
                             ))
@@ -120,7 +124,7 @@ const Members = () => {
                 </div>
 
             </div>
-
+                     { isModalOpen &&  <AddNewMemberModal setIsModalOpen={setIsModalOpen}/>}
         </div>
     );
 }

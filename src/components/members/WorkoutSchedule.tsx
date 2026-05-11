@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import WorkoutsAddModal from "@/src/app/members/[id]/WorkoutAddModal";
 import { FaDumbbell } from "react-icons/fa6";
 import { subscribeToUserSchedules } from "@/util/getSchedule";
-import { deleteSchedule } from "@/util/deleteSchedule";
+import { deleteSchedule } from "@/util/deleteDocs";
 
 const WorkoutSchedule = ({ userData, userId }) => {
 
@@ -41,12 +41,14 @@ const WorkoutSchedule = ({ userData, userId }) => {
         return () => unsubscribe()
     }, [userId])
 
-    console.log("Schedules Collection At workoutSchedule", schedules)
+   
     if (isLoading) {
         return (
             <div><p>Loading</p></div>
         )
     }
+
+    console.log("At Workout schedule",schedules)
 
     return (
         <div className="flex-col  mt-4">
@@ -91,7 +93,7 @@ const WorkoutSchedule = ({ userData, userId }) => {
                                 <div className="flex gap-10 mt-2 ">
                                     <p className="text-sub">Frequency : {schedule.frequency}</p>
                                     <p className="text-sub">Duration : {schedule.duration}</p>
-                                    <p className="text-sub">Created At: 2025/07/23</p>
+                                    <p className="text-sub">Created At: {schedule.createdAt.toDate().toLocaleDateString()}</p>
                                 </div>
                                 {/* focus List */}
                                 <div className="flex gap-3 mt-2">

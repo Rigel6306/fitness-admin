@@ -3,14 +3,17 @@ import { doc, updateDoc ,arrayUnion} from "firebase/firestore"
 import { db } from "@/services/firebase"
 
 // Update specific fields in a document
-export const updateScheduleData = async (userId: string, updatedData:any) => {
+
+
+export const updateDocument = async (docId:string,collectionName:string, updatedData:any) =>{
+
   try {
-    const userRef = doc(db, "users", userId)
-    await updateDoc(userRef, {
-        schedule:arrayUnion(updatedData)
-    })
-    console.log("User updated successfully")
-  } catch (error: any) {
-   throw new Error(error.message)
+
+    const docRef = doc(db,collectionName,docId)
+    await updateDoc(docRef,updatedData);
+    console.log("Doc Updated Successfully")
+  }
+  catch(error){
+    throw new Error("Error Occured")
   }
 }

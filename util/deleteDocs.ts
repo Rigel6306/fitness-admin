@@ -13,3 +13,17 @@ export const deleteSchedule = async (userId: string, scheduleId: string) => {
     throw err;
   }
 };
+
+
+export const deleteUser = async (userId:string) =>{
+  try {
+    const userRef = doc(db,"users",userId)
+
+    await deleteDoc(userRef)
+    console.log("User Deleted Successfully")
+
+  }
+  catch(err:any){
+    throw err
+  }
+}

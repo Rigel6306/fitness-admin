@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 
-export default function CustomTabsWithTooltips() {
+export default function  () {
   const [hovered, setHovered] = useState<string | null>(null)
   const [type, setType] = useState("overview")
 

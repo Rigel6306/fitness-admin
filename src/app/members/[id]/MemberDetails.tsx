@@ -10,6 +10,8 @@ import { FaChalkboardUser } from "react-icons/fa6";
 import Link from "next/link";
 import { useState } from "react";
 import React from "react";
+import MemberInfoEditModal from "./MemberInfoEditModal";
+import { deleteUser } from "@/util/deleteDocs";
 
 // lazy loaded components
 const OverviewCard = React.lazy(() => import("@/src/components/members/OverviewCard"))
@@ -21,6 +23,9 @@ type MemberDetailsProps = { id: string };
 
 const MemberDetails = ({ id }: MemberDetailsProps) => {
   const [type, setType] = useState<ComponentType>("overview");
+  const [isModalOpen,setIsModalOpen] = useState(false)
+  const [err,setError] =useState(null)
+
   const data = useUserClientContext();
 
   const userData = data.find(item => item.data.membershipNumber === id);
@@ -41,6 +46,9 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
     );
   }
 
+  const handleDelete = ()=>{
+    deleteUser(userData.id)
+  }
 
   const components = {
     overview: <OverviewCard userInfo={userData.data} />,
@@ -70,11 +78,15 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
         </div>
         {/* Action Btns */}
         <div className="actionBtns flex gap-4">
-          <div className="edit gap-2 flex cursor-pointer items-center justify-center bg-[#4d4d4e44] px-4 h-10 rounded-sm">
+          <div className="edit gap-2 flex cursor-pointer items-center justify-center bg-[#4d4d4e44] px-4 h-10 rounded-sm hover:bg-[#c6ced588]"
+          onClick={()=>setIsModalOpen(true)}
+          >
             <BiSolidEdit />
             <p className="font-semibold">Edit</p>
           </div>
-          <div className="delete cursor-pointer gap-2 flex items-center justify-center bg-[#313b4542] px-4 h-10 rounded-sm">
+          <div
+          onClick={handleDelete}
+          className="delete cursor-pointer gap-2 flex items-center justify-center bg-[#313b4542] px-4 h-10 rounded-sm hover:bg-[#c6ced588]">
             <MdDelete color="crimson" />
             <p className="text-[#d67e7f] font-semibold">Delete</p>
           </div>
@@ -163,6 +175,7 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
 
       {/* Main Content */}
       {components[type]}
+      {isModalOpen&&<MemberInfoEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} userData={userData}/>}
     </div>
   );
 };

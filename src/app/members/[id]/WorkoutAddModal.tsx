@@ -3,7 +3,6 @@ import CustomTabsWithTooltips from "@/src/components/ui/tabsCard";
 import { error } from "console";
 import { useState, useEffect } from "react";
 import { z } from 'zod'
-import { updateScheduleData } from "@/util/updateDoc";
 import { addScheduleDoc } from "@/util/addSchedule";
 import { updateSchedule } from "@/util/updateSchedule";
 
@@ -105,7 +104,8 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userId, editingSchedule
  
   }
 
-  console.log("At Add Schedule Modal", editingSchedule, workoutPlanInfo,workoutDayList)
+  
+  
   if (!isModalOpen) return null;
 
   // Toggle focus area selection

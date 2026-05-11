@@ -7,12 +7,13 @@ export const subscribeToUserSchedules = (
   setIsLoading: (loading: boolean) => void,
   setErr: (err: string | null) => void
 ) => {
+
+
+  console.log("FIred, USER ID",userId)
   try {
     setIsLoading(true);
-
     const userDocRef = doc(db, "users", userId);
     const scheduleCollRef = collection(userDocRef, "schedules");
-
     const unsubscribe = onSnapshot(
       scheduleCollRef,
       (snap) => {
@@ -21,6 +22,7 @@ export const subscribeToUserSchedules = (
           ...doc.data(),
         }));
 
+        console.log("Fetched Schedules",schedules)
         setSchedules(schedules);
         setIsLoading(false);
         setErr(null);

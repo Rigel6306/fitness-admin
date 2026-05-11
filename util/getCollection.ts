@@ -6,17 +6,14 @@ interface User {
   id: string
   data: DocumentData
 }
-
 export const subscribeToCollection = (
   setUsers: Dispatch<SetStateAction<User[]>>,
   setErr: Dispatch<SetStateAction<string | null>>,
   setIsLoading: Dispatch<SetStateAction<boolean>>
 ) => {
   const colRef = collection(db, "users")
-
   setIsLoading(true)
   setErr(null)
-
   const unsubscribe = onSnapshot(
     colRef,
     snapshot => {

@@ -20,10 +20,7 @@ const OverviewCard = ({ userInfo }) => {
 
             <div className="cardContainer  flex  gap-10 h-full w-full ">
                 <div className="flex flex-col flex-1 rounded-2xl p-4 bg-[#bec5cb12]  ">
-                    {/* Heading */}
-                    {/* <p className="text-heading text-md">Member Details</p>
-                    <hr className=" bg-gray border- " /> */}
-
+    
                     {/* user Info 1st card*/}
                     <div className="flex items-center mx-10 mt-4 gap-4">
                         <BiUser size={24} />
@@ -96,7 +93,7 @@ const OverviewCard = ({ userInfo }) => {
                     <div className="flex mx-10  items-center mt-4 gap-4">
                         <FaChalkboardUser size={24}/>
                         <div className="flex flex-col">
-                            <p className="text-heading text-sm">Contact Number</p>
+                            <p className="text-heading text-sm">Membership</p>
                             <p className="text-sub">{userInfo.packageName}</p>
                         </div>
                     </div>
@@ -104,7 +101,7 @@ const OverviewCard = ({ userInfo }) => {
                          <MdOutlineSportsGymnastics size={24} className=""/>
                         <div className="flex flex-col">
                             <p className="text-heading text-sm">Status</p>
-                            <p className="text-sub">{`${userInfo.packageName?"Active":"Inactive"}`}</p>
+                            <p className="text-sub">{`${userInfo.status?"Active":"Inactive"}`}</p>
                         </div>
                     </div>
                 </div>
