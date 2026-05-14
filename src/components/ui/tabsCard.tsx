@@ -2,29 +2,26 @@
 
 import { useState } from "react"
 
-export default function  () {
+export const CustomTabsWithTooltips = ({setMode})=> {
   const [hovered, setHovered] = useState<string | null>(null)
-  const [type, setType] = useState("overview")
+  const [type, setType] = useState("noAi")
 
   const tabs = [
     {
-      id: "overview",
+      id: "noAi",
       label: "Fully Manual Mode",
       description: "No AI suggestions and spellcheck.",
     },
     {
-      id: "workout",
+      id: "ai",
       label: "AI Assist Mode",
       description: "AI Assist by providing suggestions and spellcheck.",
     },
-    {
-      id: "analytics",
-      label: "Auto Mode",
-      description: "AI will generate the Schedule for you based on the user data.",
-    },
+    
   ]
 
   const handleNavClick = (id: string) => {
+    id==="ai"?setMode(true):setMode(false)
     setType(id)
   }
 

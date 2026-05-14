@@ -1,10 +1,16 @@
 'use client'
-import CustomTabsWithTooltips from "@/src/components/ui/tabsCard";
+import {CustomTabsWithTooltips} from "@/src/components/ui/tabsCard";
 import { error } from "console";
 import { useState, useEffect } from "react";
 import { z } from 'zod'
 import { addScheduleDoc } from "@/util/addSchedule";
 import { updateSchedule } from "@/util/updateSchedule";
+import AddNewMemberModal from "../addNewMemberModal";
+import AddWorkoutsForm from "@/src/components/members/AddWorkoutsForm";
+import { serverTimestamp } from "firebase/firestore";
+import AIWindow from "@/src/components/members/AIWindow";
+import { LightRays } from "@/src/components/ui/lightRays";
+import { Ripple } from "@/src/components/ui/ripple";
 
 type Exercise = {
   id: number;
@@ -21,6 +27,7 @@ type WorkoutDay = {
 type Props = {
   isModalOpen: boolean;
   setIsModalOpen: (open: boolean) => void;
+ userData:{},
   userId: string;
   editingSchedule?: any;
 };
@@ -36,9 +43,14 @@ type workoutPlanInfo = {
 
 }
 
-const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userId, editingSchedule }: Props) => {
+const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen,userData,userId, editingSchedule }: Props) => {
   const [validationError, setValidationError] = useState<string | undefined>()
   const [workoutDayList, setWorkoutDayList] = useState<WorkoutDay[]>([]);
+  const [mode,setMode] = useState(false)
+  const [aiSuggession,setAiSuggession] = useState(null)
+  const [isAiLoading,setIsAiLoading] = useState(false)
+
+ 
   const [workoutPlanInfo, setWorkoutPlanInfo] = useState<workoutPlanInfo>({
     title: '',
     frequency: '',
@@ -47,6 +59,9 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userId, editingSchedule
     workoutsCount: 0,
     workouts: []
   })
+ console.log("Ai suggesions State at Workouts add Modal",workoutPlanInfo)
+  
+
   const [focusList, setFocusList] = useState([
     { name: 'Shoulders', selected: false },
     { name: 'Chest', selected: false },
@@ -58,6 +73,9 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userId, editingSchedule
     { name: 'Core', selected: false },
     { name: 'Cardio', selected: false },
   ]);
+
+  console.log("At Workouts Add Modal: ", userData)
+
 
   // Initialize form when editing a schedule
   useEffect(() => {
@@ -82,7 +100,14 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userId, editingSchedule
     }
 
      if(!editingSchedule){
-        setWorkoutPlanInfo([])
+        setWorkoutPlanInfo({
+    title: '',
+    frequency: '',
+    duration: '',
+    focus: [],
+    workoutsCount: 0,
+    workouts: []
+  })
         setWorkoutDayList([])
         setFocusList([
     { name: 'Shoulders', selected: false },
@@ -199,11 +224,13 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userId, editingSchedule
     focus: z.array(z.string()).min(1, "please Add Focus Areas to the schedule")
   })
 
+  
 
-
+// Confirm Logic
   const handleConfirm = async () => {
     const plan = {
       ...workoutPlanInfo,
+      createdAt: serverTimestamp(),
       workouts: workoutDayList,
       focus: focusList.filter(f => f.selected).map(f => f.name),
     }
@@ -233,8 +260,10 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userId, editingSchedule
 
 
   return (
-    <div className="fixed inset-0 bg-gray-600/30 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-gray-600/30 flex items-center justify-center z-50 gap-2">
       <div className="bg-[#000000]/50 w-[90vw] max-w-4xl h-[90vh] rounded-2xl p-6 shadow-lg flex flex-col backdrop-blur-xl overflow-hidden">
+
+     {isAiLoading && <LightRays color="#4fefcc5d"/>}
 
         {/* Header */}
         <div className="flex justify-between items-start mb-4">
@@ -253,7 +282,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userId, editingSchedule
         {/* AI Assistance */}
         <div className="flex flex-col items-center mb-6">
           <p className="text-sub mb-2">AI Assistance Mode</p>
-          <CustomTabsWithTooltips />
+          <CustomTabsWithTooltips setMode={setMode}/>
         </div>
 
         {/* Main Content */}
@@ -315,71 +344,9 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userId, editingSchedule
           </div>
 
           {/* Days List */}
-          <div className="flex flex-col gap-4">
-            {workoutDayList.map((day, dayIndex) => (
-              <div key={dayIndex} className="bg-[#5e656c70] rounded-2xl p-3 shadow">
-
-                {/* Day header */}
-                <div className="flex justify-between items-center mb-2">
-                  <p className="font-semibold">Day {day.day}</p>
-
-                  <p
-                    onClick={() => handleRemoveDay(dayIndex)}
-                    className="flex p-2 cursor-pointer"
-                  >✕</p>
-
-                </div>
-
-                {/* Exercise list */}
-                <div className="flex flex-col gap-2">
-                  {day.schedule.map((exercise, exerciseIndex) => (
-                    <div key={exercise.id} className="bg-[#74777a44] justify-around flex gap-2 rounded-xl p-3 items-center mb-2">
-
-                      <p>{exerciseIndex + 1}</p>
-                      <input
-                        type="text"
-                        placeholder="Exercise name"
-                        required
-                        value={exercise.name}
-                        onChange={(e) =>
-                          handleExerciseChange(dayIndex, exerciseIndex, "name", e.target.value)
-                        }
-                        className="bg-[#000000cb] flex-1 rounded px-2 py-1 text-white "
-                      />
-                      <input
-                        type="text"
-                        required
-                        placeholder="Reps (e.g. 12,10,8,6)"
-                        value={exercise.reps.join(",")}
-                        onChange={(e) =>
-                          handleExerciseChange(dayIndex, exerciseIndex, "reps", e.target.value.split(/[,\s]+/))
-                        }
-                        className="bg-[#000000cb] rounded px-2 py-1 text-white"
-                      />
-
-                      <p
-                        onClick={() => { handleRemoveExercise(dayIndex, exerciseIndex) }}
-                        className="cursor-pointer"
-                      >
-                        ✕</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAddExercise(dayIndex);
-                  }}
-                  className="px-2 py-1 bg-[#050505cd] font-semibold text-center text-white rounded cursor-pointer hover:bg-[#7e7e7ef0] hover:text-black"
-                >
-                  + Add Exercise
-                </div>
-              </div>
-
-
-            ))}
-          </div>
+          <AddWorkoutsForm workoutDayList={workoutDayList} handleRemoveDay={handleRemoveDay} handleExerciseChange={handleExerciseChange} handleRemoveExercise={handleRemoveExercise} handleAddExercise={handleAddExercise}/>
+          
+         
 
 
         </div>
@@ -393,6 +360,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userId, editingSchedule
         </div>
 
       </div>
+      {mode && <AIWindow userData={userData} setWorkoutPlanInfo={setWorkoutPlanInfo} setIsAiLoading={setIsAiLoading} setWorkoutDayList={setWorkoutDayList} />} 
     </div>
   );
 };

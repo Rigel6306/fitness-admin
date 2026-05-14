@@ -64,7 +64,7 @@ const WorkoutSchedule = ({ userData, userId }) => {
                 </div>
 
             </div>
-            <WorkoutsAddModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} userId={userId} editingSchedule={editingSchedule} />
+            <WorkoutsAddModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}  userData={userData} userId={userId} editingSchedule={editingSchedule} />
             {/* Workouts Plan Section */}
             <div className="flex-col flex gap-10 flex-1  min-h-70 mt-4 rounded-2xl ">
                 {schedules && schedules.length > 0 ? (
@@ -93,7 +93,7 @@ const WorkoutSchedule = ({ userData, userId }) => {
                                 <div className="flex gap-10 mt-2 ">
                                     <p className="text-sub">Frequency : {schedule.frequency}</p>
                                     <p className="text-sub">Duration : {schedule.duration}</p>
-                                    <p className="text-sub">Created At: {schedule.createdAt.toDate().toLocaleDateString()}</p>
+                                    <p className="text-sub">Created At: {schedule.createdAt?.toDate().toLocaleDateString()}</p>
                                 </div>
                                 {/* focus List */}
                                 <div className="flex gap-3 mt-2">

@@ -52,7 +52,7 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
 
   const components = {
     overview: <OverviewCard userInfo={userData.data} />,
-    workout: <WorkoutSchedule userData={userData.data} userId={userData.id} />,
+    workout: <WorkoutSchedule  userData={userData} userId={userData.id} />,
     analytics: <Analytics />
   };
 
