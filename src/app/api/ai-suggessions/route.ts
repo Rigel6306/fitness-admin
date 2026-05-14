@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
   const { height, weight, goals, experienceLevel, promptType,scheduleData } = await req.json();
 
   const openai = new OpenAI({
-    apiKey: "***REMOVED***",
+    apiKey: process.env.OPEN_AI_API_KEY ,
   });
 
   console.log("Shedule Data: ",scheduleData)
