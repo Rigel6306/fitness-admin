@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/components/ui/select"
+import AnimatedContainer from "../animatedContainer"
 
 export const description = "An interactive area chart"
 
@@ -154,7 +155,8 @@ export function ChartAreaInteractive() {
   })
 
   return (
-    <Card className="w-full h-full bg-[#2c2c2c93]  " >
+
+    <AnimatedContainer className="w-full h-full rounded-xl bg-black/10 backdrop-blur-md shadow-md shadow-white/5 " >
       <CardHeader className="flex items-center gap-2 space-y-0  py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
           <CardTitle className="m-2 mx-10 text-2xl text-[#F0F0F0] font-sans">Revenue & Member Growth</CardTitle>
@@ -183,7 +185,7 @@ export function ChartAreaInteractive() {
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
+          className="aspect-auto h-[200px] w-full"
         >
           <AreaChart data={filteredData}>
             <defs>
@@ -259,6 +261,7 @@ export function ChartAreaInteractive() {
           </AreaChart>
         </ChartContainer>
       </CardContent>
-    </Card>
+    </AnimatedContainer>
+  
   )
 }

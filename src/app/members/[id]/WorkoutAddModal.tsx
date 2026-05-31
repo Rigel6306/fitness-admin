@@ -1,5 +1,5 @@
 'use client'
-import {CustomTabsWithTooltips} from "@/src/components/ui/tabsCard";
+import { CustomTabsWithTooltips } from "@/src/components/ui/tabsCard";
 import { error } from "console";
 import { useState, useEffect } from "react";
 import { z } from 'zod'
@@ -11,8 +11,9 @@ import { serverTimestamp } from "firebase/firestore";
 import AIWindow from "@/src/components/members/AIWindow";
 import { LightRays } from "@/src/components/ui/lightRays";
 import { Ripple } from "@/src/components/ui/ripple";
-
-type Exercise = {
+import { AnimatePresence, LayoutGroup } from "motion/react";
+import AnimatedContainer from "@/src/components/ui/animatedContainer";
+type Exercise = { 
   id: number;
   name: string;
   reps: string[];
@@ -27,7 +28,7 @@ type WorkoutDay = {
 type Props = {
   isModalOpen: boolean;
   setIsModalOpen: (open: boolean) => void;
- userData:{},
+  userData: {},
   userId: string;
   editingSchedule?: any;
 };
@@ -43,14 +44,14 @@ type workoutPlanInfo = {
 
 }
 
-const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen,userData,userId, editingSchedule }: Props) => {
+const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editingSchedule }: Props) => {
   const [validationError, setValidationError] = useState<string | undefined>()
   const [workoutDayList, setWorkoutDayList] = useState<WorkoutDay[]>([]);
-  const [mode,setMode] = useState(false)
-  const [aiSuggession,setAiSuggession] = useState(null)
-  const [isAiLoading,setIsAiLoading] = useState(false)
+  const [mode, setMode] = useState(false)
+  const [aiSuggession, setAiSuggession] = useState(null)
+  const [isAiLoading, setIsAiLoading] = useState(false)
 
- 
+
   const [workoutPlanInfo, setWorkoutPlanInfo] = useState<workoutPlanInfo>({
     title: '',
     frequency: '',
@@ -59,8 +60,8 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen,userData,userId, editing
     workoutsCount: 0,
     workouts: []
   })
- console.log("Ai suggesions State at Workouts add Modal",workoutPlanInfo)
-  
+  console.log("Ai suggesions State at Workouts add Modal", workoutPlanInfo)
+
 
   const [focusList, setFocusList] = useState([
     { name: 'Shoulders', selected: false },
@@ -89,7 +90,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen,userData,userId, editing
         workouts: editingSchedule.workouts || []
       });
       setWorkoutDayList(editingSchedule.workouts || []);
-     
+
       // Update focus list with selected items
       setFocusList(prev =>
         prev.map(focus => ({
@@ -99,38 +100,38 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen,userData,userId, editing
       );
     }
 
-     if(!editingSchedule){
-        setWorkoutPlanInfo({
-    title: '',
-    frequency: '',
-    duration: '',
-    focus: [],
-    workoutsCount: 0,
-    workouts: []
-  })
-        setWorkoutDayList([])
-        setFocusList([
-    { name: 'Shoulders', selected: false },
-    { name: 'Chest', selected: false },
-    { name: 'Tricep', selected: false },
-    { name: 'Biceps', selected: false },
-    { name: 'Forearms', selected: false },
-    { name: 'Back', selected: false },
-    { name: 'Legs', selected: false },
-    { name: 'Core', selected: false },
-    { name: 'Cardio', selected: false },
-  ])
-      }
+    if (!editingSchedule) {
+      setWorkoutPlanInfo({
+        title: '',
+        frequency: '',
+        duration: '',
+        focus: [],
+        workoutsCount: 0,
+        workouts: []
+      })
+      setWorkoutDayList([])
+      setFocusList([
+        { name: 'Shoulders', selected: false },
+        { name: 'Chest', selected: false },
+        { name: 'Tricep', selected: false },
+        { name: 'Biceps', selected: false },
+        { name: 'Forearms', selected: false },
+        { name: 'Back', selected: false },
+        { name: 'Legs', selected: false },
+        { name: 'Core', selected: false },
+        { name: 'Cardio', selected: false },
+      ])
+    }
   }, [editingSchedule, isModalOpen]);
 
-  const handleCancle = ()=>{
-  
-    setIsModalOpen(false) 
- 
+  const handleCancle = () => {
+    setMode(false)
+    setIsModalOpen(false)
+
   }
 
-  
-  
+
+
   if (!isModalOpen) return null;
 
   // Toggle focus area selection
@@ -224,9 +225,9 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen,userData,userId, editing
     focus: z.array(z.string()).min(1, "please Add Focus Areas to the schedule")
   })
 
-  
 
-// Confirm Logic
+
+  // Confirm Logic
   const handleConfirm = async () => {
     const plan = {
       ...workoutPlanInfo,
@@ -254,16 +255,21 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen,userData,userId, editing
     }
 
     setIsModalOpen(false)
+    setMode(false)
 
   };
 
 
 
   return (
+    <LayoutGroup>
     <div className="fixed inset-0 bg-gray-600/30 flex items-center justify-center z-50 gap-2">
-      <div className="bg-[#000000]/50 w-[90vw] max-w-4xl h-[90vh] rounded-2xl p-6 shadow-lg flex flex-col backdrop-blur-xl overflow-hidden">
+      <AnimatedContainer
+      duration={0.3}
+      className="bg-[#000000]/50 w-[90vw] max-w-4xl h-[90vh] rounded-2xl p-6 shadow-lg flex flex-col backdrop-blur-xl overflow-hidden">
 
-     {isAiLoading && <LightRays color="#4fefcc5d"/>}
+        {isAiLoading && <LightRays color="#4fefcc5d" />}
+        
 
         {/* Header */}
         <div className="flex justify-between items-start mb-4">
@@ -272,7 +278,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen,userData,userId, editing
             <p className="text-sub text-sm">{editingSchedule?.id ? "Update your workout program" : "Create a comprehensive workout program"}</p>
           </div>
           <button
-            onClick={() => setIsModalOpen(false)}
+            onClick={handleCancle}
             className="text-gray-100 cursor-pointer text-2xl hover:text-gray-400"
           >
             ✕
@@ -282,7 +288,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen,userData,userId, editing
         {/* AI Assistance */}
         <div className="flex flex-col items-center mb-6">
           <p className="text-sub mb-2">AI Assistance Mode</p>
-          <CustomTabsWithTooltips setMode={setMode}/>
+          <CustomTabsWithTooltips setMode={setMode} />
         </div>
 
         {/* Main Content */}
@@ -331,7 +337,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen,userData,userId, editing
           {/* Workout Days */}
           <div className="flex items-center gap-6">
             <p className="font-semibold">Workout Days</p>
-            <button
+            {/* <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
@@ -340,13 +346,27 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen,userData,userId, editing
               className="px-3 py-1 bg-[#494c4f44] rounded-md cursor-pointer hover:bg-[#494c4f66]"
             >
               + Add Day
-            </button>
+            </button> */}
           </div>
 
           {/* Days List */}
-          <AddWorkoutsForm workoutDayList={workoutDayList} handleRemoveDay={handleRemoveDay} handleExerciseChange={handleExerciseChange} handleRemoveExercise={handleRemoveExercise} handleAddExercise={handleAddExercise}/>
-          
-         
+
+
+          {isAiLoading ? <div className="flex h-45 max-h-45 relative  ">
+            <Ripple />
+          </div>
+            : <AddWorkoutsForm workoutDayList={workoutDayList} handleRemoveDay={handleRemoveDay} handleExerciseChange={handleExerciseChange} handleRemoveExercise={handleRemoveExercise} handleAddExercise={handleAddExercise} />}
+           {!isAiLoading && <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddDay();
+              }}
+              className="px-3 py-1 bg-[#494c4f44] rounded-md cursor-pointer hover:bg-[#494c4f66]"
+            >
+              + Add Day
+            </button>}
+
 
 
         </div>
@@ -355,13 +375,23 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen,userData,userId, editing
           {validationError && <div className=" flex flex-1 items-center justify-center rounded-md bg-[#8e909322]">
             <p className="text-[#f31936] font-bold">{validationError}</p>
           </div>}
-          <div className="confirm  p-2 bg-[#3ce7c2c0] rounded-lg cursor-pointer" onClick={handleConfirm}><p>{editingSchedule?.id ? "Update" : "Confirm"}</p></div>
-          <div onClick={handleCancle} className="cancle p-2 bg-[#474547db] rounded-lg cursor-pointer"><p>Cancle</p></div>
+          <div className="confirm  p-2 bg-[#5f5f5f44] hover:bg-[#b4b4b444] rounded-lg cursor-pointer" onClick={handleConfirm}><p>{editingSchedule?.id ? "Update" : "Confirm"}</p></div>
+          <div onClick={handleCancle} className="cancle p-2 bg-[#5f5f5f44] hover:bg-[#b4b4b444] rounded-lg cursor-pointer"><p>Cancle</p></div>
         </div>
 
-      </div>
-      {mode && <AIWindow userData={userData} setWorkoutPlanInfo={setWorkoutPlanInfo} setIsAiLoading={setIsAiLoading} setWorkoutDayList={setWorkoutDayList} />} 
+      </AnimatedContainer>
+      <AnimatePresence mode="wait">
+      {mode && (
+    <AIWindow
+      userData={userData}
+      setWorkoutPlanInfo={setWorkoutPlanInfo}
+      setIsAiLoading={setIsAiLoading}
+      setWorkoutDayList={setWorkoutDayList}
+    />
+  )}
+      </AnimatePresence>
     </div>
+    </LayoutGroup>
   );
 };
 

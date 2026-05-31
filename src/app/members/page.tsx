@@ -7,6 +7,7 @@ import { PiDotsNineBold } from "react-icons/pi";
 import { useRouter } from "next/navigation";
 import useUserClientContext from "@/src/hooks/useUserClientContext";
 import AddNewMemberModal from "./addNewMemberModal";
+import AnimatedContainer from "@/src/components/ui/animatedContainer";
 const Members = () => {
 
 
@@ -43,7 +44,7 @@ const Members = () => {
     
     return (
 
-        <div className=" flex flex-col h-[115vh] px-10 bg-[#07020b] pb-10 text-white">
+        <div className=" flex flex-col h-[115vh] px-10  pb-10 text-white">
             <div className="heading flex justify-between items-center  my-10">
                 <div className="headingTextContainer flex flex-col">
                     <h1 className="text-3xl font-semibold text-[#E0E0E0]">Members</h1>
@@ -59,8 +60,8 @@ const Members = () => {
             {/* Member Details section */}
             <div className="flex flex-col  items-center justify-center ">
                 {/* Search Bard */}
-                <div className="flex h-20  gap-10 justify-center  items-center bg-[#2c2c2c93] w-full  p-4 rounded-md my-5">
-                    <div className="flex-5 gap-2  flex items-center p-1 bg-[#363738] rounded-md">
+                <AnimatedContainer className="flex h-20  gap-10 justify-center  items-center bg-black/10 backdrop-blur-md shadow-md shadow-white/5 w-full  p-4 rounded-md my-5">
+                    <div className="flex-5 gap-2  flex items-center p-1 bg-[#3f404046] rounded-md">
                         <RiSearch2Line className="m-1 " color="gray" />
                         <input type="text" name="" id="" onChange={(e) => handleChange(e)} className="text-gray-200 border-0 w-full" placeholder="Member name or mobile number" />
                     </div>
@@ -72,11 +73,11 @@ const Members = () => {
                             <option value="inactive">inacvtive</option>
                         </select>
                     </div>
-                </div>
+                </AnimatedContainer>
                 {/* Member details Table */}
-                <div className="flex flex-col justify-center items-center bg-[#00000093] w-full  overflow-x-hidden overflow-y-auto pt-0 rounded-md ">
+                <AnimatedContainer className="flex flex-col justify-center items-center bg-black/10 backdrop-blur-md shadow-md shadow-white/5 w-full  overflow-x-hidden overflow-y-auto pt-0 rounded-md ">
                     {/* Table headings */}
-                    <div className="flex text-white  gap-10 items-center justify-start w-full px-14 backdrop-blur-md bg-gray-200/10 p-4   sticky top-0 ">
+                    <div className="flex text-white  gap-10 items-center justify-start w-full px-14 bg-white/3 backdrop-blur-md shadow-md shadow-white/5 p-4   sticky top-0 ">
                         <p className="flex-1 text-xl font-semibold">Member</p>
                         <p className="flex-1 text-xl font-semibold">Contact</p>
                         <p className="flex-1 text-xl xl:flex-1 font-semibold">Membership</p>
@@ -121,7 +122,7 @@ const Members = () => {
                             : <h1>Loading</h1>
                         }
                     </div>
-                </div>
+                </AnimatedContainer>
 
             </div>
                      { isModalOpen &&  <AddNewMemberModal setIsModalOpen={setIsModalOpen}/>}

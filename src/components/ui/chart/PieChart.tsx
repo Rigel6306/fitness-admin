@@ -2,7 +2,7 @@
 
 import { TrendingUp } from "lucide-react"
 import { Pie, PieChart } from "recharts"
-
+import AnimatedContainer from "../animatedContainer"
 import {
   Card,
   CardContent,
@@ -42,12 +42,12 @@ const chartConfig = {
 
 export function ChartPieSimple() {
   return (
-    <Card className="flex h-full flex-col  bg-[#2c2c2c93] ">
-      <h1 className="m-2 mx-10 text-2xl text-[#F0F0F0] font-sans">Membership Distribution</h1>
-      <CardContent className="flex-1 pb-0">
+    <AnimatedContainer className="flex h-full rounded-xl flex-col bg-black/10 backdrop-blur-md overflow-hidden shadow-md shadow-white/5 ">
+      <h1 className="m-2 mx-10 text-lg text-[#F0F0F0] font-sans flex-shrink-0">Membership Distribution</h1>
+      <CardContent className="flex-1 pb-0 min-h-0">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[350px]"
+          className="mx-auto aspect-square h-full max-h[250px]"
         >
           <PieChart>
             <ChartTooltip
@@ -59,6 +59,6 @@ export function ChartPieSimple() {
         </ChartContainer>
       </CardContent>
     
-    </Card>
+    </AnimatedContainer>
   )
 }

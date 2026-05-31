@@ -1,5 +1,5 @@
 
-import { doc, updateDoc ,arrayUnion} from "firebase/firestore"
+import { doc, updateDoc } from "firebase/firestore"
 import { db } from "@/services/firebase"
 
 // Update specific fields in a document

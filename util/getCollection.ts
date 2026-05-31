@@ -14,6 +14,7 @@ export const subscribeToCollection = (
   const colRef = collection(db, "users")
   setIsLoading(true)
   setErr(null)
+  
   const unsubscribe = onSnapshot(
     colRef,
     snapshot => {

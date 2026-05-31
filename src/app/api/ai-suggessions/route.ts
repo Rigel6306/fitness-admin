@@ -1,26 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
-import { streamText } from "ai";
 import OpenAI from "openai";
-import { success } from "zod";
+
 export async function POST(req: NextRequest) {
-  const { height, weight, goals, experienceLevel, promptType,scheduleData } = await req.json();
+  try {
+    const { height, weight, goals, experienceLevel, promptType, scheduleData } = await req.json();
 
-  const openai = new OpenAI({
-    apiKey: process.env.OPEN_AI_API_KEY ,
-  });
+    const openai = new OpenAI({
+      apiKey: process.env.OPEN_AI_API_KEY,
+    });
 
-  console.log("Shedule Data: ",scheduleData)
+    const prompts = {
 
-  const prompts = {
-
-    withSchedule:`Generate a weekly workout plan for a user with height ${height}cm, weight ${weight}kg, goal ${goals}, and experience level ${experienceLevel}.  
+    withSchedule: `Generate a weekly workout plan for a user with height ${height}cm, weight ${weight}kg, goal ${goals}, and experience level ${experienceLevel}.  
 
 You are also given an existing JSON object called scheduleData.  
 - Keep all fields and values from scheduleData exactly as provided.  
 - Merge your plan with scheduleData by adding new workouts, days, or focus items if needed.  
 - Do not remove or overwrite any of the admin’s data.  
 - Correct spelling mistakes silently.  
-- Return ONLY a valid JSON object,   no code fences.add a little discription about the workout plan in the description filed below
+- maximum of 3 days. NO MORE THAN 3 DAYS
+- Return ONLY a valid JSON object,   no code fences.add a little discription about the workout plan in the description filed 
+below
 
 scheduleData = ${scheduleData}
 
@@ -45,7 +45,7 @@ description:"Your Discription about the plan"
 }
 `,
 
-        noShedule:`Generate a weekly workout plan for a user with height ${172}cm, weight ${90}kg, goal ${"weight loss"}, and experience level ${"1 year"}. Generate a weekly workout plan as a valid JSON object.
+    noShedule: `Generate a weekly workout plan for a user with height ${172}cm, weight ${90}kg, goal ${"weight loss"}, and experience level ${"1 year"}. Generate a weekly workout plan as a valid JSON object.
 Return ONLY the JSON,  no code fences.add a little discription about the workout plan in the description filed below
 Structure: {data:{
             title: 'Basic Schedule',
@@ -78,47 +78,80 @@ Structure: {data:{
   }
 
 
-  const response = openai.responses.create({
-    model: "gpt-5.4-mini",
-    input: prompts[promptType as keyof typeof prompts],
-    store: true,
-  });
+    let response;
+    try {
+      response = await openai.responses.create({
+        model: "gpt-5.4-mini",
+        input: prompts[promptType as keyof typeof prompts],
+        store: true,
+      });
+    } catch (apiError: any) {
+      // Handle API-level errors (quota, tokens, etc.)
+      console.error("OpenAI API error:", apiError);
 
+      // Check for specific error codes/messages
+      if (apiError.error?.code === "insufficient_quota" || apiError.message?.includes("tokens")) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Token limit or quota exceeded",
+            details: apiError.message,
+          },
+          { status: 429 } // Too Many Requests
+        );
+      }
 
-  // Stream back to client
-  // res is the raw text output from the model
-const responce = (await response).output_text;
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Failed to call OpenAI API",
+          details: apiError.message,
+        },
+        { status: 500 }
+      );
+    }
 
-const cleaned = responce
-  .replace(/```[a-z]*\n?/gi, "")  // remove ```js, ```json, etc.
-  .replace(/```/g, "");           // remove closing ```
+    const rawText = response.output_text;
+    const cleaned = rawText.replace(/```[a-z]*\n?/gi, "").replace(/```/g, "");
 
-try {
-  // Try to parse the text as JSON
-  const workoutPlan = JSON.parse(cleaned);
+    let workoutPlan;
+    try {
+      workoutPlan = JSON.parse(cleaned);
+    } catch (parseError) {
+      const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        workoutPlan = JSON.parse(jsonMatch[0]);
+      } else {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Failed to parse AI response as JSON",
+            details: cleaned,
+          },
+          { status: 500 }
+        );
+      }
+    }
 
-  console.log("Parsed workout plan:", workoutPlan);
-  
+    return NextResponse.json({
+      success: true,
+      data: workoutPlan,
+    });
 
-  // Now you can access fields like:
-  console.log(workoutPlan.title);
-
-return NextResponse.json({
-    success: true,
-    data: workoutPlan,
-  });
-
-} catch (error) {
-  console.error("Failed to parse AI response as JSON:", error);
-
-  // Optional: fallback if the AI added extra text around the JSON
-  const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-  if (jsonMatch) {
-    const workoutPlan = JSON.parse(jsonMatch[0]);
-    console.log("Recovered workout plan:", workoutPlan);
+  } catch (error: any) {
+    console.error("Unexpected error:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Internal server error",
+        details: error.message || String(error),
+      },
+      { status: 500 }
+    );
   }
 }
 
 
 
-}
+
+ 

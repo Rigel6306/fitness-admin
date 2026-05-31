@@ -26,25 +26,25 @@ export const CustomTabsWithTooltips = ({setMode})=> {
   }
 
   return (
-    <div className="btnContainer flex gap-2 bg-[#4d4d4e44] rounded-4xl py-2 w-fit px-2  justify-center relative">
+    <div className="btnContainer flex gap-2 bg-black/10 backdrop-blur-md shadow-md shadow-white/5 rounded-4xl py-1 w-fit px-1  justify-center relative">
       {tabs.map((tab) => (
         <div
           key={tab.id}
           onClick={() => handleNavClick(tab.id)}
           onMouseEnter={() => setHovered(tab.id)}
           onMouseLeave={() => setHovered(null)}
-          className={`btn px-2 rounded-4xl cursor-pointer font-semibold relative ${
+          className={`btn px-2 py-1 rounded-4xl cursor-pointer font-semibold relative ${
             type === tab.id ? "bg-[#bec5cb44]" : ""
           }`}
         >
           <p>{tab.label}</p>
 
           {/* Tooltip */}
-          {hovered === tab.id && (
+          {/* {hovered === tab.id && (
             <div className="absolute left-0 top-full mt-2 w-64 bg-[#1234] border rounded-md shadow-lg p-3 z-10">
               <p className="text-sm text-gray-700">{tab.description}</p>
             </div>
-          )}
+          )} */}
         </div>
       ))}
     </div>

@@ -35,7 +35,7 @@ const AddWorkoutsForm = ({
 
         <div className="flex flex-col gap-4">
             {workoutDayList.map((day, dayIndex) => (
-              <div key={dayIndex} className="bg-[#5e656c70] rounded-2xl p-3 shadow">
+              <div key={dayIndex} className="bg-[#e0e2e52f] rounded-2xl p-3 shadow">
 
                 {/* Day header */}
                 <div className="flex justify-between items-center mb-2">
@@ -51,7 +51,7 @@ const AddWorkoutsForm = ({
                 {/* Exercise list */}
                 <div className="flex flex-col gap-2">
                   {day.schedule.map((exercise, exerciseIndex) => (
-                    <div key={exercise.id} className="bg-[#74777a44] justify-around flex gap-2 rounded-xl p-3 items-center mb-2">
+                    <div key={exercise.id} className="bg-[#00000044] justify-around flex gap-2 rounded-xl p-3 items-center mb-2">
 
                       <p>{exerciseIndex + 1}</p>
                       <input
@@ -62,7 +62,7 @@ const AddWorkoutsForm = ({
                         onChange={(e) =>
                           handleExerciseChange(dayIndex, exerciseIndex, "name", e.target.value)
                         }
-                        className="bg-[#000000cb] flex-1 rounded px-2 py-1 text-white "
+                        className="bg-[#000000cb] flex-1 rounded-md px-2 py-1 text-white "
                       />
                       <input
                         type="text"
@@ -72,7 +72,7 @@ const AddWorkoutsForm = ({
                         onChange={(e) =>
                           handleExerciseChange(dayIndex, exerciseIndex, "reps", e.target.value.split(/[,\s]+/))
                         }
-                        className="bg-[#000000cb] rounded px-2 py-1 text-white"
+                        className="bg-[#000000cb] rounded-md px-2 py-1 text-white"
                       />
 
                       <p
@@ -89,7 +89,7 @@ const AddWorkoutsForm = ({
                     e.stopPropagation();
                     handleAddExercise(dayIndex);
                   }}
-                  className="px-2 py-1 bg-[#050505cd] font-semibold text-center text-white rounded cursor-pointer hover:bg-[#7e7e7ef0] hover:text-black"
+                  className="px-2 py-3 bg-[#050505cd] font-semibold text-center text-white rounded-xl cursor-pointer hover:bg-[#7e7e7ef0] hover:text-black"
                 >
                   + Add Exercise
                 </div>

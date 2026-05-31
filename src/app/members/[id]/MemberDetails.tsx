@@ -11,6 +11,8 @@ import Link from "next/link";
 import { useState } from "react";
 import React from "react";
 import MemberInfoEditModal from "./MemberInfoEditModal";
+import AnimatedContainer from "@/src/components/ui/animatedContainer";
+import { AnimatePresence } from "motion/react";
 import { deleteUser } from "@/util/deleteDocs";
 
 // lazy loaded components
@@ -23,8 +25,8 @@ type MemberDetailsProps = { id: string };
 
 const MemberDetails = ({ id }: MemberDetailsProps) => {
   const [type, setType] = useState<ComponentType>("overview");
-  const [isModalOpen,setIsModalOpen] = useState(false)
-  const [err,setError] =useState(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [err, setError] = useState(null)
 
   const data = useUserClientContext();
 
@@ -46,13 +48,13 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
     );
   }
 
-  const handleDelete = ()=>{
+  const handleDelete = () => {
     deleteUser(userData.id)
   }
 
   const components = {
     overview: <OverviewCard userInfo={userData.data} />,
-    workout: <WorkoutSchedule  userData={userData} userId={userData.id} />,
+    workout: <WorkoutSchedule userData={userData} userId={userData.id} />,
     analytics: <Analytics />
   };
 
@@ -79,14 +81,14 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
         {/* Action Btns */}
         <div className="actionBtns flex gap-4">
           <div className="edit gap-2 flex cursor-pointer items-center justify-center bg-[#4d4d4e44] px-4 h-10 rounded-sm hover:bg-[#c6ced588]"
-          onClick={()=>setIsModalOpen(true)}
+            onClick={() => setIsModalOpen(true)}
           >
             <BiSolidEdit />
             <p className="font-semibold">Edit</p>
           </div>
           <div
-          onClick={handleDelete}
-          className="delete cursor-pointer gap-2 flex items-center justify-center bg-[#313b4542] px-4 h-10 rounded-sm hover:bg-[#c6ced588]">
+            onClick={handleDelete}
+            className="delete cursor-pointer gap-2 flex items-center justify-center bg-[#313b4542] px-4 h-10 rounded-sm hover:bg-[#c6ced588]">
             <MdDelete color="crimson" />
             <p className="text-[#d67e7f] font-semibold">Delete</p>
           </div>
@@ -95,7 +97,7 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
 
       {/* Cards */}
       <div className="flex gap-20 mt-10">
-        <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-25">
+        <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-white/3 backdrop-blur-md shadow-md shadow-white/5 h-25'} >
           <FaChalkboardUser size={45} />
           <div className="flex flex-col">
             <div className="heading text-xl font-semibold">
@@ -105,8 +107,8 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
               <p>{userData.data.packageName}</p>
             </div>
           </div>
-        </div>
-        <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-25">
+       </AnimatedContainer>
+         <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-white/3 backdrop-blur-md shadow-md shadow-white/5 h-25'} >
           <MdOutlineSportsGymnastics size={45} className="text-[#4cddbbb2]" />
           <div className="flex flex-col">
             <div className="heading text-xl font-semibold">
@@ -118,8 +120,8 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
               </p>
             </div>
           </div>
-        </div>
-        <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-25">
+        </AnimatedContainer>
+         <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-white/3 backdrop-blur-md shadow-md shadow-white/5 h-25'} >
           <CgCalendarToday size={45} />
           <div className="flex flex-col">
             <div className="heading text-xl font-semibold">
@@ -129,8 +131,8 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
               <p>{userData.data.registerdAt.toDate().toLocaleDateString()}</p>
             </div>
           </div>
-        </div>
-        <div className="flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-[#36373879] h-25">
+         </AnimatedContainer>
+       <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-white/3 backdrop-blur-md shadow-md shadow-white/5 h-25'} >
           <FaSackDollar size={30} />
           <div className="flex flex-col">
             <div className="heading text-xl font-semibold">
@@ -142,40 +144,39 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
               </p>
             </div>
           </div>
-        </div>
+         </AnimatedContainer>
       </div>
 
       {/* btnList */}
-      <div className="btnCOntainer flex gap-2 bg-[#4d4d4e44] rounded-4xl py-2 w-fit px-2 mt-10 justify-center">
+      <div className="btnCOntainer flex gap-2 bg-white/3 backdrop-blur-md shadow-md shadow-white/5 rounded-4xl py-2 w-fit px-2 mt-10 justify-center">
         <div
           onClick={() => handleNavClick("overview")}
-          className={`btn p-2 rounded-4xl ${
-            type === "overview" ? "bg-[#bec5cb44]" : ""
-          } cursor-pointer font-semibold`}
+          className={`btn p-2 rounded-4xl ${type === "overview" ? "bg-white/10 backdrop-blur-md shadow-md shadow-black/15" : ""
+            } cursor-pointer font-semibold`}
         >
           <p>Overview</p>
         </div>
         <div
           onClick={() => handleNavClick("workout")}
-          className={`btn p-2 rounded-4xl ${
-            type === "workout" ? "bg-[#bec5cb44]" : ""
-          } cursor-pointer font-semibold`}
+          className={`btn p-2 rounded-4xl ${type === "workout" ? "bg-white/10 backdrop-blur-md shadow-md shadow-black/15" : ""
+            } cursor-pointer font-semibold`}
         >
           <p>Workout Schedule</p>
         </div>
         <div
           onClick={() => handleNavClick("analytics")}
-          className={`btn p-2 rounded-4xl ${
-            type === "analytics" ? "bg-[#bec5cb44]" : ""
-          } cursor-pointer font-semibold`}
+          className={`btn p-2 rounded-4xl ${type === "analytics" ? "bg-white/10 backdrop-blur-md shadow-md shadow-black/15" : ""
+            } cursor-pointer font-semibold`}
         >
           <p>Analytics</p>
         </div>
       </div>
 
       {/* Main Content */}
-      {components[type]}
-      {isModalOpen&&<MemberInfoEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} userData={userData}/>}
+      <AnimatePresence>
+        {components[type]}
+      </AnimatePresence>
+      {isModalOpen && <MemberInfoEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} userData={userData} />}
     </div>
   );
 };

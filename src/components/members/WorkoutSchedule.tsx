@@ -6,7 +6,8 @@ import WorkoutsAddModal from "@/src/app/members/[id]/WorkoutAddModal";
 import { FaDumbbell } from "react-icons/fa6";
 import { subscribeToUserSchedules } from "@/util/getSchedule";
 import { deleteSchedule } from "@/util/deleteDocs";
-
+import { AnimatePresence } from "motion/react";
+import AnimatedContainer from "../ui/animatedContainer";
 const WorkoutSchedule = ({ userData, userId }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -17,12 +18,12 @@ const WorkoutSchedule = ({ userData, userId }) => {
 
     const handleModal = () => {
         setEditingSchedule(null)
-         setIsModalOpen(true)
+        setIsModalOpen(true)
     }
 
-    const handleEdit = async(schedule: any) => {
+    const handleEdit = async (schedule: any) => {
         setEditingSchedule(schedule)
-         setIsModalOpen(true)
+        setIsModalOpen(true)
     }
 
     const handleDelete = async (scheduleId: string) => {
@@ -41,14 +42,14 @@ const WorkoutSchedule = ({ userData, userId }) => {
         return () => unsubscribe()
     }, [userId])
 
-   
+
     if (isLoading) {
         return (
             <div><p>Loading</p></div>
         )
     }
 
-    console.log("At Workout schedule",schedules)
+    console.log("At Workout schedule", schedules)
 
     return (
         <div className="flex-col  mt-4">
@@ -57,20 +58,30 @@ const WorkoutSchedule = ({ userData, userId }) => {
 
 
 
-                <div 
-                onClick={handleModal}
-                className="addbtn bg-[#373a3c44] p-2 rounded-2xl text-sm font-semibold cursor-pointer">
+                <div
+                    onClick={handleModal}
+                    className="addbtn bg-[#373a3c44] p-2 rounded-2xl text-sm font-semibold cursor-pointer">
                     <p >+ Add Schedule</p>
                 </div>
 
             </div>
-            <WorkoutsAddModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}  userData={userData} userId={userId} editingSchedule={editingSchedule} />
-            {/* Workouts Plan Section */}
+            <AnimatePresence>
+                {isModalOpen && (
+                    <WorkoutsAddModal
+                        isModalOpen={isModalOpen}
+                        setIsModalOpen={setIsModalOpen}
+                        userData={userData}
+                        userId={userId}
+                        editingSchedule={editingSchedule}
+                    />
+                )}
+                {/* Workouts Plan Section */}
+            </AnimatePresence>
             <div className="flex-col flex gap-10 flex-1  min-h-70 mt-4 rounded-2xl ">
                 {schedules && schedules.length > 0 ? (
                     schedules.map((schedule, index) => (
-                        <div
-                            className="flex-col w-full flex bg-[#bec5cb12] p-4 rounded-2xl"
+                        <AnimatedContainer
+                            className="flex-col w-full flex bg-black/5 backdrop-blur-md p-4 rounded-2xl"
                             key={index}
                         >
                             {/* workout plan heading */}
@@ -78,9 +89,9 @@ const WorkoutSchedule = ({ userData, userId }) => {
                                 <div className="flex justify-between items-center">
                                     <p className="text-heading text-xl">{schedule.title.toUpperCase()}</p>
                                     <div className="btns flex gap-2">
-                                        <div 
-                                        className="flex p-2 font-semibold bg-[#76787a44] w-20 items-center justify-center rounded-xl cursor-pointer hover:bg-[#c6ced588]"
-                                        onClick={() => handleEdit(schedule)}
+                                        <div
+                                            className="flex p-2 font-semibold bg-[#76787a44] w-20 items-center justify-center rounded-xl cursor-pointer hover:bg-[#c6ced588]"
+                                            onClick={() => handleEdit(schedule)}
                                         >
                                             <p>Edit</p>
                                         </div>
@@ -127,7 +138,7 @@ const WorkoutSchedule = ({ userData, userId }) => {
                                     ))}
                                 </div>
                             ))}
-                        </div>
+                        </AnimatedContainer>
                     ))
                 ) : (
                     <div className="flex">

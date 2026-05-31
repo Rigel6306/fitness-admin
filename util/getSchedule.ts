@@ -1,4 +1,4 @@
-import { onSnapshot, collection, doc } from "firebase/firestore";
+import { onSnapshot, collection, doc,query,orderBy } from "firebase/firestore";
 import { db } from "@/services/firebase";
 
 export const subscribeToUserSchedules = (
@@ -14,8 +14,9 @@ export const subscribeToUserSchedules = (
     setIsLoading(true);
     const userDocRef = doc(db, "users", userId);
     const scheduleCollRef = collection(userDocRef, "schedules");
+    const q = query(scheduleCollRef,orderBy("createdAt",'desc'))
     const unsubscribe = onSnapshot(
-      scheduleCollRef,
+      q,
       (snap) => {
         const schedules = snap.docs.map((doc) => ({
           id: doc.id,

@@ -41,11 +41,11 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
                 message: "Weight must be between 20kg and 300kg",
             }),
         packageName: z.enum([
-            "Workouts Only",
-            "Workouts + Treadmill",
-            "Zumba Only",
-            "Zumba + Workouts",
-            "Zumba + Workouts + Treadmil",
+            "workouts only",
+            "workouts + treadmill",
+            "zumba only",
+            "zumba + workout",
+            "zumba + workouts + treadmil",
         ]),
       
 
@@ -94,7 +94,7 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
 
                 {/* Curent Info Section */}
 
-                <div className="flex justify-between mt-4 bg-[#41424344] backdrop-blur-2xl rounded-2xl py-3">
+                <div className="flex justify-between mt-4 bg-[#00000000] backdrop-blur-2xl rounded-2xl py-3">
 
                     <div className="flex flex-col">
 
@@ -195,13 +195,13 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
 
                 <div className="flex mt-4 justify-between flex-1 items-center">
                     <div className="flex flex-col gap-3">
-                        <div className="flex items-center gap-2 bg-[#595b5e44] rounded-2xl justify-between">
+                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl justify-between">
                             <label className="ms-2" htmlFor="name">User Name</label>
                             <input onChange={(e) => handleInputs("name", e.target.value)}
-                                className="bg-[#7f818244] p-2 rounded-xl" type="text" name="name" id="name" value={userInputs.name} />
+                                className="bg-[#7f818244]  p-2 rounded-xl" type="text" name="name" id="name" value={userInputs.name} />
                         </div>
 
-                        <div className="flex items-center gap-2 bg-[#595b5e44] rounded-2xl justify-between">
+                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl justify-between">
                             <label className="ms-2 " htmlFor="age">Age</label>
                             <input
                                 onChange={(e) => handleInputs("age", e.target.value)}
@@ -209,7 +209,7 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
                                 type="number" name="age" id="age" value={userInputs.age} />
                         </div>
 
-                        <div className="flex items-center gap-2 bg-[#595b5e44] rounded-2xl justify-between">
+                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl justify-between">
                             <label className="ms-2" htmlFor="email">E-mail</label>
                             <input
                                 // onChange={(e) => handleInputs("email", e.target.value)} keep as readonly coz changing the email may cause accidential problems 
@@ -217,7 +217,7 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
                                 className="bg-[#7f818244] p-2 rounded-xl" type="text" name="email" id="email" value={userInputs.email} />
                         </div>
 
-                        <div className="flex items-center gap-2 bg-[#595b5e44] rounded-2xl justify-between">
+                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl justify-between">
                             <label className="ms-2" htmlFor="pno">Contact Number</label>
                             <input
                                 onChange={(e) => handleInputs("contactNumber", e.target.value)}
@@ -225,7 +225,7 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
                                 value={userInputs.contactNumber} />
                         </div>
 
-                        <div className="flex items-center gap-2 bg-[#595b5e44] rounded-2xl justify-between">
+                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl justify-between">
                             <label className="ms-2" htmlFor="membershipNumber">Membership Number</label>
                             <input
                                 onChange={(e) => handleInputs("membershipNumber", e.target.value)}
@@ -234,7 +234,7 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
 
                     </div>
                     <div className="flex flex-col gap-3">
-                        <div className="flex items-center gap-2 bg-[#595b5e44] rounded-2xl h-10 justify-between">
+                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl h-10 justify-between">
                             <label className="ms-2" htmlFor="gender">Gender</label>
                             <select
                                 onChange={(e) => handleInputs("gender", e.target.value)}
@@ -244,34 +244,34 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
                             </select>
                         </div>
 
-                        <div className="flex items-center gap-2 bg-[#595b5e44] rounded-2xl justify-between">
+                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl justify-between">
                             <label className="ms-2" htmlFor="height">Height (cm) </label>
                             <input
                                 onChange={(e) => handleInputs("height", e.target.value)}
                                 className="bg-[#7f818244] p-2 rounded-xl" type="text" name="height" id="height" value={userInputs.height} />
                         </div>
-                        <div className="flex items-center gap-2 bg-[#595b5e44] rounded-2xl justify-between">
+                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl justify-between">
                             <label className="ms-2" htmlFor="weight">Weight (kg) </label>
                             <input
                                 onChange={(e) => handleInputs("weight", e.target.value)}
                                 className="bg-[#7f818244] p-2 rounded-xl" type="text" name="weight" id="weight" value={userInputs.weight} />
                         </div>
 
-                        <div className="flex items-center gap-2 bg-[#595b5e44] rounded-2xl h-10 justify-between">
+                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl h-10 justify-between">
                             <label className="ms-2" htmlFor="membership">Membership</label>
                             <select
                                 onChange={(e) => handleInputs("packageName", e.target.value)}
                                 className="bg-[#7f818244] p-2 rounded-xl w-70" value={userInputs.packageName} name="membership" id="membership"  >
-                                <option className="bg-gray-600" value="Workouts Only">Workouts Only</option>
-                                <option className="bg-gray-600" value="Workouts + Treadmill">Workouts + Treadmill</option>
-                                <option className="bg-gray-600" value="Zumba Only">Zumba Only</option>
-                                <option className="bg-gray-600" value="Zumba + Workouts">Zumba + Workouts</option>
-                                <option className="bg-gray-600" value="Zumba + Workouts + Treadmil">Zumba + Workouts + Treadmil</option>
+                                <option className="bg-gray-600" value="workouts only">Workouts Only</option>
+                                <option className="bg-gray-600" value="workouts + treadmill">Workouts + Treadmill</option>
+                                <option className="bg-gray-600" value="zumba only">Zumba Only</option>
+                                <option className="bg-gray-600" value="zumba + workouts">Zumba + Workouts</option>
+                                <option className="bg-gray-600" value="zumba + workouts + treadmil">Zumba + Workouts + Treadmil</option>
 
                             </select>
                         </div>
 
-                        <div className="flex items-center gap-2 bg-[#595b5e44] rounded-2xl h-10 justify-between">
+                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl h-10 justify-between">
                             <label className="ms-2" htmlFor="status">Status</label>
                             <select
                                 onChange={(e) => handleInputs("status", e.target.value)}

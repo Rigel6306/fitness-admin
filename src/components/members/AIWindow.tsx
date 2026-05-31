@@ -5,6 +5,8 @@ import { TypingAnimation } from "../ui/typingAnimation";
 import { TextAnimate } from "../ui/textAnimation";
 import axios from 'axios'
 import { useState } from "react";
+import { motion } from 'motion/react'
+import AnimatedContainer from "../ui/animatedContainer";
 type props = {
      userData: { data: any },
      setIsAiLoading: any,
@@ -18,6 +20,11 @@ const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayL
      const { data } = userData
      const [isLoading, setIsLoading] = useState(false)
      const [aiDescription, setAiDescription] = useState('')
+     const [isInitialLoad, setIsInitialLoad] = useState(true)
+
+     setTimeout(() => {
+          setIsInitialLoad(false)
+     }, 1800)
 
      const handleGenerateSchedule = async () => {
           setIsLoading(true)
@@ -69,17 +76,34 @@ const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayL
      }
 
      return (
-          <div className="bg-[#000000]/50 w-[20vw]  h-[90vh] rounded-2xl p-6 shadow-lg flex flex-col items-center backdrop-blur-xl overflow-hidden">
+
+          <motion.div
+               layout
+               initial={{ opacity: 0, scale: 0.6, height: 0, x: 900 }}
+               animate={{ opacity: 1, scale: 1, height: '90%', x: 0 }}
+               exit={{ opacity: 0 }}
+               transition={{
+                    type: 'tween',
+                    stiffness: 190,
+                    damping: 20,
+                    mass: 1.5,
+                    duration:0.3,
+                    ease:'easeInOut'
+                   
+               }}
+               className="bg-[#000000]/50 w-[20vw]  h-[90vh] rounded-2xl p-6 shadow-lg flex flex-col items-center backdrop-blur-xl overflow-hidden" >
 
                {isLoading && <LightRays color="#4fefcc5d" />}
+               {isInitialLoad && <LightRays color="#4fefcc5d" />}
                {/* Heading Section */}
                <div className="flex flex-col flex-1">
                     <div className="heading flex justify-center flex-col items-center">
                          <p className="text-md font-semibold text-heading">AI Schedule Assistant </p>
                          <p className="text-sm text-sub"> Im your AI companion</p>
-                           
+
                     </div>
-                    <div className="flex h-45 max-h-45 relative  ">
+                    <div className="flex h-45 w-45 max-h-45 relative rounded-full  ">
+
                          <Ripple />
                     </div>
 
@@ -100,23 +124,24 @@ const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayL
                               {"Hey there. i just created a plan for you. "+aiDescription}
                          </TypingAnimation> */}
 
-                         <TextAnimate animation="blurIn" as="h1" className="leading-relaxed text-sm text-sub text-justify">
-                          {aiDescription}    
-                         </TextAnimate>
-                         
+                         {aiDescription && <TextAnimate animation="blurIn" as="h1" className="leading-relaxed text-sm text-sub  text-justify mt-10">
+                              {`Hey there. I just created your schedule. ${aiDescription}`}
+                         </TextAnimate>}
+
                     </div>
                }
 
 
                {/* Btn Section */}
 
-               <div className="bg-[#25e8e844] w-50 flex items-center justify-center p-2 rounded-2xl"
+               <div className="bg-[#5f5f5f44] hover:bg-[#b4b4b444] w-50 cursor-pointer flex items-center justify-center p-2 rounded-2xl"
                     onClick={handleGenerateSchedule}
                >
                     <p>Generate Schedule</p>
                </div>
 
-          </div>
+          </motion.div>
+
      );
 }
 

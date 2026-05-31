@@ -1,7 +1,8 @@
+'use client'
 import { FaArrowUp,FaArrowDown } from "react-icons/fa";
 import { LuUsers } from "react-icons/lu";
 import icons from "@/src/const/icons";
-
+import AnimatedContainer from "../ui/animatedContainer";
 interface statCardsProp {
     icon: "user" | "dollor" | "delayedPayments" | "attendence",
     heading:string,
@@ -16,7 +17,7 @@ const StatCard = ({icon,heading,total,percentage,growth}:statCardsProp) => {
    
 
     return (
-        <div className="container flex card p-4 rounded-2xl gap-2">
+        <AnimatedContainer className="container flex bg-black/10 backdrop-blur-sm p-4 rounded-2xl gap-2 shadow-md shadow-white/5">
             <div className="flex flex-col flex-3 gap-2">
                 <h1 className="text-gray-300">{heading}</h1>
                 <h3 className="text-xl sm:text-2xl md:text-3xl text-white">{total}</h3>
@@ -38,7 +39,7 @@ const StatCard = ({icon,heading,total,percentage,growth}:statCardsProp) => {
 
             </div>
 
-        </div>);
+        </AnimatedContainer>);
 }
 
 export default StatCard;

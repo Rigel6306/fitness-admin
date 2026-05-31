@@ -32,10 +32,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className={`${inter.className} min-h-full flex flex-col`}>
+      <body className={`${inter.className} min-h-full flex flex-col `}>
        
        {/* Navigation Logic */}
-        <nav className="flex sticky top-0 h-20 items-center text-md backdrop-blur-2xl text-[#E4E4E4] bg-[#5954542f] justify-between px-10">
+        <nav className="  flex sticky top-0 h-15 items-center text-md backdrop-blur-sm text-[#E4E4E4] bg-black/10 shadow-md shadow-white/5 justify-between px-10">
           <div className="heading text-2xl">
             <h1>Superbody Gym</h1>
           </div>

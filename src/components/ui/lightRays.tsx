@@ -66,11 +66,12 @@ const Ray = ({
         {
           "--ray-left": `${left}%`,
           "--ray-width": `${width}px`,
+          background:"var(--light-rays-gradient)"
         } as CSSProperties
       }
       initial={{ rotate: rotate }}
       animate={{
-        opacity: [0, intensity, 0],
+        opacity: [0.2, 0.7, 0.1],
         rotate: [rotate - swing, rotate + swing, rotate - swing],
       }}
       transition={{
@@ -87,11 +88,11 @@ const Ray = ({
 export function LightRays({
   className,
   style,
-  count = 7,
+  count = 12,
   color = "rgba(160, 210, 255, 0.2)",
-  blur = 36,
+  blur = 76,
   speed = 1,
-  length = "70vh",
+  length = "35vh",
   ref,
   ...props
 }: LightRaysProps) {
@@ -111,6 +112,8 @@ export function LightRays({
       )}
       style={
         {
+          "--light-rays-gradient":
+            "linear-gradient(to bottom, red, green, blue, indigo, violet)",
           "--light-rays-color": color,
           "--light-rays-blur": `${blur}px`,
           "--light-rays-length": length,
@@ -126,7 +129,7 @@ export function LightRays({
           style={
             {
               background:
-                "radial-gradient(circle at 20% 15%, color-mix(in srgb, var(--light-rays-color) 45%, transparent), transparent 70%)",
+                "radial-gradient(circle at 70% 15%, color-mix(in srgb, var(--light-rays-gradient) 45%, transparent), transparent 70%)",
             } as CSSProperties
           }
         />
@@ -136,12 +139,12 @@ export function LightRays({
           style={
             {
               background:
-                "radial-gradient(circle at 80% 10%, color-mix(in srgb, var(--light-rays-color) 35%, transparent), transparent 75%)",
+                "radial-gradient(circle at 80% 10%, color-mix(in srgb, var(--light-rays-gradient) 35%, transparent), transparent 75%)",
             } as CSSProperties
           }
         />
         {rays.map((ray) => (
-          <Ray key={ray.id} {...ray}  />
+          <Ray key={ray.id} {...ray} />
         ))}
       </div>
     </div>

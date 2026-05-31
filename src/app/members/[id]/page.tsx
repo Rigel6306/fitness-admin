@@ -6,7 +6,7 @@ const UserDetails = async ({params}:{params:Promise<{id:string}>}) => {
     const {id} = await params
 
     return ( 
-        <div className="flex flex-col  pt-4 pb-10 px-10 bg-[#07020b] ">
+        <div className="flex flex-col  pt-4 pb-10 px-10  ">
             <MemberDetails id={id}/>
         </div>
      );

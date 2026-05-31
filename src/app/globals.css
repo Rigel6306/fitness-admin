@@ -136,8 +136,13 @@
   * {
     @apply border-border outline-ring/50;
   }
+ 
   body {
-    @apply bg-[#07020b]  text-foreground;
+    background-image: url('/bck14.jpg');
+    background-size: cover;
+  background-position: center;
+
+    @apply  text-foreground;
   }
   html {
     @apply font-sans;
