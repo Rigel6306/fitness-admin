@@ -14,7 +14,8 @@ import MemberInfoEditModal from "./MemberInfoEditModal";
 import AnimatedContainer from "@/src/components/ui/animatedContainer";
 import { AnimatePresence, motion, LayoutGroup } from "motion/react";
 import { deleteUser } from "@/util/deleteDocs";
-
+import GlassLiquidCard from "@/src/components/ui/glassLiquidCard";
+import LiquidOverlay from "@/src/components/ui/liquidOverlay";
 // lazy loaded components
 const OverviewCard = React.lazy(() => import("@/src/components/members/OverviewCard"))
 const Analytics = React.lazy(() => import('@/src/components/members/Analytics'));
@@ -87,7 +88,7 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
           <div className="edit gap-2 flex cursor-pointer items-center justify-center bg-white/5 backdrop-blur-md shadow-md shadow-white/5  px-4 h-10 rounded-sm hover:bg-white/15"
             onClick={() => setIsModalOpen(true)}
           >
-            <BiSolidEdit color="light"/>
+            <BiSolidEdit color="light" />
             <p className="font-semibold">Edit</p>
           </div>
           <div
@@ -101,7 +102,12 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
 
       {/* Cards */}
       <div className="flex gap-20 mt-10">
-        <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-white/3 backdrop-blur-md shadow-md shadow-white/5 h-25'} >
+        {/* Membership Card */}
+        <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-2xl bg-white/3 backdrop-blur-md shadow-md shadow-white/5 h-25'} >
+          {/* Glassy Overlay Effect */}
+          <div
+            className={`absolute inset-0 z-0 rounded-2xl bg-linear-to-b from-white/1 to-white/2 border-t-white/30 border-b-white/5 border border-x-white/4 shadow-[0_8px_20px_-6px_$rgba(255,255,255,0.05) inset_0_1px_1px_rgba(255,255,255,0.15)] backdrop-blur-sm`}
+          />
           <FaChalkboardUser size={45} />
           <div className="flex flex-col">
             <div className="heading text-xl font-semibold">
@@ -112,7 +118,10 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
             </div>
           </div>
         </AnimatedContainer>
-        <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-white/3 backdrop-blur-md shadow-md shadow-white/5 h-25'} >
+        {/* Active Status Card */}
+        <AnimatedContainer className={'flex items-center  justify-start p-4 gap-6 flex-1 rounded-2xl bg-black/53 relative shadow-md shadow-white/5 h-25'} >
+          {/* Glassy Overlay */}
+        <LiquidOverlay/>
           <MdOutlineSportsGymnastics size={45} className="text-[#4cddbbb2]" />
           <div className="flex flex-col">
             <div className="heading text-xl font-semibold">
@@ -125,7 +134,14 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
             </div>
           </div>
         </AnimatedContainer>
-        <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-white/3 backdrop-blur-md shadow-md shadow-white/5 h-25'} >
+
+        {/* Join Date Card */}
+        <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-2xl bg-white/3 backdrop-blur-md relative shadow-md shadow-white/5 h-25'} >
+          {/* Glassy overlay */}
+          <div
+            className={`absolute inset-0 z-0 rounded-2xl backdrop-blur-md transition-all duration-300 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.01)_30%,rgba(255,255,255,0.06)_100%)] border border-x-white/5 border-t-white/40 border-b-black/30 shadow-[0_12px_24px_-8px_rgba(0,0,0,0.5),inset_0_2px_3px_rgba(255,255,255,0.3),inset_0_-8px_12px_rgba(0,0,0,0.4),inset_0_0_0_1px_rgba(255,255,255,0.1)]`
+            }
+          />
           <CgCalendarToday size={45} />
           <div className="flex flex-col">
             <div className="heading text-xl font-semibold">
@@ -136,7 +152,12 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
             </div>
           </div>
         </AnimatedContainer>
-        <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-white/3 backdrop-blur-md shadow-md shadow-white/5 h-25'} >
+        {/* payments Card */}
+        <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-2xl bg-white/3 backdrop-blur-md shadow-md shadow-white/5 h-25'} >
+          {/* Glassy Overlay */}
+          <div
+            className={`absolute inset-0 z-0 rounded-2xl bg-linear-to-b from-white/1 to-white/2 border-t-white/30 border-b-white/5 border border-x-white/4 shadow-[0_8px_20px_-6px_$rgba(255,255,255,0.05) inset_0_1px_1px_rgba(255,255,255,0.15)] backdrop-blur-sm`}
+          />
           <FaSackDollar size={30} />
           <div className="flex flex-col">
             <div className="heading text-xl font-semibold">
@@ -153,8 +174,8 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
 
 
       <LayoutGroup id="member-details-subnav-isolated">
-        <motion.div 
-          className="btnCOntainer flex gap-2 bg-white/3 backdrop-blur-md shadow-md shadow-white/5 rounded-4xl py-2 w-fit px-2 mt-10 justify-center relative origin-center"
+        <motion.div
+          className="btnCOntainer flex gap-2 bg-white/3 backdrop-blur-md shadow-md shadow-white/5 rounded-4xl py-1 w-fit px-2 mt-10 justify-center relative origin-center"
           key={activeIndex}
           animate={{
             scaleX: [1, 1.01, 0.99, 1, 1],
@@ -168,13 +189,12 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
           {/* Overview Tab */}
           <div
             onClick={() => handleNavClick("overview")}
-            className={`btn p-2 px-4 rounded-4xl cursor-pointer font-semibold relative select-none z-10 transition-colors duration-300 ${
-              type === "overview" ? "text-white" : "text-white/40 hover:text-white/80"
-            }`}
+            className={`btn p-2 px-4 rounded-4xl cursor-pointer font-semibold relative select-none z-10 transition-colors duration-300 ${type === "overview" ? "text-white" : "text-white/40 hover:text-white/80"
+              }`}
           >
-            <motion.p 
+            <motion.p
               className="relative block origin-center mix-blend-difference"
-              animate={{ 
+              animate={{
                 scale: type === "overview" ? 1.02 : 1,
                 y: type === "overview" ? -0.5 : 0,
                 scaleX: type === "overview" ? [0.94, 1.06, 0.98, 1] : 1,
@@ -197,13 +217,12 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
           {/* Workout Schedule Tab */}
           <div
             onClick={() => handleNavClick("workout")}
-            className={`btn p-2 px-4 rounded-4xl cursor-pointer font-semibold relative select-none z-10 transition-colors duration-300 ${
-              type === "workout" ? "text-white" : "text-white/40 hover:text-white/80"
-            }`}
+            className={`btn p-2 px-4 rounded-4xl cursor-pointer font-semibold relative select-none z-10 transition-colors duration-300 ${type === "workout" ? "text-white" : "text-white/40 hover:text-white/80"
+              }`}
           >
-            <motion.p 
+            <motion.p
               className="relative block origin-center mix-blend-difference"
-              animate={{ 
+              animate={{
                 scale: type === "workout" ? 1.02 : 1,
                 y: type === "workout" ? -0.5 : 0,
                 scaleX: type === "workout" ? [0.94, 1.06, 0.98, 1] : 1,
@@ -226,13 +245,12 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
           {/* Analytics Tab */}
           <div
             onClick={() => handleNavClick("analytics")}
-            className={`btn p-2 px-4 rounded-4xl cursor-pointer font-semibold relative select-none z-10 transition-colors duration-300 ${
-              type === "analytics" ? "text-white" : "text-white/40 hover:text-white/80"
-            }`}
+            className={`btn p-2 px-4 rounded-4xl cursor-pointer font-semibold relative select-none z-10 transition-colors duration-300 ${type === "analytics" ? "text-white" : "text-white/40 hover:text-white/80"
+              }`}
           >
-            <motion.p 
+            <motion.p
               className="relative block origin-center mix-blend-difference"
-              animate={{ 
+              animate={{
                 scale: type === "analytics" ? 1.02 : 1,
                 y: type === "analytics" ? -0.5 : 0,
                 scaleX: type === "analytics" ? [0.94, 1.06, 0.98, 1] : 1,

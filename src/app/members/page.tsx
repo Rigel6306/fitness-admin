@@ -9,7 +9,7 @@ import { AnimatePresence } from "motion/react";
 import useUserClientContext from "@/src/hooks/useUserClientContext";
 import AddNewMemberModal from "./addNewMemberModal";
 import AnimatedContainer from "@/src/components/ui/animatedContainer";
-
+import GlassLiquidButton from "@/src/components/ui/liquidBtn";
 const Members = () => {
     const [filterdUsers, setFilterdUsers] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,12 +48,13 @@ const Members = () => {
                     <h1 className="text-2xl sm:text-3xl font-semibold text-[#E0E0E0]">Members</h1>
                     <p className="text-sm text-[#B0B0B0]">Manage your gym members and their memberships</p>
                 </div>
-                <div
+                <GlassLiquidButton
                     onClick={() => setIsModalOpen(true)}
-                    className="flex p-2.5 px-4 font-semibold bg-white/5 backdrop-blur-md shadow-md shadow-white/5 items-center justify-center rounded-xl cursor-pointer hover:bg-[#98989888] transition-colors self-end sm:self-auto"
+                    bubbleGradient="from-white/10 to-white/3"
+                    
                 >
                     <p className="font-bold text-sm sm:text-base">+ Add Member</p>
-                </div>
+                </GlassLiquidButton>
             </div>
 
             {/* Main Interactive Workstation Area */}

@@ -123,14 +123,12 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
       ])
     }
   }, [editingSchedule, isModalOpen]);
-
+  
   const handleCancle = () => {
     setMode(false)
     setIsModalOpen(false)
 
   }
-
-
 
   if (!isModalOpen) return null;
 

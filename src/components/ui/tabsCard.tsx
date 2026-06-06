@@ -40,12 +40,13 @@ export const CustomTabsWithTooltips = ({ setMode }: CustomTabsProps) => {
           className="btnContainer flex gap-1 relative bg-white/2 p-1 rounded-2xl border border-white/15 shadow-inner shadow-white/5 origin-center"
           key={activeIndex}
           animate={{
-            scaleX: [1, 1.01, 0.99, 1, 1],
+            scaleX: [1, 1.01, 0.99, 1.01, 1],
             scaleY: [1, 0.88, 1.01, 1.01, 1],
           }}
           transition={{
-            duration: 0.6,
-            ease: [0.19, 1, 0.22, 1]
+           
+            duration: 0.9,
+            ease: [0.19, 1, 1.22, 1]
           }}
         >
           {tabs.map((tab) => {
@@ -71,6 +72,7 @@ export const CustomTabsWithTooltips = ({ setMode }: CustomTabsProps) => {
                     scaleY: isActive ? [1.04, 0.96, 1.01, 1] : 1
                   }}
                   transition={{
+                   
                     scale: { type: "spring", stiffness: 450, damping: 22 },
                     y: { type: "spring", stiffness: 450, damping: 22 },
                     default: {
@@ -93,6 +95,7 @@ export const CustomTabsWithTooltips = ({ setMode }: CustomTabsProps) => {
                     }}
                     transition={{
                         layout: {
+                          delay:0.34,
                             type: "spring",
                             stiffness: 220, 
                             damping: 25,    

@@ -8,6 +8,7 @@ import { subscribeToUserSchedules } from "@/util/getSchedule";
 import { deleteSchedule } from "@/util/deleteDocs";
 import { AnimatePresence } from "motion/react";
 import AnimatedContainer from "../ui/animatedContainer";
+import GlassLiquidButton from "../ui/liquidBtn";
 const WorkoutSchedule = ({ userData, userId }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -53,16 +54,20 @@ const WorkoutSchedule = ({ userData, userId }) => {
 
     return (
         <div className="flex-col  mt-4">
-            <div className="heading flex justify-between items-center">
+            <div className="heading flex justify-between items-center my-4">
 
 
 
 
-                <div
+                <GlassLiquidButton
                     onClick={handleModal}
-                    className="addbtn bg-[#373a3c44] p-2 rounded-2xl text-sm font-semibold cursor-pointer">
+                    className="addbtn  backdrop-blur-md shadow-md shadow-white/5 p-2 rounded-2xl text-sm font-semibold cursor-pointer">
                     <p >+ Add Schedule</p>
-                </div>
+
+                    
+                </GlassLiquidButton>
+
+               
 
             </div>
             <AnimatePresence>
