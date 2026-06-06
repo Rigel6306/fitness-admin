@@ -13,7 +13,7 @@ import { LightRays } from "@/src/components/ui/lightRays";
 import { Ripple } from "@/src/components/ui/ripple";
 import { AnimatePresence, LayoutGroup } from "motion/react";
 import AnimatedContainer from "@/src/components/ui/animatedContainer";
-type Exercise = { 
+type Exercise = {
   id: number;
   name: string;
   reps: string[];
@@ -151,7 +151,6 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
     ] as WorkoutDay[]);
   };
   const handleScheduleTitle = (field: string, value: string) => {
-
     setWorkoutPlanInfo(prev => ({ ...prev, [field]: value }))
   }
 
@@ -220,7 +219,10 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
   const workoutPlanSchema = z.object({
     title: z.string().nonempty("Title is Required"),
     frequency: z.string().nonempty("Frequency is Required"),
-    duration: z.string().nonempty("Duration is Required"),
+    duration: z.union([
+      z.string().nonempty("Duration is required"),
+      z.number()
+    ]),
     workouts: z.array(workoutDaySchema).min(1, "At least 1 workout day plan is required"),
     focus: z.array(z.string()).min(1, "please Add Focus Areas to the schedule")
   })
@@ -259,85 +261,88 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
 
   };
 
-
+  console.log("Workout Plan Info at Workouts Add MOdal", workoutPlanInfo)
 
   return (
     <LayoutGroup>
-    <div className="fixed inset-0 bg-gray-600/30 flex items-center justify-center z-50 gap-2">
-      <AnimatedContainer
-      duration={0.3}
-      className="bg-[#000000]/50 w-[90vw] max-w-4xl h-[90vh] rounded-2xl p-6 shadow-lg flex flex-col backdrop-blur-xl overflow-hidden">
+      <div className="fixed inset-0 bg-gray-600/30 flex items-center justify-center z-150 gap-2">
+        <AnimatedContainer
+          duration={0.3}
+          className="bg-[#000000]/50 w-[90vw] max-w-4xl h-[90vh] rounded-2xl p-6 shadow-lg flex flex-col backdrop-blur-xl overflow-hidden">
 
-        {isAiLoading && <LightRays color="#4fefcc5d" />}
-        
+          {isAiLoading && <LightRays color="#4fefcc5d" />}
 
-        {/* Header */}
-        <div className="flex justify-between items-start mb-4">
-          <div>
-            <p className="text-heading text-lg mt-2">{editingSchedule?.id ? "Edit Workout Schedule" : "Add Workout Schedule"}</p>
-            <p className="text-sub text-sm">{editingSchedule?.id ? "Update your workout program" : "Create a comprehensive workout program"}</p>
-          </div>
-          <button
-            onClick={handleCancle}
-            className="text-gray-100 cursor-pointer text-2xl hover:text-gray-400"
-          >
-            ✕
-          </button>
-        </div>
 
-        {/* AI Assistance */}
-        <div className="flex flex-col items-center mb-6">
-          <p className="text-sub mb-2">AI Assistance Mode</p>
-          <CustomTabsWithTooltips setMode={setMode} />
-        </div>
-
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col gap-6 overflow-y-auto pr-2">
-
-          {/* Inputs */}
-          <div className="flex gap-4">
-            <div className="flex flex-col flex-1">
-              <label htmlFor="title">Workout Title</label>
-              <input onChange={(e) => handleScheduleTitle('title', e.target.value)}
-                placeholder="Basic Schedule"
-                type="text" name="title" className="mt-2 bg-[#74777a44] rounded-lg px-2 py-1" />
+          {/* Header */}
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <p className="text-heading text-lg mt-2">{editingSchedule?.id ? "Edit Workout Schedule" : "Add Workout Schedule"}</p>
+              <p className="text-sub text-sm">{editingSchedule?.id ? "Update your workout program" : "Create a comprehensive workout program"}</p>
             </div>
-            <div className="flex flex-col flex-1">
-              <label htmlFor="frequency">Frequency</label>
-              <input onChange={(e) => handleScheduleTitle('frequency', e.target.value)}
-                placeholder="3 days per week"
-                type="text" name="frequency" className="mt-2 bg-[#74777a44] rounded-lg px-2 py-1" />
-            </div>
-
-            <div className="flex flex-col flex-1">
-              <label htmlFor="duration">Duration</label>
-              <input onChange={(e) => handleScheduleTitle('duration', e.target.value)} type="text"
-                placeholder="3 Months"
-                name="duration" className="mt-2 bg-[#74777a44] rounded-lg px-2 py-1" />
-            </div>
+            <button
+              onClick={handleCancle}
+              className="text-gray-100 cursor-pointer text-2xl hover:text-gray-400"
+            >
+              ✕
+            </button>
           </div>
 
-          {/* Focus Areas */}
-          <div>
-            <p className="mb-2">Focus Areas</p>
-            <div className="flex flex-wrap gap-3">
-              {focusList.map((focusItem, index) => (
-                <p
-                  key={index}
-                  onClick={() => handleFocusSelect(index)}
-                  className={`px-3 py-1 cursor-pointer rounded-2xl font-semibold transition 
+          {/* AI Assistance */}
+          <div className="flex flex-col items-center mb-6">
+            <p className="text-sub mb-2">AI Assistance Mode</p>
+            <CustomTabsWithTooltips setMode={setMode} />
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1 flex flex-col gap-6 overflow-y-auto pr-2">
+
+            {/* Inputs */}
+            <div className="flex gap-4">
+              <div className="flex flex-col flex-1">
+                <label htmlFor="title">Workout Title</label>
+                <input onChange={(e) => handleScheduleTitle('title', e.target.value)}
+                  value={workoutPlanInfo.title}
+                  placeholder="Basic Schedule"
+                  type="text" name="title" className="mt-2 bg-[#74777a44] rounded-lg px-2 py-1" />
+              </div>
+              <div className="flex flex-col flex-1">
+                <label htmlFor="frequency">Frequency</label>
+                <input onChange={(e) => handleScheduleTitle('frequency', e.target.value)}
+                  value={workoutPlanInfo.frequency}
+                  placeholder="3 days per week"
+                  type="text" name="frequency" className="mt-2 bg-[#74777a44] rounded-lg px-2 py-1" />
+              </div>
+
+              <div className="flex flex-col flex-1">
+                <label htmlFor="duration">Duration</label>
+                <input onChange={(e) => handleScheduleTitle('duration', e.target.value)} type="text"
+                  value={workoutPlanInfo.duration}
+                  placeholder="3 Months"
+                  name="duration" className="mt-2 bg-[#74777a44] rounded-lg px-2 py-1" />
+              </div>
+            </div>
+
+            {/* Focus Areas */}
+            <div>
+              <p className="mb-2">Focus Areas</p>
+              <div className="flex flex-wrap gap-3">
+                {focusList.map((focusItem, index) => (
+                  <p
+                    key={index}
+                    onClick={() => handleFocusSelect(index)}
+                    className={`px-3 py-1 cursor-pointer rounded-2xl font-semibold transition 
                     ${focusItem.selected ? "bg-[#4ae2bf85] text-black" : "bg-[#677e9544] text-white"}`}
-                >
-                  {focusItem.name}
-                </p>
-              ))}
+                  >
+                    {focusItem.name}
+                  </p>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Workout Days */}
-          <div className="flex items-center gap-6">
-            <p className="font-semibold">Workout Days</p>
-            {/* <button
+            {/* Workout Days */}
+            <div className="flex items-center gap-6">
+              <p className="font-semibold">Workout Days</p>
+              {/* <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
@@ -347,16 +352,16 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
             >
               + Add Day
             </button> */}
-          </div>
+            </div>
 
-          {/* Days List */}
+            {/* Days List */}
 
 
-          {isAiLoading ? <div className="flex h-45 max-h-45 relative  ">
-            <Ripple />
-          </div>
-            : <AddWorkoutsForm workoutDayList={workoutDayList} handleRemoveDay={handleRemoveDay} handleExerciseChange={handleExerciseChange} handleRemoveExercise={handleRemoveExercise} handleAddExercise={handleAddExercise} />}
-           {!isAiLoading && <button
+            {isAiLoading ? <div className="flex h-45 max-h-45 relative  ">
+              <Ripple />
+            </div>
+              : <AddWorkoutsForm workoutDayList={workoutDayList} handleRemoveDay={handleRemoveDay} handleExerciseChange={handleExerciseChange} handleRemoveExercise={handleRemoveExercise} handleAddExercise={handleAddExercise} />}
+            {!isAiLoading && <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
@@ -369,28 +374,29 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
 
 
 
-        </div>
-        {/* Footer */}
-        <div className="flex justify-end gap-2 mt-2">
-          {validationError && <div className=" flex flex-1 items-center justify-center rounded-md bg-[#8e909322]">
-            <p className="text-[#f31936] font-bold">{validationError}</p>
-          </div>}
-          <div className="confirm  p-2 bg-[#5f5f5f44] hover:bg-[#b4b4b444] rounded-lg cursor-pointer" onClick={handleConfirm}><p>{editingSchedule?.id ? "Update" : "Confirm"}</p></div>
-          <div onClick={handleCancle} className="cancle p-2 bg-[#5f5f5f44] hover:bg-[#b4b4b444] rounded-lg cursor-pointer"><p>Cancle</p></div>
-        </div>
+          </div>
+          {/* Footer */}
+          <div className="flex justify-end gap-2 mt-2">
+            {validationError && <div className=" flex flex-1 items-center justify-center rounded-md bg-[#8e909322]">
+              <p className="text-[#f31936] font-bold">{validationError}</p>
+            </div>}
+            <div className="confirm  p-2 bg-[#5f5f5f44] hover:bg-[#b4b4b444] rounded-lg cursor-pointer" onClick={handleConfirm}><p>{editingSchedule?.id ? "Update" : "Confirm"}</p></div>
+            <div onClick={handleCancle} className="cancle p-2 bg-[#5f5f5f44] hover:bg-[#b4b4b444] rounded-lg cursor-pointer"><p>Cancle</p></div>
+          </div>
 
-      </AnimatedContainer>
-      <AnimatePresence mode="wait">
-      {mode && (
-    <AIWindow
-      userData={userData}
-      setWorkoutPlanInfo={setWorkoutPlanInfo}
-      setIsAiLoading={setIsAiLoading}
-      setWorkoutDayList={setWorkoutDayList}
-    />
-  )}
-      </AnimatePresence>
-    </div>
+        </AnimatedContainer>
+        <AnimatePresence mode="wait">
+          {mode && (
+            <AIWindow
+              userData={userData}
+              setWorkoutPlanInfo={setWorkoutPlanInfo}
+              setIsAiLoading={setIsAiLoading}
+              setWorkoutDayList={setWorkoutDayList}
+              setFocusList={setFocusList}
+            />
+          )}
+        </AnimatePresence>
+      </div>
     </LayoutGroup>
   );
 };

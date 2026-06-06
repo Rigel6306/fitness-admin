@@ -14,6 +14,7 @@ import { MdOutlineSportsGymnastics } from "react-icons/md";
 import { useState } from "react";
 import { addNewUser } from "@/util/addNewUser";
 import { serverTimestamp } from "firebase/firestore";
+import AnimatedContainer from "@/src/components/ui/animatedContainer";
 import z from "zod";
 const AddNewMemberModal = ({ setIsModalOpen }) => {
     const [userInputs, setUserInputs] = useState({
@@ -84,31 +85,38 @@ const AddNewMemberModal = ({ setIsModalOpen }) => {
 
         setUserInputs(prev => ({ ...prev, [field]: value }))
         const result = userSchema.shape[field].safeParse(value)
-        setValidinput(prev=>({...prev,[field]:result.success?true:false}))
+        setValidinput(prev => ({ ...prev, [field]: result.success ? true : false }))
 
         //  const result = userSchema.pick({ [field]: true }).safeParse({ [field]: value })
-        console.log("at Handle Inputs",result)
-    
+
+
     }
 
-    console.log(validInput)
 
-    const handleConfirm = () => {
+
+    const handleConfirm = async () => {
         const result = userSchema.safeParse(userInputs)
         if (!result.success) {
             console.log("Validation Error at edit Modal:", result.error.issues[0].message)
             return
         }
-        console.log(result)
+
         const userData = { ...userInputs, registerdAt: serverTimestamp(), status: true }
-        console.log("Final UserData At add Modal", userData)
-        addNewUser(userData)
+
+        try {
+            await addNewUser(userData)
+            setIsModalOpen(false)
+        }
+        catch(err){
+            console.log("User Registration Failed")
+        }
+       
 
     }
     return (
 
-        <div className="fixed inset-0  bg-gray-600/30 flex items-center justify-center z-50">
-            <div className="bg-[#000000]/50  h-[95vh] rounded-2xl p-2 px-6  shadow-lg flex flex-col backdrop-blur-xl overflow-y-auto ">
+        <div className="fixed inset-0  bg-gray-600/10 flex items-center justify-center z-150">
+            <AnimatedContainer className="bg-[#000000]/50  h-[95vh] rounded-2xl p-2 px-6  shadow-lg flex flex-col backdrop-blur-xl overflow-y-auto ">
                 {/* Heading */}
                 <div className="heading flex gap-15 justify-between py-3">
                     <div className="flex flex-col">
@@ -128,7 +136,7 @@ const AddNewMemberModal = ({ setIsModalOpen }) => {
                         <BiUser size={24} />
                         <input
                             onChange={(e) => handleInputs("name", e.target.value)}
-                            className={`${validInput.name?"bg-[#89eac644]":"bg-[#7f818244]"} bg-[#7f818244] p-2 rounded-xl flex-1 `}
+                            className={`${validInput.name ? "bg-[#89eac644]" : "bg-[#7f818244]"} bg-[#7f818244] p-2 rounded-xl flex-1 `}
                             placeholder="User Name"
                             type="text" name="age" id="age" value={userInputs.name || ''} />
 
@@ -137,7 +145,7 @@ const AddNewMemberModal = ({ setIsModalOpen }) => {
                         <PiCalendarStarFill size={24} />
                         <input
                             onChange={(e) => handleInputs("age", e.target.value)}
-                            className={`${validInput.age?"bg-[#89eac644]":"bg-[#7f818244]"} bg-[#7f818244] p-2 rounded-xl flex-1 `}
+                            className={`${validInput.age ? "bg-[#89eac644]" : "bg-[#7f818244]"} bg-[#7f818244] p-2 rounded-xl flex-1 `}
                             placeholder="Age"
                             type="number" name="age" id="age" value={userInputs.age || ''} />
                     </div>
@@ -146,14 +154,14 @@ const AddNewMemberModal = ({ setIsModalOpen }) => {
                         <input
                             onChange={(e) => handleInputs("email", e.target.value)}
                             placeholder="E-Mail"
-                            className={`${validInput.email?"bg-[#89eac644]":"bg-[#7f818244]"} bg-[#7f818244] p-2 rounded-xl flex-1 `}
+                            className={`${validInput.email ? "bg-[#89eac644]" : "bg-[#7f818244]"} bg-[#7f818244] p-2 rounded-xl flex-1 `}
                             type="text" name="email" id="email" value={userInputs.email || ''} />
                     </div>
                     <div className="flex items-center  gap-4">
                         <CiMobile1 size={24} />
                         <input
                             onChange={(e) => handleInputs("contactNumber", e.target.value)}
-                            className={`${validInput.contactNumber?"bg-[#89eac644]":"bg-[#7f818244]"} bg-[#7f818244] p-2 rounded-xl flex-1 `}
+                            className={`${validInput.contactNumber ? "bg-[#89eac644]" : "bg-[#7f818244]"} bg-[#7f818244] p-2 rounded-xl flex-1 `}
                             type="tel" name="pno" id="pno"
                             placeholder="Contact Number"
                             value={userInputs.contactNumber || ''} />
@@ -163,7 +171,7 @@ const AddNewMemberModal = ({ setIsModalOpen }) => {
                         <input
                             onChange={(e) => handleInputs("membershipNumber", e.target.value)}
                             placeholder="Membership Number"
-                            className={`${validInput.membershipNumber?"bg-[#89eac644]":"bg-[#7f818244]"} bg-[#7f818244] p-2 rounded-xl flex-1 `}
+                            className={`${validInput.membershipNumber ? "bg-[#89eac644]" : "bg-[#7f818244]"} bg-[#7f818244] p-2 rounded-xl flex-1 `}
                             type="text" name="membershipNumber" id="membershipNumber" value={userInputs.membershipNumber || ''} />
                     </div>
                     <div className="flex items-center  gap-4">
@@ -182,8 +190,8 @@ const AddNewMemberModal = ({ setIsModalOpen }) => {
                         <input
                             onChange={(e) => handleInputs("height", e.target.value)}
                             placeholder="Height (CM)"
-                            className={`${validInput.height?"bg-[#89eac644]":"bg-[#7f818244]"} bg-[#7f818244] p-2 rounded-xl flex-1 `}
-                             type="text" name="height" id="height" value={userInputs.height || ''} />
+                            className={`${validInput.height ? "bg-[#89eac644]" : "bg-[#7f818244]"} bg-[#7f818244] p-2 rounded-xl flex-1 `}
+                            type="text" name="height" id="height" value={userInputs.height || ''} />
                     </div>
 
                     <div className="flex items-center  gap-4">
@@ -191,8 +199,8 @@ const AddNewMemberModal = ({ setIsModalOpen }) => {
                         <input
                             onChange={(e) => handleInputs("weight", e.target.value)}
                             placeholder="Weight (KG)"
-                            className={`${validInput.weight?"bg-[#89eac644]":"bg-[#7f818244]"} bg-[#7f818244] p-2 rounded-xl flex-1 `}
-                             type="text" name="weight" id="weight" value={userInputs.weight || ''} />
+                            className={`${validInput.weight ? "bg-[#89eac644]" : "bg-[#7f818244]"} bg-[#7f818244] p-2 rounded-xl flex-1 `}
+                            type="text" name="weight" id="weight" value={userInputs.weight || ''} />
                     </div>
 
                     <div className="flex items-center  gap-4">
@@ -225,7 +233,7 @@ const AddNewMemberModal = ({ setIsModalOpen }) => {
                         <p>Cancle</p>
                     </div>
                 </div>
-            </div>
+            </AnimatedContainer>
         </div>
     );
 }

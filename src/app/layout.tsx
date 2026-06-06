@@ -4,7 +4,8 @@ import Link from "next/link";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { UserContextWrapper } from "../context/userContext";
-
+import AnimatedLayout from "../components/ui/animatedLayout";
+import NavBar from "../components/NavBar";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -30,25 +31,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
+
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className={`${inter.className} min-h-full flex flex-col `}>
-       
-       {/* Navigation Logic */}
-        <nav className="  flex sticky top-0 h-15 items-center text-md backdrop-blur-sm text-[#E4E4E4] bg-black/10 shadow-md shadow-white/5 justify-between px-10">
-          <div className="heading text-2xl">
-            <h1>Superbody Gym</h1>
-          </div>
 
-          <div className="linksContainer flex gap-10">
-            <Link href="/">Home</Link>
-            <Link  href="/members">Members</Link>
-            <Link href="/payment">Payments</Link>
-          </div>
-        </nav>
+        {/* Navigation Logic */}  
+
+      <NavBar/>
 
         <UserContextWrapper>
-          {children}
+        
+            {children}
+         
         </UserContextWrapper>
       </body>
     </html>

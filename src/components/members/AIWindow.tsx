@@ -12,9 +12,10 @@ type props = {
      setIsAiLoading: any,
      setWorkoutPlanInfo: any,
      setWorkoutDayList: any
+     setFocusList:any
 }
 
-const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayList }: props) => {
+const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayList,setFocusList }: props) => {
 
      // Handiling ai-suggession api call
      const { data } = userData
@@ -29,7 +30,7 @@ const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayL
      const handleGenerateSchedule = async () => {
           setIsLoading(true)
           setIsAiLoading(true)
-          console.log("Ai generation fired")
+         
           const responce = await axios.post("http://localhost:3000/api/ai-suggessions", {
                height: data.height,
                weight: data.weight,
@@ -54,7 +55,7 @@ const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayL
                }
           })
           const { success } = responce.data
-          console.log("AT AIWINDOWS RESPONCE DATA:", responce.data)
+         
           if (success) {
                // Transform reps from numbers to strings
                const workoutsWithStringReps = responce.data.data.data.workouts.map((day: any) => ({
@@ -64,6 +65,9 @@ const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayL
                          reps: exercise.reps.map((rep: any) => String(rep))
                     }))
                }))
+
+               console.log("Ai Response data checking",  responce.data.data.data)
+               setFocusList(prev=>([...prev,...responce.data.data.data.focus.map(item=>({name:item,selected:true}))]))
                setWorkoutPlanInfo(responce.data.data.data)
                setAiDescription(responce.data.data.description)
                setWorkoutDayList(workoutsWithStringReps)
@@ -72,7 +76,7 @@ const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayL
           }
 
 
-          console.log("AI Responce data", responce.data.data,)
+        
      }
 
      return (

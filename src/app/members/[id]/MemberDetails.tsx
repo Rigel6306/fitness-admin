@@ -12,7 +12,7 @@ import { useState } from "react";
 import React from "react";
 import MemberInfoEditModal from "./MemberInfoEditModal";
 import AnimatedContainer from "@/src/components/ui/animatedContainer";
-import { AnimatePresence } from "motion/react";
+import { AnimatePresence, motion, LayoutGroup } from "motion/react";
 import { deleteUser } from "@/util/deleteDocs";
 
 // lazy loaded components
@@ -58,14 +58,18 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
     analytics: <Analytics />
   };
 
+
+  const tabIds: ComponentType[] = ["overview", "workout", "analytics"];
+  const activeIndex = tabIds.indexOf(type);
+
   return (
     <div className="flex flex-col text-white">
       {/* Header */}
       <div className="flex justify-between">
-        <div className="flex items-center gap-10">
+        <div className="flex  items-center gap-10">
           <Link
             href={"/members"}
-            className="bckBtn flex items-center justify-center bg-[#4d4d4e44] rounded-md p-2 h-10 cursor-pointer"
+            className="bckBtn flex bg-white/5 backdrop-blur-md shadow-md shadow-white/5  items-center justify-center  rounded-md p-2 h-10 cursor-pointer hover:bg-white/15"
           >
             <IoIosArrowBack color="white" size={24} />
           </Link>
@@ -80,17 +84,17 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
         </div>
         {/* Action Btns */}
         <div className="actionBtns flex gap-4">
-          <div className="edit gap-2 flex cursor-pointer items-center justify-center bg-[#4d4d4e44] px-4 h-10 rounded-sm hover:bg-[#c6ced588]"
+          <div className="edit gap-2 flex cursor-pointer items-center justify-center bg-white/5 backdrop-blur-md shadow-md shadow-white/5  px-4 h-10 rounded-sm hover:bg-white/15"
             onClick={() => setIsModalOpen(true)}
           >
-            <BiSolidEdit />
+            <BiSolidEdit color="light"/>
             <p className="font-semibold">Edit</p>
           </div>
           <div
             onClick={handleDelete}
-            className="delete cursor-pointer gap-2 flex items-center justify-center bg-[#313b4542] px-4 h-10 rounded-sm hover:bg-[#c6ced588]">
+            className="delete cursor-pointer gap-2 flex items-center justify-center bg-white/5 backdrop-blur-md shadow-md shadow-white/5  px-4 h-10 rounded-sm hover:bg-white/15">
             <MdDelete color="crimson" />
-            <p className="text-[#d67e7f] font-semibold">Delete</p>
+            <p className="font-semibold">Delete</p>
           </div>
         </div>
       </div>
@@ -107,8 +111,8 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
               <p>{userData.data.packageName}</p>
             </div>
           </div>
-       </AnimatedContainer>
-         <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-white/3 backdrop-blur-md shadow-md shadow-white/5 h-25'} >
+        </AnimatedContainer>
+        <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-white/3 backdrop-blur-md shadow-md shadow-white/5 h-25'} >
           <MdOutlineSportsGymnastics size={45} className="text-[#4cddbbb2]" />
           <div className="flex flex-col">
             <div className="heading text-xl font-semibold">
@@ -121,7 +125,7 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
             </div>
           </div>
         </AnimatedContainer>
-         <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-white/3 backdrop-blur-md shadow-md shadow-white/5 h-25'} >
+        <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-white/3 backdrop-blur-md shadow-md shadow-white/5 h-25'} >
           <CgCalendarToday size={45} />
           <div className="flex flex-col">
             <div className="heading text-xl font-semibold">
@@ -131,8 +135,8 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
               <p>{userData.data.registerdAt.toDate().toLocaleDateString()}</p>
             </div>
           </div>
-         </AnimatedContainer>
-       <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-white/3 backdrop-blur-md shadow-md shadow-white/5 h-25'} >
+        </AnimatedContainer>
+        <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-md bg-white/3 backdrop-blur-md shadow-md shadow-white/5 h-25'} >
           <FaSackDollar size={30} />
           <div className="flex flex-col">
             <div className="heading text-xl font-semibold">
@@ -144,39 +148,119 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
               </p>
             </div>
           </div>
-         </AnimatedContainer>
+        </AnimatedContainer>
       </div>
 
-      {/* btnList */}
-      <div className="btnCOntainer flex gap-2 bg-white/3 backdrop-blur-md shadow-md shadow-white/5 rounded-4xl py-2 w-fit px-2 mt-10 justify-center">
-        <div
-          onClick={() => handleNavClick("overview")}
-          className={`btn p-2 rounded-4xl ${type === "overview" ? "bg-white/10 backdrop-blur-md shadow-md shadow-black/15" : ""
-            } cursor-pointer font-semibold`}
+
+      <LayoutGroup id="member-details-subnav-isolated">
+        <motion.div 
+          className="btnCOntainer flex gap-2 bg-white/3 backdrop-blur-md shadow-md shadow-white/5 rounded-4xl py-2 w-fit px-2 mt-10 justify-center relative origin-center"
+          key={activeIndex}
+          animate={{
+            scaleX: [1, 1.01, 0.99, 1, 1],
+            scaleY: [1, 0.88, 1.01, 1.01, 1],
+          }}
+          transition={{
+            duration: 0.6,
+            ease: [0.19, 1, 0.22, 1]
+          }}
         >
-          <p>Overview</p>
-        </div>
-        <div
-          onClick={() => handleNavClick("workout")}
-          className={`btn p-2 rounded-4xl ${type === "workout" ? "bg-white/10 backdrop-blur-md shadow-md shadow-black/15" : ""
-            } cursor-pointer font-semibold`}
-        >
-          <p>Workout Schedule</p>
-        </div>
-        <div
-          onClick={() => handleNavClick("analytics")}
-          className={`btn p-2 rounded-4xl ${type === "analytics" ? "bg-white/10 backdrop-blur-md shadow-md shadow-black/15" : ""
-            } cursor-pointer font-semibold`}
-        >
-          <p>Analytics</p>
-        </div>
-      </div>
+          {/* Overview Tab */}
+          <div
+            onClick={() => handleNavClick("overview")}
+            className={`btn p-2 px-4 rounded-4xl cursor-pointer font-semibold relative select-none z-10 transition-colors duration-300 ${
+              type === "overview" ? "text-white" : "text-white/40 hover:text-white/80"
+            }`}
+          >
+            <motion.p 
+              className="relative block origin-center mix-blend-difference"
+              animate={{ 
+                scale: type === "overview" ? 1.02 : 1,
+                y: type === "overview" ? -0.5 : 0,
+                scaleX: type === "overview" ? [0.94, 1.06, 0.98, 1] : 1,
+                scaleY: type === "overview" ? [1.04, 0.96, 1.01, 1] : 1
+              }}
+              transition={{ default: { duration: 0.55, ease: [0.19, 1, 0.22, 1] } }}
+            >
+              Overview
+            </motion.p>
+            {type === "overview" && (
+              <motion.div
+                layoutId="liquidTabSelectionBubble"
+                className="absolute inset-0 z-0 rounded-4xl bg-linear-to-b from-white/16 to-white/3 border border-t-white/35 border-x-white/20 border-b-white/10 shadow-[0_8px_20px_-6px_rgba(255,255,255,0.14),inset_0_1px_1px_rgba(255,255,255,0.25),inset_0_-1px_8px_rgba(255,255,255,0.03)] backdrop-blur-[2px]"
+                animate={{ scaleX: [0.85, 1.15, 0.95, 1], scaleY: [1.1, 0.9, 1.05, 1] }}
+                transition={{ layout: { type: "spring", stiffness: 220, damping: 25, mass: 1.3 }, default: { duration: 0.55, ease: [0.19, 1, 0.22, 1] } }}
+              />
+            )}
+          </div>
+
+          {/* Workout Schedule Tab */}
+          <div
+            onClick={() => handleNavClick("workout")}
+            className={`btn p-2 px-4 rounded-4xl cursor-pointer font-semibold relative select-none z-10 transition-colors duration-300 ${
+              type === "workout" ? "text-white" : "text-white/40 hover:text-white/80"
+            }`}
+          >
+            <motion.p 
+              className="relative block origin-center mix-blend-difference"
+              animate={{ 
+                scale: type === "workout" ? 1.02 : 1,
+                y: type === "workout" ? -0.5 : 0,
+                scaleX: type === "workout" ? [0.94, 1.06, 0.98, 1] : 1,
+                scaleY: type === "workout" ? [1.04, 0.96, 1.01, 1] : 1
+              }}
+              transition={{ default: { duration: 0.55, ease: [0.19, 1, 0.22, 1] } }}
+            >
+              Workout Schedule
+            </motion.p>
+            {type === "workout" && (
+              <motion.div
+                layoutId="liquidTabSelectionBubble"
+                className="absolute inset-0 z-0 rounded-4xl bg-linear-to-b from-white/16 to-white/3 border border-t-white/35 border-x-white/20 border-b-white/10 shadow-[0_8px_20px_-6px_rgba(255,255,255,0.14),inset_0_1px_1px_rgba(255,255,255,0.25),inset_0_-1px_8px_rgba(255,255,255,0.03)] backdrop-blur-[2px]"
+                animate={{ scaleX: [0.85, 1.15, 0.95, 1], scaleY: [1.1, 0.9, 1.05, 1] }}
+                transition={{ layout: { type: "spring", stiffness: 220, damping: 25, mass: 1.3 }, default: { duration: 0.55, ease: [0.19, 1, 0.22, 1] } }}
+              />
+            )}
+          </div>
+
+          {/* Analytics Tab */}
+          <div
+            onClick={() => handleNavClick("analytics")}
+            className={`btn p-2 px-4 rounded-4xl cursor-pointer font-semibold relative select-none z-10 transition-colors duration-300 ${
+              type === "analytics" ? "text-white" : "text-white/40 hover:text-white/80"
+            }`}
+          >
+            <motion.p 
+              className="relative block origin-center mix-blend-difference"
+              animate={{ 
+                scale: type === "analytics" ? 1.02 : 1,
+                y: type === "analytics" ? -0.5 : 0,
+                scaleX: type === "analytics" ? [0.94, 1.06, 0.98, 1] : 1,
+                scaleY: type === "analytics" ? [1.04, 0.96, 1.01, 1] : 1
+              }}
+              transition={{ default: { duration: 0.55, ease: [0.19, 1, 0.22, 1] } }}
+            >
+              Analytics
+            </motion.p>
+            {type === "analytics" && (
+              <motion.div
+                layoutId="liquidTabSelectionBubble"
+                className="absolute inset-0 z-0 rounded-4xl bg-linear-to-b from-white/16 to-white/3 border border-t-white/35 border-x-white/20 border-b-white/10 shadow-[0_8px_20px_-6px_rgba(255,255,255,0.14),inset_0_1px_1px_rgba(255,255,255,0.25),inset_0_-1px_8px_rgba(255,255,255,0.03)] backdrop-blur-[2px]"
+                animate={{ scaleX: [0.85, 1.15, 0.95, 1], scaleY: [1.1, 0.9, 1.05, 1] }}
+                transition={{ layout: { type: "spring", stiffness: 220, damping: 25, mass: 1.3 }, default: { duration: 0.55, ease: [0.19, 1, 0.22, 1] } }}
+              />
+            )}
+          </div>
+        </motion.div>
+      </LayoutGroup>
 
       {/* Main Content */}
       <AnimatePresence>
         {components[type]}
       </AnimatePresence>
-      {isModalOpen && <MemberInfoEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} userData={userData} />}
+      <AnimatePresence>
+        {isModalOpen && <MemberInfoEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} userData={userData} />}
+      </AnimatePresence>
     </div>
   );
 };

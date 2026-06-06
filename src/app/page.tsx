@@ -7,8 +7,8 @@ export default function Home() {
   return (
     <div className="flex flex-col pb-4 px-10 h-[calc(100vh-80px)] overflow-hidden" >
       {/* heading */}
-      <div className="flex flex-col my-3">
-        <h1 className="font-semibold text-3xl text-[#5e5f5f] ">Dashboard</h1>
+      <div className="flex flex-col my-8">
+        <h1 className="font-semibold text-3xl text-heading ">Dashboard</h1>
         <p className="text-[#999999]">Welcome back! Here's what's happening today.</p>
       </div>
       {/* stats card */}

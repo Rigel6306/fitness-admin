@@ -2,11 +2,12 @@
 import { updateDocument } from "@/util/updateDoc";
 import { useState } from "react";
 import z, { email } from "zod";
+import AnimatedContainer from "@/src/components/ui/animatedContainer";
 
 const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
 
     const [userInputs, setUserInputs] = useState({ ...userData.data })
-  
+
     const handleInputs = (field, value) => {
         if (field === 'status') {
             setUserInputs((prev) => ({ ...prev, [field]: value === "active" ? true : false }))
@@ -25,7 +26,7 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
         membershipNumber: z
             .string()
             .regex(/^\d{4}$/, "Membership number must be exactly 4 digits"),
-        gender:z.enum(["male",'female']), 
+        gender: z.enum(["male", 'female']),
         height: z
             .string()
             .regex(/^\d+$/, "Height must be a number")
@@ -47,7 +48,7 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
             "zumba + workout",
             "zumba + workouts + treadmil",
         ]),
-      
+
 
 
     })
@@ -55,8 +56,8 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
     const handleConfirm = async () => {
 
         const result = userSchema.safeParse(userInputs)
-        if(!result.success){
-            console.log("Validation Error at edit Modal:",result.error.issues[0].message)
+        if (!result.success) {
+            console.log("Validation Error at edit Modal:", result.error.issues[0].message)
             return
         }
 
@@ -79,8 +80,8 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
 
 
     return (
-        <div className="fixed inset-0 bg-gray-600/30 flex items-center justify-center z-50">
-            <div className="bg-[#000000]/50 w-[90vw] max-w-4xl h-[90vh] rounded-2xl p-6 shadow-lg flex flex-col backdrop-blur-xl overflow-hidden">
+        <div className="fixed inset-0 bg-gray-600/15 flex items-center justify-center z-150">
+            <AnimatedContainer className="bg-[#000000]/50 w-[90vw] max-w-4xl h-[90vh] rounded-2xl p-6 shadow-lg flex flex-col backdrop-blur-xl overflow-hidden">
 
                 <div className="heading flex justify-between py-3">
                     <div className="flex flex-col">
@@ -236,12 +237,16 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
                     <div className="flex flex-col gap-3">
                         <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl h-10 justify-between">
                             <label className="ms-2" htmlFor="gender">Gender</label>
-                            <select
-                                onChange={(e) => handleInputs("gender", e.target.value)}
-                                className="bg-[#7f818244] p-2 rounded-xl w-40" value={userInputs.gender} name="gender" id="gender"  >
-                                <option className="bg-gray-600" value="male">Male</option>
-                                <option className="bg-gray-600" value="female">Female</option>
-                            </select>
+
+                            <div className=" bg-[#7f818244] pe-2 rounded-xl  ">
+                                <select
+                                    onChange={(e) => handleInputs("gender", e.target.value)}
+                                    className="p-2 rounded-xl w-40" value={userInputs.gender} name="gender" id="gender"  >
+                                    <option className="bg-gray-600" value="male">Male</option>
+                                    <option className="bg-gray-600" value="female">Female</option>
+                                </select>
+                            </div>
+
                         </div>
 
                         <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl justify-between">
@@ -259,26 +264,33 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
 
                         <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl h-10 justify-between">
                             <label className="ms-2" htmlFor="membership">Membership</label>
-                            <select
-                                onChange={(e) => handleInputs("packageName", e.target.value)}
-                                className="bg-[#7f818244] p-2 rounded-xl w-70" value={userInputs.packageName} name="membership" id="membership"  >
-                                <option className="bg-gray-600" value="workouts only">Workouts Only</option>
-                                <option className="bg-gray-600" value="workouts + treadmill">Workouts + Treadmill</option>
-                                <option className="bg-gray-600" value="zumba only">Zumba Only</option>
-                                <option className="bg-gray-600" value="zumba + workouts">Zumba + Workouts</option>
-                                <option className="bg-gray-600" value="zumba + workouts + treadmil">Zumba + Workouts + Treadmil</option>
 
-                            </select>
+                            <div className=" bg-[#7f818244] pe-2 rounded-xl ">
+                                <select
+                                    onChange={(e) => handleInputs("packageName", e.target.value)}
+                                    className=" p-2 rounded-xl w-70" value={userInputs.packageName} name="membership" id="membership"  >
+                                    <option className="bg-gray-600" value="workouts only">Workouts Only</option>
+                                    <option className="bg-gray-600" value="workouts + treadmill">Workouts + Treadmill</option>
+                                    <option className="bg-gray-600" value="zumba only">Zumba Only</option>
+                                    <option className="bg-gray-600" value="zumba + workouts">Zumba + Workouts</option>
+                                    <option className="bg-gray-600" value="zumba + workouts + treadmil">Zumba + Workouts + Treadmil</option>
+
+                                </select>
+                            </div>
+
                         </div>
 
                         <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl h-10 justify-between">
                             <label className="ms-2" htmlFor="status">Status</label>
-                            <select
-                                onChange={(e) => handleInputs("status", e.target.value)}
-                                className="bg-[#7f818244] p-2 rounded-xl w-40" name="status" id="status"  >
-                                <option className="bg-gray-600" value="active">Active</option>
-                                <option className="bg-gray-600" value="inactive">Inactive</option>
-                            </select>
+                            <div className=" bg-[#7f818244] pe-2 rounded-xl  ">
+                                <select
+                                    onChange={(e) => handleInputs("status", e.target.value)}
+                                    className="p-2 rounded-xl w-40" name="status" id="status"  >
+                                    <option className="bg-gray-600" value="active">Active</option>
+                                    <option className="bg-gray-600" value="inactive">Inactive</option>
+                                </select>
+                            </div>
+
                         </div>
 
 
@@ -299,7 +311,7 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
                     </div>
                 </div>
 
-            </div>
+            </AnimatedContainer>
 
         </div>
 

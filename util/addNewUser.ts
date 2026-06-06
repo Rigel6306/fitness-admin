@@ -38,6 +38,8 @@ export const addNewUser = async (userData:any)=>{
 
     }catch(err){
 
+        throw new Error(err.message)
+
     }
 
 
