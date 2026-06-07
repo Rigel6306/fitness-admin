@@ -119,9 +119,9 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
           </div>
         </AnimatedContainer>
         {/* Active Status Card */}
-        <AnimatedContainer className={'flex items-center  justify-start p-4 gap-6 flex-1 rounded-2xl bg-black/53 relative shadow-md shadow-white/5 h-25'} >
+        <AnimatedContainer className={'flex items-center  justify-start p-4 gap-6 flex-1 rounded-2xl backdrop-blur-sm bg-black/30 relative shadow-md shadow-white/5 h-25'} >
           {/* Glassy Overlay */}
-        <LiquidOverlay/>
+    <LiquidOverlay/>
           <MdOutlineSportsGymnastics size={45} className="text-[#4cddbbb2]" />
           <div className="flex flex-col">
             <div className="heading text-xl font-semibold">
@@ -139,7 +139,7 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
         <AnimatedContainer className={'flex items-center justify-start p-4 gap-6 flex-1 rounded-2xl bg-white/3 backdrop-blur-md relative shadow-md shadow-white/5 h-25'} >
           {/* Glassy overlay */}
           <div
-            className={`absolute inset-0 z-0 rounded-2xl backdrop-blur-md transition-all duration-300 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.01)_30%,rgba(255,255,255,0.06)_100%)] border border-x-white/5 border-t-white/40 border-b-black/30 shadow-[0_12px_24px_-8px_rgba(0,0,0,0.5),inset_0_2px_3px_rgba(255,255,255,0.3),inset_0_-8px_12px_rgba(0,0,0,0.4),inset_0_0_0_1px_rgba(255,255,255,0.1)]`
+            className={`absolute inset-0 z-0 rounded-2xl  transition-all duration-300 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.01)_30%,rgba(255,255,255,0.06)_100%)] border border-x-white/5 border-t-white/40 border-b-black/30 shadow-[0_12px_24px_-8px_rgba(0,0,0,0.5),inset_0_2px_3px_rgba(255,255,255,0.3),inset_0_-8px_12px_rgba(0,0,0,0.4),inset_0_0_0_1px_rgba(255,255,255,0.1)]`
             }
           />
           <CgCalendarToday size={45} />

@@ -1,64 +1,104 @@
-
 const LiquidOverlay = () => {
-    return ( 
-
+    return (
         <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl select-none pointer-events-none">
-  
-  {/* Layer 1: Enhanced Backdrop Clarity & Base Radial Light Map */}
-  <div 
-    className="absolute inset-0 rounded-2xl backdrop-blur-2xl"
-    style={{
-      /* Pushed core transparency out further to 65% for maximum water-like clarity */
-      background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0) 65%, rgba(255,255,255,0.03) 85%, rgba(0,0,0,0.18) 100%)',
-      boxShadow: '0 20px 40px -16px rgba(0,0,0,0.65)'
-    }}
-  />
 
-  {/* Layer 2: Soft Curved Fluid Rim (Thick Water Meniscus) */}
-  <div 
-    className="absolute inset-0 rounded-2xl"
-    style={{
-      /* Multi-angle radial lights blend into the corners to eliminate straight lines */
-      backgroundImage: `
-        radial-gradient(circle at 15% 15%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 40%),
-        radial-gradient(circle at 85% 15%, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 40%),
-        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%)
-      `,
-      /* Advanced Fluid Shading Matrix:
-         - Inset 1: Deepened the blur radius (4px) of the top edge to make the rim look rounded and thick, not sharp.
-         - Inset 2: Softened the inner glare to expand smoothly into the top corners.
-         - Inset 3: A rich, curved water-pool shadow gathering smoothly at the bottom base.
-         - Inset 4: A highly transparent boundary stroke that cushions the hard card edges.
-      */
-      boxShadow: `
-        inset 0 2px 4px 0px rgba(255,255,255,0.55),
-        inset 0 10px 20px -5px rgba(255,255,255,0.25),
-        inset 0 -14px 24px -6px rgba(0,0,0,0.65),
-        inset 0 0 0 1px rgba(255,255,255,0.08)
-      `
-    }}
-  />
+            {/* Layer 1: Deepened base clarity + volumetric gel tint (slightly darker) */}
+            <div
+                className="absolute inset-0 rounded-2xl"
+                style={{
+                    // Reduced brightness: lower alpha on light tones, added a hint of dark
+                    background: `radial-gradient(circle at 50% 50%, 
+                        rgba(200, 220, 240, 0) 60%, 
+                        rgba(150, 180, 210, 0.04) 80%, 
+                        rgba(60, 90, 120, 0.15) 100%)`,
+                    boxShadow: '0 25px 45px -12px rgba(0,0,0,0.65)'  // darker outer shadow
+                }}
+            />
 
-  {/* Layer 3: Main Studio Glare Shield (Primary Curved Light Reflection) */}
-  <div 
-    className="absolute top-[3px] left-[4px] right-[4px] h-[42%] rounded-t-[18px] pointer-events-none mix-blend-overlay opacity-95"
-    style={{
-      /* Shifted to an elliptical radial gradient to mimic a real 3D glossy surface bend */
-      background: 'radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.15) 55%, rgba(255,255,255,0) 100%)',
-      borderTop: '1px solid rgba(255,255,255,0.35)'
-    }}
-  />
+            {/* Layer 2: Enhanced fluid meniscus (dimmed rim highlights, stronger bottom shadow) */}
+            <div
+                className="absolute inset-0 rounded-2xl"
+                style={{
+                    backgroundImage: `
+                        radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 55%),
+                        radial-gradient(ellipse at 85% 15%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 50%),
+                        radial-gradient(ellipse at 50% 5%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 70%)
+                    `,
+                    boxShadow: `
+                        inset 0 1px 2px 1px rgba(255,255,255,0.4),
+                        inset 0 4px 10px -4px rgba(255,255,255,0.2),
+                        inset 0 -8px 20px -8px rgba(0,0,0,0.75),
+                        inset 0 0 0 1px rgba(255,255,255,0.15),
+                        0 0 0 1px rgba(0,0,0,0.3),
+                        0 12px 28px -8px rgba(0,0,0,0.5)
+                    `,
+                }}
+            />
 
-  {/* Layer 4: NEW Secondary Low-Angle Environment Reflection */}
-  <div 
-    className="absolute bottom-[4px] left-[6px] right-[6px] h-[20%] rounded-b-[18px] pointer-events-none mix-blend-screen opacity-40"
-    style={{
-      /* Bottom crescent-shaped bounce reflection to make the bubble look fully spherical */
-      background: 'linear-gradient(to top, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 100%)'
-    }}
-  />
-</div>
-     );
+            {/* Layer 3: Main studio glare – reduced brightness */}
+            <div
+                className="absolute top-0.5 left-0.75 right-0.75 h-[45%] rounded-t-[20px] pointer-events-none mix-blend-overlay"
+                style={{
+                    background: 'radial-gradient(ellipse at 45% 0%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.15) 40%, rgba(255,255,255,0) 80%)',
+                    borderTop: '1px solid rgba(255,255,255,0.25)'
+                }}
+            />
+
+            {/* Layer 4: Secondary bounce reflection – softer */}
+            <div
+                className="absolute bottom-0.75 left-1.25 right-1.25 h-[22%] rounded-b-[20px] pointer-events-none mix-blend-screen"
+                style={{
+                    background: 'linear-gradient(to top, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.02) 70%, rgba(255,255,255,0) 100%)'
+                }}
+            />
+
+            {/* Layer 5: Gel core depth – cooler and slightly darker */}
+            <div
+                className="absolute inset-0 rounded-2xl pointer-events-none"
+                style={{
+                    background: `radial-gradient(ellipse at 30% 40%, 
+                        rgba(100, 130, 170, 0.1) 0%, 
+                        rgba(60, 80, 110, 0.05) 50%, 
+                        transparent 80%)`,
+                    mixBlendMode: 'soft-light'
+                }}
+            />
+
+            {/* Layer 6: Edge refraction glow – dimmed white, added dark inner rim */}
+            <div
+                className="absolute inset-0 rounded-2xl pointer-events-none"
+                style={{
+                    boxShadow: `inset 0 0 18px 6px rgba(0,0,0,0.2),
+                                inset 0 0 3px 1px rgba(255,255,255,0.25),
+                                0 0 0 1px rgba(0,0,0,0.2)`,
+                    borderRadius: 'inherit'
+                }}
+            />
+
+            {/* Layer 7: Micro‑specular shimmer – reduced opacity */}
+            <div
+                className="absolute top-0 left-0 w-full h-full rounded-2xl pointer-events-none opacity-20"
+                style={{
+                    background: `repeating-linear-gradient(
+                        105deg,
+                        rgba(255,255,255,0) 0%,
+                        rgba(255,255,255,0.08) 8%,
+                        rgba(255,255,255,0) 16%
+                    )`,
+                    backgroundSize: '200% 100%',
+                    mixBlendMode: 'overlay'
+                }}
+            />
+        </div>
+    );
 }
- 
+
+export const LiquidOverlayVarient1 = () => {
+    return (
+        <div
+            className={`absolute inset-0 z-0 rounded-2xl bg-linear-to-b from-white/1 to-black/2 border-t-white/30 border-b-white/5 border border-x-white/4 shadow-[0_8px_20px_-6px_$rgba(255,255,255,0.05) inset_0_1px_1px_rgba(255,255,255,0.15)] backdrop-blur-sm`}
+        />
+    )
+}
+
 export default LiquidOverlay;

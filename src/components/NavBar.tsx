@@ -16,8 +16,9 @@ const NavBar = () => {
     const activeIndex = navLinks.findIndex(link => link.href === pathname);
 
     return (
+        
         <nav className="flex sticky top-0 h-16 items-center backdrop-blur-md text-[#E4E4E4] bg-black/20 border-b border-white/5 shadow-lg justify-between px-10 z-50 antialiased">
-
+            
             <div className="heading text-lg font-semibold tracking-wider text-white/90 uppercase font-sans">
                 <h1>Superbody Gym</h1>
             </div>
@@ -66,6 +67,7 @@ const NavBar = () => {
                                 }}
                             >
                                 {link.label}
+                                
                             </motion.span>
 
                            
@@ -102,7 +104,9 @@ const NavBar = () => {
                                         }
                                     }}
                                 />
+                                
                             )}
+                            
                         </Link>
                     );
                 })}

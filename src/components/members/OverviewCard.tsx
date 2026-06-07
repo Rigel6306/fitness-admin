@@ -12,20 +12,22 @@ import { FaChalkboardUser } from "react-icons/fa6";
 import { MdOutlineSportsGymnastics } from "react-icons/md";
 import { motion } from 'motion/react'
 import AnimatedContainer from "../ui/animatedContainer";
+
 const OverviewCard = ({ userInfo }) => {
 
     console.log('At Overview Card', userInfo)
     return (
 
         <motion.div
-           
+
             className="flex flex-col mt-10 gap-10">
 
 
             <div className="cardContainer  flex  gap-10 h-full w-full  ">
                 <AnimatedContainer
+                    className="flex flex-col flex-1 rounded-2xl p-4 bg-black/10 backdrop-blur-md shadow-md shadow-white/5"
+                >
                    
-                    className="flex flex-col flex-1 rounded-2xl p-4 bg-black/10 backdrop-blur-md shadow-md shadow-white/5">
 
                     {/* user Info 1st card*/}
                     <div className="flex items-center mx-10 mt-4 gap-4">
@@ -71,10 +73,11 @@ const OverviewCard = ({ userInfo }) => {
                 </AnimatedContainer>
                 {/* User info 2nd card */}
                 <AnimatedContainer
-                initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
+                    initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
                     animate={{ opacity: 1, backdropFilter: "blur(12px)" }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                className="flex-col flex-1 rounded-2xl p-4 bg-black/10 backdrop-blur-md shadow-md shadow-white/5">
+                    className="flex-col flex-1 rounded-2xl p-4 bg-black/10 backdrop-blur-md shadow-md shadow-white/5">
+                     
                     <div className="flex items-center mx-10 mt-4 gap-4">
                         <BsGenderAmbiguous size={24} />
                         <div className="flex flex-col">
