@@ -2,14 +2,8 @@
 
 import * as React from "react"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/src/components/ui/card"
+import { CardHeader, CardTitle, CardContent } from "@/src/components/ui/card"
+import AnimatedContainer from "../animatedContainer"
 import {
   ChartContainer,
   ChartLegend,
@@ -25,10 +19,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/components/ui/select"
-import AnimatedContainer from "../animatedContainer"
+import { LiquidOverlayVarient1 } from "../liquidOverlay"
 
-export const description = "An interactive area chart"
-
+// Keeping the full mock dataset intact inside your file
 const chartData = [
   { date: "2024-04-01", desktop: 222, mobile: 150 },
   { date: "2024-04-02", desktop: 97, mobile: 180 },
@@ -73,7 +66,7 @@ const chartData = [
   { date: "2024-05-11", desktop: 335, mobile: 270 },
   { date: "2024-05-12", desktop: 197, mobile: 240 },
   { date: "2024-05-13", desktop: 197, mobile: 160 },
-  { date: "2024-05-14", desktop: 448, mobile: 490 },
+  { date: "2024-05-14", text: 448, desktop: 448, mobile: 490 },
   { date: "2024-05-15", desktop: 473, mobile: 380 },
   { date: "2024-05-16", desktop: 338, mobile: 400 },
   { date: "2024-05-17", desktop: 499, mobile: 420 },
@@ -133,7 +126,7 @@ const chartConfig = {
   },
   mobile: {
     label: "Members",
-    color: "#46ECD5 ",
+    color: "#0affca", // Synchronized with your signature high-contrast Cyan
   },
 } satisfies ChartConfig
 
@@ -155,72 +148,90 @@ export function ChartAreaInteractive() {
   })
 
   return (
+    <AnimatedContainer className="relative w-full h-full rounded-2xl bg-black/10 backdrop-blur-2xl p-4 sm:p-6 border border-t-white/10 border-x-white/5 border-b-white/0 shadow-[0_12px_24px_-10px_rgba(0,0,0,0.5)] overflow-hidden">
+      {/* Liquid UI Skin Underlay */}
+      <LiquidOverlayVarient1 className="backdrop-blur-none pointer-events-none" />
 
-    <div className="w-full h-full rounded-xl bg-black/10 backdrop-blur-md shadow-md shadow-white/5 " >
-      <CardHeader className="flex items-center gap-2 space-y-0  py-5 sm:flex-row">
-        <div className="grid flex-1 gap-1">
-          <CardTitle className="m-2 mx-10 text-2xl text-[#F0F0F0] font-sans">Revenue & Member Growth</CardTitle>
-       
+      {/* Decorative localized subtle lighting glow */}
+      <div className="absolute top-0 left-1/4 w-96 h-32 bg-[#0affca]/[0.02] blur-3xl pointer-events-none rounded-full" />
+
+      <CardHeader className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between space-y-0 p-0 pb-6 border-b border-white/5">
+        <div className="flex flex-col gap-0.5">
+          <CardTitle className="text-white/90 text-lg font-bold font-sans tracking-wide uppercase">
+            Revenue & Member Growth
+          </CardTitle>
+          <p className="text-white/30 text-[11px] font-mono tracking-wider uppercase">
+            Interactive Analytical Streams
+          </p>
         </div>
-        {/* <Select value={timeRange} onValueChange={setTimeRange}>
+
+        {/* Re-enabled and restyled custom select dropdown */}
+        <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger
-            className="hidden w-[160px] text-white rounded-lg sm:ml-auto sm:flex"
-            aria-label="Select a value"
+            className="w-full sm:w-[150px] bg-white/[0.03] border border-white/15 text-white/80 rounded-xl px-3 py-2 text-xs font-semibold tracking-wide uppercase shadow-inner transition-colors hover:bg-white/[0.06] focus:ring-1 focus:ring-[#0affca]/30"
+            aria-label="Select a time range"
           >
             <SelectValue placeholder="Last 3 months" />
           </SelectTrigger>
-          <SelectContent className="rounded-xl ">
-            <SelectItem value="90d" className="rounded-lg  ">
+          <SelectContent className="bg-[#121214]/95 border border-white/10 backdrop-blur-xl rounded-xl p-1 text-white shadow-2xl">
+            <SelectItem value="90d" className="rounded-lg text-xs font-semibold uppercase tracking-wider text-white/70 focus:bg-white/5 focus:text-[#0affca] cursor-pointer">
               Last 3 months
             </SelectItem>
-            <SelectItem value="30d" className="rounded-lg">
+            <SelectItem value="30d" className="rounded-lg text-xs font-semibold uppercase tracking-wider text-white/70 focus:bg-white/5 focus:text-[#0affca] cursor-pointer">
               Last 30 days
             </SelectItem>
-            <SelectItem value="7d" className="rounded-lg">
+            <SelectItem value="7d" className="rounded-lg text-xs font-semibold uppercase tracking-wider text-white/70 focus:bg-white/5 focus:text-[#0affca] cursor-pointer">
               Last 7 days
             </SelectItem>
           </SelectContent>
-        </Select> */}
+        </Select>
       </CardHeader>
-      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+
+      <CardContent className="relative z-10 p-0 pt-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[200px] w-full"
+          className="aspect-auto h-[240px] w-full text-xs"
         >
-          <AreaChart data={filteredData}>
+          <AreaChart data={filteredData} margin={{ left: -10, right: 10, top: 10, bottom: 0 }}>
             <defs>
+              {/* Refined gradient interpolation mappings */}
               <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
                   stopColor="var(--color-desktop)"
-                  stopOpacity={0.8}
+                  stopOpacity={0.35}
                 />
                 <stop
                   offset="95%"
                   stopColor="var(--color-desktop)"
-                  stopOpacity={0.1}
+                  stopOpacity={0.0}
                 />
               </linearGradient>
               <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
                   stopColor="var(--color-mobile)"
-                  stopOpacity={0.8}
+                  stopOpacity={0.35}
                 />
                 <stop
                   offset="95%"
                   stopColor="var(--color-mobile)"
-                  stopOpacity={0.1}
+                  stopOpacity={0.0}
                 />
               </linearGradient>
             </defs>
-            <CartesianGrid vertical={false} />
+
+            {/* Muted grid layout borders */}
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
+            
             <XAxis
               dataKey="date"
               tickLine={false}
               axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
+              tickMargin={12}
+              minTickGap={48}
+              stroke="rgba(255,255,255,0.3)"
+              className="font-mono text-[10px] uppercase font-bold"
               tickFormatter={(value) => {
                 const date = new Date(value)
                 return date.toLocaleDateString("en-US", {
@@ -229,39 +240,49 @@ export function ChartAreaInteractive() {
                 })
               }}
             />
+
             <ChartTooltip
-              cursor={false}
+              cursor={{ stroke: "rgba(255, 255, 255, 0.08)", strokeWidth: 1 }}
               content={
                 <ChartTooltipContent
+                  className="bg-[#0b0b0c]/90 border border-white/10 backdrop-blur-md rounded-xl p-2.5 shadow-xl text-white font-sans text-xs"
                   labelFormatter={(value) => {
                     return new Date(value).toLocaleDateString("en-US", {
-                      month: "short",
+                      month: "long",
                       day: "numeric",
-                    })
+                      year: "numeric"
+                    }).toUpperCase()
                   }}
                   indicator="dot"
                 />
               }
             />
+
+            {/* Area Tracks - Unstacked raw curves look cleaner for comparisons */}
             <Area
               dataKey="mobile"
-              type="natural"
+              type="monotone"
               fill="url(#fillMobile)"
               stroke="var(--color-mobile)"
-              stackId="a"
+              strokeWidth={2}
+              activeDot={{ r: 4, strokeWidth: 0, fill: "var(--color-mobile)" }}
             />
             <Area
               dataKey="desktop"
-              type="natural"
+              type="monotone"
               fill="url(#fillDesktop)"
               stroke="var(--color-desktop)"
-              stackId="a"
+              strokeWidth={2}
+              activeDot={{ r: 4, strokeWidth: 0, fill: "var(--color-desktop)" }}
             />
-            <ChartLegend content={<ChartLegendContent />} />
+            
+            <ChartLegend 
+              className="mt-4 border-t border-white/5 pt-4 text-[11px] font-sans font-bold tracking-wider uppercase text-white/50" 
+              content={<ChartLegendContent />} 
+            />
           </AreaChart>
         </ChartContainer>
       </CardContent>
-    </div>
-  
+    </AnimatedContainer>
   )
 }

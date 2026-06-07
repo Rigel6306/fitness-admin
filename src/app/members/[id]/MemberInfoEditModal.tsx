@@ -1,11 +1,11 @@
 'use client'
 import { updateDocument } from "@/util/updateDoc";
-import { useState } from "react";
+import { useState, useId } from "react";
 import z, { email } from "zod";
 import AnimatedContainer from "@/src/components/ui/animatedContainer";
 
 const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
-
+    const baseId = useId();
     const [userInputs, setUserInputs] = useState({ ...userData.data })
 
     const handleInputs = (field, value) => {
@@ -48,21 +48,17 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
             "zumba + workout",
             "zumba + workouts + treadmil",
         ]),
-
-
-
     })
 
     const handleConfirm = async () => {
-
         const result = userSchema.safeParse(userInputs)
         if (!result.success) {
             console.log("Validation Error at edit Modal:", result.error.issues[0].message)
+            alert(`Validation Error: ${result.error.issues[0].message}`)
             return
         }
 
         const confirmed = window.confirm("Do you want to CONFIRM the changes?");
-
         if (!confirmed) {
             return;
         }
@@ -78,243 +74,285 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
     };
     console.log("At EditInfoModal", userInputs)
 
+    if (!isModalOpen) return null;
+
+    // Autofill aesthetic protector parameters
+    const autofillOverride = {
+        WebkitBoxShadow: "0 0 0px 1000px transparent inset",
+        WebkitTextFillColor: "rgba(255, 255, 255, 0.8)",
+        transition: "background-color 5000s ease-in-out 0s",
+    };
 
     return (
-        <div className="fixed inset-0 bg-gray-600/15 flex items-center justify-center z-150">
-            <AnimatedContainer className="bg-[#000000]/50 w-[90vw] max-w-4xl h-[90vh] rounded-2xl p-6 shadow-lg flex flex-col backdrop-blur-xl overflow-hidden">
+        <div className="fixed inset-0  backdrop-blur-md flex items-center justify-center z-[150] p-4 select-none animate-fadeIn">
+            <AnimatedContainer 
+                duration={0.3}
+                className="bg-black/60 relative w-[90vw] max-w-4xl h-[90vh] rounded-2xl p-6 md:p-8 flex flex-col backdrop-blur-xl overflow-hidden border border-t-white/10 border-x-white/5 border-b-white/0 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.7)]"
+            >
+                {/* Accent Background Highlights */}
+                <div className="absolute -top-12 -right-12 w-48 h-48 bg-[#0affca]/[0.02] blur-3xl rounded-full pointer-events-none" />
 
-                <div className="heading flex justify-between py-3">
-                    <div className="flex flex-col">
-                        <p className="text-heading text-xl">Edit member information</p>
-                        <p className="text-sub">Keep member details accurate and up to date</p>
-
+                {/* Heading Block Section */}
+                <div className="relative z-10 flex justify-between items-start border-b border-white/5 pb-4 shrink-0">
+                    <div className="flex flex-col gap-0.5">
+                        <h2 className="text-xl font-bold tracking-wide uppercase text-white/90">
+                            Edit Member Information
+                        </h2>
+                        <p className="text-white/30 text-[10px] font-mono tracking-widest uppercase mt-0.5">
+                            Management // Keep member parameters accurate and synchronized
+                        </p>
                     </div>
-
-                    <p className=" cursor-pointer" onClick={() => setIsModalOpen(false)}>✕</p>
+                    <button 
+                        type="button"
+                        className="text-white/40 hover:text-white/90 text-xs font-mono tracking-wider uppercase bg-white/[0.03] border border-white/5 px-2.5 py-1.5 rounded-xl cursor-pointer transition-all duration-200"
+                        onClick={() => setIsModalOpen(false)}
+                    >
+                        ✕
+                    </button>
                 </div>
 
-                {/* Curent Info Section */}
-
-                <div className="flex justify-between mt-4 bg-[#00000000] backdrop-blur-2xl rounded-2xl py-3">
-
-                    <div className="flex flex-col">
-
-                        <div className="flex flex-1 items-center mx-10 mt-2 ">
-
-                            <div className="flex gap-2 ">
-                                <p className="text-heading text-sm">User Name :</p>
-                                <p className="text-sub text-sm">{userInputs.name}</p>
+                {/* Scrollable Work Area Wrapper */}
+                <div className="relative z-10 flex-1 flex flex-col gap-6 overflow-y-auto pr-1 py-4 scrollbar-thin">
+                    
+                    {/* Current Meta Blueprint Display Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-xl bg-white/[0.01] border border-white/5 shrink-0">
+                        <div className="flex flex-col gap-2">
+                            <div className="flex gap-2 items-baseline text-xs">
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-36">User Name :</span>
+                                <span className="font-semibold text-white/80 uppercase tracking-wide">{userInputs.name}</span>
+                            </div>
+                            <div className="flex gap-2 items-baseline text-xs">
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-36">Age Allocation :</span>
+                                <span className="font-semibold text-white/80">{userInputs.age} Years</span>
+                            </div>
+                            <div className="flex gap-2 items-baseline text-xs">
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-36">E-mail Routing :</span>
+                                <span className="font-mono text-[11px] text-white/60 lowercase">{userInputs.email}</span>
+                            </div>
+                            <div className="flex gap-2 items-baseline text-xs">
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-36">Contact Line :</span>
+                                <span className="font-mono text-[11px] text-white/80 tracking-wide">{userInputs.contactNumber}</span>
+                            </div>
+                            <div className="flex gap-2 items-baseline text-xs">
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-36">Membership ID :</span>
+                                <span className="font-mono text-[11px] text-[#0affca] font-bold">#{userInputs.membershipNumber}</span>
                             </div>
                         </div>
 
-                        <div className="flex mx-10 flex-1  items-center mt-2">
-
-                            <div className="flex gap-2  ">
-                                <p className="text-heading text-sm">Age :</p>
-                                <p className="text-sub text-sm">{userInputs.age}</p>
+                        <div className="flex flex-col gap-2 border-t md:border-t-0 md:border-l border-white/5 pt-2 md:pt-0 md:pl-4">
+                            <div className="flex gap-2 items-baseline text-xs">
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-32">Gender Vector :</span>
+                                <span className="font-semibold text-white/80 uppercase tracking-wider">{userInputs.gender}</span>
+                            </div>
+                            <div className="flex gap-2 items-baseline text-xs">
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-32">Height Metric :</span>
+                                <span className="font-semibold text-white/80 font-mono">{userInputs.height} CM</span>
+                            </div>
+                            <div className="flex gap-2 items-baseline text-xs">
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-32">Weight Metric :</span>
+                                <span className="font-semibold text-white/80 font-mono">{userInputs.weight} KG</span>
+                            </div>
+                            <div className="flex gap-2 items-baseline text-xs">
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-32">Package Module :</span>
+                                <span className="font-semibold text-white/80 uppercase text-[11px] tracking-wide text-white/70">{userInputs.packageName}</span>
+                            </div>
+                            <div className="flex gap-2 items-baseline text-xs">
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-32">Roster Status :</span>
+                                <span className={`px-2 py-0.5 rounded text-[9px] font-bold font-mono uppercase tracking-widest ${userInputs.status ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-red-500/10 text-red-400 border border-red-500/20"}`}>
+                                    {userInputs.status ? "Active" : "Inactive"}
+                                </span>
                             </div>
                         </div>
-
-                        <div className="flex mx-10 flex-1  items-center mt-2 ">
-
-                            <div className="flex gap-2  ">
-                                <p className="text-heading text-sm">E-mail :</p>
-                                <p className="text-sub text-sm">{userInputs.email}</p>
-                            </div>
-                        </div>
-
-                        <div className="flex mx-10 flex-1  items-center mt-2 ">
-
-                            <div className="flex gap-2 ">
-                                <p className="text-heading text-sm">Contact Number :</p>
-                                <p className="text-sub text-sm">{userInputs.contactNumber}</p>
-                            </div>
-                        </div>
-                        <div className="flex mx-10  flex-1 items-center mt-2 ">
-
-                            <div className="flex gap-2  ">
-                                <p className="text-heading text-sm">Membership Number :</p>
-                                <p className="text-sub text-sm">{userInputs.membershipNumber}</p>
-                            </div>
-                        </div>
-
-
-
                     </div>
 
+                    {/* Interactive Mutator Input System Layout */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                        
+                        {/* Left Column Fields */}
+                        <div className="flex flex-col gap-4">
+                            {/* Input Field - Name */}
+                            <div className="flex flex-col gap-1.5">
+                                <label htmlFor={`${baseId}-name`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">User Name</label>
+                                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
+                                    <input 
+                                        id={`${baseId}-name`}
+                                        type="text" 
+                                        value={userInputs.name}
+                                        onChange={(e) => handleInputs("name", e.target.value)}
+                                        className="absolute inset-0 w-full h-full px-3 text-white/80 bg-transparent border-none outline-none text-xs font-semibold tracking-wide uppercase transition-colors duration-300"
+                                        style={autofillOverride}
+                                    />
+                                </div>
+                            </div>
 
+                            {/* Input Field - Age */}
+                            <div className="flex flex-col gap-1.5">
+                                <label htmlFor={`${baseId}-age`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Age Allocation</label>
+                                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
+                                    <input 
+                                        id={`${baseId}-age`}
+                                        type="number" 
+                                        value={userInputs.age}
+                                        onChange={(e) => handleInputs("age", e.target.value)}
+                                        className="absolute inset-0 w-full h-full px-3 text-white/80 bg-transparent border-none outline-none text-xs font-semibold font-mono tracking-wide transition-colors duration-300"
+                                        style={autofillOverride}
+                                    />
+                                </div>
+                            </div>
 
-                    <div className="flex-col">
+                            {/* Input Field - Email (Readonly) */}
+                            <div className="flex flex-col gap-1.5 opacity-60 select-none cursor-not-allowed">
+                                <label htmlFor={`${baseId}-email`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/20">E-mail Routing (Locked)</label>
+                                <div className="relative flex items-center h-10 bg-white/[0.01] rounded-xl border border-white/5 cursor-not-allowed">
+                                    <input 
+                                        id={`${baseId}-email`}
+                                        type="text" 
+                                        readOnly
+                                        value={userInputs.email}
+                                        className="absolute inset-0 w-full h-full px-3 text-white/40 bg-transparent border-none outline-none text-xs font-mono lowercase cursor-not-allowed"
+                                        style={autofillOverride}
+                                    />
+                                </div>
+                            </div>
 
-                        <div className="flex  min-w-[320] items-center mx-10 mt-2 ">
+                            {/* Input Field - Contact */}
+                            <div className="flex flex-col gap-1.5">
+                                <label htmlFor={`${baseId}-contact`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Contact Number</label>
+                                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
+                                    <input 
+                                        id={`${baseId}-contact`}
+                                        type="tel" 
+                                        value={userInputs.contactNumber}
+                                        onChange={(e) => handleInputs("contactNumber", e.target.value)}
+                                        className="absolute inset-0 w-full h-full px-3 text-white/80 bg-transparent border-none outline-none text-xs font-semibold font-mono tracking-wide transition-colors duration-300"
+                                        style={autofillOverride}
+                                    />
+                                </div>
+                            </div>
 
-                            <div className="flex gap-2 ">
-                                <p className="text-heading text-sm">Gender :</p>
-                                <p className="text-sub text-sm">{userInputs.gender}</p>
+                            {/* Input Field - Membership Number */}
+                            <div className="flex flex-col gap-1.5">
+                                <label htmlFor={`${baseId}-memNum`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Membership Code</label>
+                                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
+                                    <input 
+                                        id={`${baseId}-memNum`}
+                                        type="text" 
+                                        value={userInputs.membershipNumber}
+                                        onChange={(e) => handleInputs("membershipNumber", e.target.value)}
+                                        className="absolute inset-0 w-full h-full px-3 text-white/80 bg-transparent border-none outline-none text-xs font-bold font-mono tracking-wider transition-colors duration-300"
+                                        style={autofillOverride}
+                                    />
+                                </div>
                             </div>
                         </div>
 
-                        <div className="flex flex-1 mx-10  items-center mt-2 ">
+                        {/* Right Column Fields */}
+                        <div className="flex flex-col gap-4">
+                            {/* Input Selector - Gender */}
+                            <div className="flex flex-col gap-1.5">
+                                <label htmlFor={`${baseId}-gender`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Gender Identity</label>
+                                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300 px-2">
+                                    <select
+                                        id={`${baseId}-gender`}
+                                        value={userInputs.gender}
+                                        onChange={(e) => handleInputs("gender", e.target.value)}
+                                        className="w-full bg-transparent text-white/80 text-xs font-semibold tracking-wide uppercase outline-none border-none cursor-pointer p-1"
+                                    >
+                                        <option className="bg-[#0b0b0c] text-white/80" value="male">Male</option>
+                                        <option className="bg-[#0b0b0c] text-white/80" value="female">Female</option>
+                                    </select>
+                                </div>
+                            </div>
 
+                            {/* Input Field - Height */}
+                            <div className="flex flex-col gap-1.5">
+                                <label htmlFor={`${baseId}-height`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Height (CM)</label>
+                                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
+                                    <input 
+                                        id={`${baseId}-height`}
+                                        type="text" 
+                                        value={userInputs.height}
+                                        onChange={(e) => handleInputs("height", e.target.value)}
+                                        className="absolute inset-0 w-full h-full px-3 text-white/80 bg-transparent border-none outline-none text-xs font-semibold font-mono tracking-wide transition-colors duration-300"
+                                        style={autofillOverride}
+                                    />
+                                </div>
+                            </div>
 
-                            <div className="flex gap-2  ">
-                                <p className="text-heading text-sm">Height :</p>
-                                <p className="text-sub text-sm">{userInputs.height} CM</p>
+                            {/* Input Field - Weight */}
+                            <div className="flex flex-col gap-1.5">
+                                <label htmlFor={`${baseId}-weight`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Weight (KG)</label>
+                                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
+                                    <input 
+                                        id={`${baseId}-weight`}
+                                        type="text" 
+                                        value={userInputs.weight}
+                                        onChange={(e) => handleInputs("weight", e.target.value)}
+                                        className="absolute inset-0 w-full h-full px-3 text-white/80 bg-transparent border-none outline-none text-xs font-semibold font-mono tracking-wide transition-colors duration-300"
+                                        style={autofillOverride}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Input Selector - Membership Package */}
+                            <div className="flex flex-col gap-1.5">
+                                <label htmlFor={`${baseId}-package`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Subscription Package Matrix</label>
+                                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300 px-2">
+                                    <select
+                                        id={`${baseId}-package`}
+                                        value={userInputs.packageName}
+                                        onChange={(e) => handleInputs("packageName", e.target.value)}
+                                        className="w-full bg-transparent text-white/80 text-xs font-semibold tracking-wide uppercase outline-none border-none cursor-pointer p-1"
+                                    >
+                                        <option className="bg-[#0b0b0c] text-white/80" value="workouts only">Workouts Only</option>
+                                        <option className="bg-[#0b0b0c] text-white/80" value="workouts + treadmill">Workouts + Treadmill</option>
+                                        <option className="bg-[#0b0b0c] text-white/80" value="zumba only">Zumba Only</option>
+                                        <option className="bg-[#0b0b0c] text-white/80" value="zumba + workouts">Zumba + Workouts</option>
+                                        <option className="bg-[#0b0b0c] text-white/80" value="zumba + workouts + treadmil">Zumba + Workouts + Treadmil</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* Input Selector - Status */}
+                            <div className="flex flex-col gap-1.5">
+                                <label htmlFor={`${baseId}-status`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Deployment Status</label>
+                                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300 px-2">
+                                    <select
+                                        id={`${baseId}-status`}
+                                        value={userInputs.status ? "active" : "inactive"}
+                                        onChange={(e) => handleInputs("status", e.target.value)}
+                                        className="w-full bg-transparent text-white/80 text-xs font-semibold tracking-wide uppercase outline-none border-none cursor-pointer p-1"
+                                    >
+                                        <option className="bg-[#0b0b0c] text-emerald-400 font-mono" value="active">Active System</option>
+                                        <option className="bg-[#0b0b0c] text-red-400 font-mono" value="inactive">Inactive Standby</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-
-                        <div className="flex flex-1 mx-10  items-center mt-2 ">
-
-                            <div className="flex gap-2 ">
-                                <p className="text-heading text-sm">Weight :</p>
-                                <p className="text-sub text-sm">{userInputs.weight} KG</p>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-1 mx-10  items-center mt-2 ">
-
-                            <div className="flex gap-2 ">
-                                <p className="text-heading text-sm">Membership :</p>
-                                <p className="text-sub text-sm">{userInputs.packageName}</p>
-                            </div>
-                        </div>
-                        <div className="flex flex-1 mx-10  items-center mt-2 ">
-
-                            <div className="flex gap-2 ">
-                                <p className="text-heading text-sm">Status :</p>
-                                <p className="text-sub text-sm">{`${userInputs.status ? "Active" : "Inactive"}`}</p>
-                            </div>
-                        </div>
-
 
                     </div>
-
-
                 </div>
 
-                {/* Input Fields Section */}
-
-                <div className="flex mt-4 justify-between flex-1 items-center">
-                    <div className="flex flex-col gap-3">
-                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl justify-between">
-                            <label className="ms-2" htmlFor="name">User Name</label>
-                            <input onChange={(e) => handleInputs("name", e.target.value)}
-                                className="bg-[#7f818244]  p-2 rounded-xl" type="text" name="name" id="name" value={userInputs.name} />
-                        </div>
-
-                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl justify-between">
-                            <label className="ms-2 " htmlFor="age">Age</label>
-                            <input
-                                onChange={(e) => handleInputs("age", e.target.value)}
-                                className="bg-[#7f818244] p-2 rounded-xl max-w-40"
-                                type="number" name="age" id="age" value={userInputs.age} />
-                        </div>
-
-                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl justify-between">
-                            <label className="ms-2" htmlFor="email">E-mail</label>
-                            <input
-                                // onChange={(e) => handleInputs("email", e.target.value)} keep as readonly coz changing the email may cause accidential problems 
-                                readOnly
-                                className="bg-[#7f818244] p-2 rounded-xl" type="text" name="email" id="email" value={userInputs.email} />
-                        </div>
-
-                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl justify-between">
-                            <label className="ms-2" htmlFor="pno">Contact Number</label>
-                            <input
-                                onChange={(e) => handleInputs("contactNumber", e.target.value)}
-                                className="bg-[#7f818244] p-2 rounded-xl" type="tel" name="pno" id="pno"
-                                value={userInputs.contactNumber} />
-                        </div>
-
-                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl justify-between">
-                            <label className="ms-2" htmlFor="membershipNumber">Membership Number</label>
-                            <input
-                                onChange={(e) => handleInputs("membershipNumber", e.target.value)}
-                                className="bg-[#7f818244] p-2 rounded-xl" type="text" name="membershipNumber" id="membershipNumber" value={userInputs.membershipNumber} />
-                        </div>
-
-                    </div>
-                    <div className="flex flex-col gap-3">
-                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl h-10 justify-between">
-                            <label className="ms-2" htmlFor="gender">Gender</label>
-
-                            <div className=" bg-[#7f818244] pe-2 rounded-xl  ">
-                                <select
-                                    onChange={(e) => handleInputs("gender", e.target.value)}
-                                    className="p-2 rounded-xl w-40" value={userInputs.gender} name="gender" id="gender"  >
-                                    <option className="bg-gray-600" value="male">Male</option>
-                                    <option className="bg-gray-600" value="female">Female</option>
-                                </select>
-                            </div>
-
-                        </div>
-
-                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl justify-between">
-                            <label className="ms-2" htmlFor="height">Height (cm) </label>
-                            <input
-                                onChange={(e) => handleInputs("height", e.target.value)}
-                                className="bg-[#7f818244] p-2 rounded-xl" type="text" name="height" id="height" value={userInputs.height} />
-                        </div>
-                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl justify-between">
-                            <label className="ms-2" htmlFor="weight">Weight (kg) </label>
-                            <input
-                                onChange={(e) => handleInputs("weight", e.target.value)}
-                                className="bg-[#7f818244] p-2 rounded-xl" type="text" name="weight" id="weight" value={userInputs.weight} />
-                        </div>
-
-                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl h-10 justify-between">
-                            <label className="ms-2" htmlFor="membership">Membership</label>
-
-                            <div className=" bg-[#7f818244] pe-2 rounded-xl ">
-                                <select
-                                    onChange={(e) => handleInputs("packageName", e.target.value)}
-                                    className=" p-2 rounded-xl w-70" value={userInputs.packageName} name="membership" id="membership"  >
-                                    <option className="bg-gray-600" value="workouts only">Workouts Only</option>
-                                    <option className="bg-gray-600" value="workouts + treadmill">Workouts + Treadmill</option>
-                                    <option className="bg-gray-600" value="zumba only">Zumba Only</option>
-                                    <option className="bg-gray-600" value="zumba + workouts">Zumba + Workouts</option>
-                                    <option className="bg-gray-600" value="zumba + workouts + treadmil">Zumba + Workouts + Treadmil</option>
-
-                                </select>
-                            </div>
-
-                        </div>
-
-                        <div className="flex items-center gap-2 bg-[#2c2e3144] rounded-2xl h-10 justify-between">
-                            <label className="ms-2" htmlFor="status">Status</label>
-                            <div className=" bg-[#7f818244] pe-2 rounded-xl  ">
-                                <select
-                                    onChange={(e) => handleInputs("status", e.target.value)}
-                                    className="p-2 rounded-xl w-40" name="status" id="status"  >
-                                    <option className="bg-gray-600" value="active">Active</option>
-                                    <option className="bg-gray-600" value="inactive">Inactive</option>
-                                </select>
-                            </div>
-
-                        </div>
-
-
-                    </div>
-                </div>
-
-                {/* Action Btns */}
-                <div className="flex mt-4 justify-end gap-4">
-                    <div
+                {/* Bottom Trigger Controls Actions Footer */}
+                <div className="relative z-10 flex mt-2 justify-end gap-3 border-t border-white/5 pt-4 shrink-0">
+                    <button
+                        type="button"
                         onClick={handleConfirm}
-                        className="flex p-2 font-semibold bg-[#76787a44] w-20 items-center justify-center rounded-xl cursor-pointer hover:bg-[#c6ced588]">
-                        <p>Confirm</p>
-                    </div>
-                    <div
-                        onClick={() => { setIsModalOpen(false) }}
-                        className="flex p-2 font-semibold bg-[#af002fdc] w-20 items-center justify-center rounded-xl cursor-pointer hover:bg-[#f20535fa]">
-                        <p>Cancle</p>
-                    </div>
+                        className="h-10 px-6 rounded-xl text-xs font-bold tracking-wider uppercase text-black bg-[#0ae2ff7a] border border-[#0affca]/20 hover:bg-[#0ae2ffad] shadow-[0_4px_12px_rgba(10,255,202,0.2)] active:scale-95 transition-all duration-250 cursor-pointer"
+                    >
+                        Commit Changes
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setIsModalOpen(false)}
+                        className="h-10 px-5 rounded-xl text-xs font-bold tracking-wider uppercase text-white/50 bg-white/[0.02] border border-white/5 hover:bg-white/[0.06] hover:text-white/80 transition-all duration-200 cursor-pointer"
+                    >
+                        Cancel
+                    </button>
                 </div>
 
             </AnimatedContainer>
-
         </div>
-
     );
 }
 

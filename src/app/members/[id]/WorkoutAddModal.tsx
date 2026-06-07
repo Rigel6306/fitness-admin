@@ -1,7 +1,6 @@
 'use client'
 import { CustomTabsWithTooltips } from "@/src/components/ui/tabsCard";
-import { error } from "console";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useId } from "react";
 import { z } from 'zod'
 import { addScheduleDoc } from "@/util/addSchedule";
 import { updateSchedule } from "@/util/updateSchedule";
@@ -14,6 +13,7 @@ import { Ripple } from "@/src/components/ui/ripple";
 import { AnimatePresence, LayoutGroup } from "motion/react";
 import AnimatedContainer from "@/src/components/ui/animatedContainer";
 import { LiquidOverlayVarient1 } from "@/src/components/ui/liquidOverlay";
+
 type Exercise = {
   id: number;
   name: string;
@@ -21,7 +21,6 @@ type Exercise = {
 };
 
 type WorkoutDay = {
-
   day: number;
   schedule: Exercise[];
 };
@@ -34,7 +33,6 @@ type Props = {
   editingSchedule?: any;
 };
 
-
 type workoutPlanInfo = {
   title: string,
   frequency: string,
@@ -42,16 +40,15 @@ type workoutPlanInfo = {
   workouts: WorkoutDay[],
   duration: string,
   focus: string[]
-
 }
 
 const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editingSchedule }: Props) => {
+  const baseId = useId();
   const [validationError, setValidationError] = useState<string | undefined>()
   const [workoutDayList, setWorkoutDayList] = useState<WorkoutDay[]>([]);
   const [mode, setMode] = useState(false)
   const [aiSuggession, setAiSuggession] = useState(null)
   const [isAiLoading, setIsAiLoading] = useState(false)
-
 
   const [workoutPlanInfo, setWorkoutPlanInfo] = useState<workoutPlanInfo>({
     title: '',
@@ -62,7 +59,6 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
     workouts: []
   })
   console.log("Ai suggesions State at Workouts add Modal", workoutPlanInfo)
-
 
   const [focusList, setFocusList] = useState([
     { name: 'Shoulders', selected: false },
@@ -78,7 +74,6 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
 
   console.log("At Workouts Add Modal: ", userData)
 
-
   // Initialize form when editing a schedule
   useEffect(() => {
     if (editingSchedule) {
@@ -92,7 +87,6 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
       });
       setWorkoutDayList(editingSchedule.workouts || []);
 
-      // Update focus list with selected items
       setFocusList(prev =>
         prev.map(focus => ({
           ...focus,
@@ -128,12 +122,10 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
   const handleCancle = () => {
     setMode(false)
     setIsModalOpen(false)
-
   }
 
   if (!isModalOpen) return null;
 
-  // Toggle focus area selection
   const handleFocusSelect = (index: number) => {
     setFocusList(prev => {
       const newList = [...prev];
@@ -142,13 +134,13 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
     });
   };
 
-  // Add a new workout day
   const handleAddDay = () => {
     setWorkoutDayList(prev => [
       ...prev,
       { day: prev.length + 1, schedule: [] }
     ] as WorkoutDay[]);
   };
+
   const handleScheduleTitle = (field: string, value: string) => {
     setWorkoutPlanInfo(prev => ({ ...prev, [field]: value }))
   }
@@ -156,7 +148,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
   const handleRemoveDay = (index: number) => {
     setWorkoutDayList(prev => prev.filter((item, i) => (i !== index)))
   }
-  // Add a new exercise to a specific day (fixed double-entry issue)
+
   const handleAddExercise = (dayIndex: number) => {
     setWorkoutDayList(prev =>
       prev.map((day, i) => {
@@ -185,7 +177,6 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
     );
   };
 
-  // Update exercise name or reps
   const handleExerciseChange = (
     dayIndex: number,
     exerciseIndex: number,
@@ -226,9 +217,6 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
     focus: z.array(z.string()).min(1, "please Add Focus Areas to the schedule")
   })
 
-
-
-  // Confirm Logic
   const handleConfirm = async () => {
     const plan = {
       ...workoutPlanInfo,
@@ -242,13 +230,11 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
       setValidationError(result.error.issues[0].message)
       return;
     } else {
-
       setValidationError('')
     }
 
     console.log("Valid plan:", result.data);
 
-    // Handle edit vs add
     if (editingSchedule?.id) {
       await updateSchedule(userId, editingSchedule.id, plan);
     } else {
@@ -257,82 +243,133 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
 
     setIsModalOpen(false)
     setMode(false)
-
   };
 
   console.log("Workout Plan Info at Workouts Add MOdal", workoutPlanInfo)
 
+  // Style helper snippet injected directly into standard input wrappers to safely prevent browser autofill styling corruption
+  const autofillOverride = {
+    WebkitBoxShadow: "0 0 0px 1000px transparent inset",
+    WebkitTextFillColor: "rgba(255, 255, 255, 0.8)",
+    transition: "background-color 5000s ease-in-out 0s",
+  };
+
   return (
     <LayoutGroup>
-      <div className="fixed inset-0 bg-gray-600/30 flex items-center justify-center z-150 gap-2">
+      <div className="fixed inset-0 backdrop-blur-md flex items-center justify-center z-150 gap-2">
         <AnimatedContainer
           duration={0.3}
-          className="bg-[#000000]/50 relative w-[90vw] max-w-4xl h-[90vh] rounded-2xl p-6 flex flex-col backdrop-blur-xl overflow-hidden  border-t-white/30 border-b-white/5 border border-x-white/4 shadow-[0_8px_20px_-6px_rgba(255,255,255,0.05),inset_0_1px_1px_rgba(255,255,255,0.15)]">
+          className="bg-black/80 backdrop-blur-3xl relative w-[90vw] max-w-4xl h-[90vh] rounded-2xl p-6 flex flex-col overflow-hidden  border-t-white/30 border-b-white/5 border border-x-white/4 shadow-[0_8px_20px_-6px_rgba(255,255,255,0.05),inset_0_1px_1px_rgba(255,255,255,0.15)]">
 
       
 
           {isAiLoading && <LightRays color="#4fefcc5d" />}
 
-
           {/* Header */}
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <p className="text-heading text-lg mt-2">{editingSchedule?.id ? "Edit Workout Schedule" : "Add Workout Schedule"}</p>
-              <p className="text-sub text-sm">{editingSchedule?.id ? "Update your workout program" : "Create a comprehensive workout program"}</p>
+          <div className="relative z-10 flex justify-between items-start border-b border-white/5 pb-4 shrink-0">
+            <div className="flex flex-col gap-0.5">
+              <h2 className="text-xl font-bold tracking-wide uppercase text-white/90">
+                {editingSchedule?.id ? "Edit Workout Schedule" : "Add Workout Schedule"}
+              </h2>
+              <p className="text-white/30 text-[10px] font-mono tracking-widest uppercase mt-0.5">
+                Roster // {editingSchedule?.id ? "Modify existing physical prescription program" : "Architect comprehensive training matrix routine"}
+              </p>
             </div>
             <button
+              type="button"
               onClick={handleCancle}
-              className="text-gray-100 cursor-pointer text-2xl hover:text-gray-400"
+              className="text-white/40 hover:text-white/90 text-xs font-mono tracking-wider uppercase bg-white/[0.03] border border-white/5 px-2.5 py-1.5 rounded-xl cursor-pointer transition-all duration-200"
             >
               ✕
             </button>
           </div>
 
-          {/* AI Assistance */}
-          <div className="flex flex-col items-center mb-6">
-            <p className="text-sub mb-2">AI Assistance Mode</p>
+          {/* AI Assistance Switcher Panel */}
+          <div className="relative z-10 flex flex-col items-center my-4 bg-white/[0.02] border border-white/5 p-3 rounded-2xl shrink-0">
+            <span className="text-[9px] font-bold font-mono tracking-widest uppercase text-white/30 mb-2">
+              Intelligence Stream Optimization Route
+            </span>
             <CustomTabsWithTooltips setMode={setMode} />
           </div>
 
-          {/* Main Content */}
-          <div className="flex-1 flex flex-col gap-6 overflow-y-auto pr-2">
-
-            {/* Inputs */}
-            <div className="flex gap-4">
-              <div className="flex flex-col flex-1">
-                <label htmlFor="title">Workout Title</label>
-                <input onChange={(e) => handleScheduleTitle('title', e.target.value)}
-                  value={workoutPlanInfo.title}
-                  placeholder="Basic Schedule"
-                  type="text" name="title" className="mt-2 bg-[#74777a44] rounded-lg px-2 py-1" />
+          {/* Main Content Workspace Form */}
+          <div className="relative z-10 flex-1 flex flex-col gap-6 overflow-y-auto pr-1 py-1 scrollbar-thin">
+            
+            {/* Core Metadata Fields Rows */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 shrink-0">
+              {/* Field - Workout Title */}
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor={`${baseId}-title`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer select-none">
+                  Workout Title
+                </label>
+                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
+                  <input 
+                    id={`${baseId}-title`}
+                    onChange={(e) => handleScheduleTitle('title', e.target.value)}
+                    value={workoutPlanInfo.title}
+                    placeholder="Basic Schedule"
+                    type="text" 
+                    name="title" 
+                    className="absolute inset-0 w-full h-full px-3 text-white/80 bg-transparent border-none outline-none text-xs font-semibold tracking-wide placeholder:text-white/25 uppercase transition-colors duration-300"
+                    style={autofillOverride}
+                  />
+                </div>
               </div>
-              <div className="flex flex-col flex-1">
-                <label htmlFor="frequency">Frequency</label>
-                <input onChange={(e) => handleScheduleTitle('frequency', e.target.value)}
-                  value={workoutPlanInfo.frequency}
-                  placeholder="3 days per week"
-                  type="text" name="frequency" className="mt-2 bg-[#74777a44] rounded-lg px-2 py-1" />
+
+              {/* Field - Frequency */}
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor={`${baseId}-frequency`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer select-none">
+                  Frequency Velocity
+                </label>
+                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
+                  <input 
+                    id={`${baseId}-frequency`}
+                    onChange={(e) => handleScheduleTitle('frequency', e.target.value)}
+                    value={workoutPlanInfo.frequency}
+                    placeholder="3 days per week"
+                    type="text" 
+                    name="frequency" 
+                    className="absolute inset-0 w-full h-full px-3 text-white/80 bg-transparent border-none outline-none text-xs font-semibold tracking-wide placeholder:text-white/25 uppercase transition-colors duration-300"
+                    style={autofillOverride}
+                  />
+                </div>
               </div>
 
-              <div className="flex flex-col flex-1">
-                <label htmlFor="duration">Duration</label>
-                <input onChange={(e) => handleScheduleTitle('duration', e.target.value)} type="text"
-                  value={workoutPlanInfo.duration}
-                  placeholder="3 Months"
-                  name="duration" className="mt-2 bg-[#74777a44] rounded-lg px-2 py-1" />
+              {/* Field - Duration */}
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor={`${baseId}-duration`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer select-none">
+                  Timeline Duration
+                </label>
+                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
+                  <input 
+                    id={`${baseId}-duration`}
+                    onChange={(e) => handleScheduleTitle('duration', e.target.value)} 
+                    type="text"
+                    value={workoutPlanInfo.duration}
+                    placeholder="3 Months"
+                    name="duration" 
+                    className="absolute inset-0 w-full h-full px-3 text-white/80 bg-transparent border-none outline-none text-xs font-semibold tracking-wide placeholder:text-white/25 uppercase transition-colors duration-300"
+                    style={autofillOverride}
+                  />
+                </div>
               </div>
             </div>
 
-            {/* Focus Areas */}
-            <div>
-              <p className="mb-2">Focus Areas</p>
-              <div className="flex flex-wrap gap-3">
+            {/* Target Focus Areas Selection Map */}
+            <div className="flex flex-col gap-2 shrink-0">
+              <span className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40">
+                Target Biometric Focus Matrices
+              </span>
+              <div className="flex flex-wrap gap-2">
                 {focusList.map((focusItem, index) => (
                   <p
                     key={index}
                     onClick={() => handleFocusSelect(index)}
-                    className={`px-3 py-1 cursor-pointer rounded-2xl font-semibold transition 
-                    ${focusItem.selected ? "bg-[#4ae2bf85] text-black" : "bg-[#677e9544] text-white"}`}
+                    className={`px-3.5 py-1.5 cursor-pointer rounded-xl text-[11px] font-bold tracking-wide uppercase transition-all duration-300 border ${
+                      focusItem.selected 
+                        ? "bg-[#0affca] text-black border-[#0affca]/20 shadow-[0_2px_8px_rgba(10,255,202,0.15)]" 
+                        : "bg-white/[0.02] text-white/50 border-white/5 hover:bg-white/[0.05] hover:text-white/80"
+                    }`}
                   >
                     {focusItem.name}
                   </p>
@@ -340,53 +377,69 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
               </div>
             </div>
 
-            {/* Workout Days */}
-            <div className="flex items-center gap-6">
-              <p className="font-semibold">Workout Days</p>
-              {/* <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleAddDay();
-              }}
-              className="px-3 py-1 bg-[#494c4f44] rounded-md cursor-pointer hover:bg-[#494c4f66]"
-            >
-              + Add Day
-            </button> */}
+            {/* Dynamic Training Modules Matrix Segment */}
+            <div className="flex flex-col gap-3 min-h-[160px]">
+              <span className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40">
+                Workout Sequence Calendar Blocks
+              </span>
+
+              {isAiLoading ? (
+                <div className="flex h-40 max-h-40 relative items-center justify-center bg-white/[0.01] border border-white/5 rounded-2xl overflow-hidden">
+                  <Ripple />
+                </div>
+              ) : (
+                <AddWorkoutsForm 
+                  workoutDayList={workoutDayList} 
+                  handleRemoveDay={handleRemoveDay} 
+                  handleExerciseChange={handleExerciseChange} 
+                  handleRemoveExercise={handleRemoveExercise} 
+                  handleAddExercise={handleAddExercise} 
+                />
+              )}
+
+              {!isAiLoading && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddDay();
+                  }}
+                  className="w-full py-3 bg-white/[0.02] border border-dashed border-white/10 hover:border-white/20 text-white/60 hover:text-white/90 text-xs font-bold font-mono tracking-wider uppercase rounded-xl cursor-pointer transition-all duration-200 mt-2"
+                >
+                  + Append New Training Day Roster
+                </button>
+              )}
             </div>
-
-            {/* Days List */}
-
-
-            {isAiLoading ? <div className="flex h-45 max-h-45 relative  ">
-              <Ripple />
-            </div>
-              : <AddWorkoutsForm workoutDayList={workoutDayList} handleRemoveDay={handleRemoveDay} handleExerciseChange={handleExerciseChange} handleRemoveExercise={handleRemoveExercise} handleAddExercise={handleAddExercise} />}
-            {!isAiLoading && <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleAddDay();
-              }}
-              className="px-3 py-1 bg-[#494c4f44] rounded-md cursor-pointer hover:bg-[#494c4f66]"
-            >
-              + Add Day
-            </button>}
-
-
-
           </div>
-          {/* Footer */}
-          <div className="flex justify-end gap-2 mt-2">
-            {validationError && <div className=" flex flex-1 items-center justify-center rounded-md bg-[#8e909322]">
-              <p className="text-[#f31936] font-bold">{validationError}</p>
-            </div>}
-            <div className="confirm  p-2 bg-[#5f5f5f44] hover:bg-[#b4b4b444] rounded-lg cursor-pointer" onClick={handleConfirm}><p>{editingSchedule?.id ? "Update" : "Confirm"}</p></div>
-            <div onClick={handleCancle} className="cancle p-2 bg-[#5f5f5f44] hover:bg-[#b4b4b444] rounded-lg cursor-pointer"><p>Cancle</p></div>
+
+          {/* Actions Footer Layer Controls */}
+          <div className="relative z-10 flex mt-2 justify-end gap-3 border-t border-white/5 pt-4 shrink-0">
+            {validationError && (
+              <div className="flex flex-1 items-center px-4 rounded-xl bg-red-950/20 border border-red-500/10">
+                <p className="text-[#f31936] text-[11px] font-mono font-bold uppercase tracking-wider">
+                  Error // {validationError}
+                </p>
+              </div>
+            )}
+            
+            <div 
+              onClick={handleConfirm}
+              className="h-10 px-6 flex items-center justify-center rounded-xl text-xs font-bold tracking-wider uppercase text-black bg-[#0ae2ff7a] border border-[#0affca]/20 hover:bg-[#0ae2ffad] shadow-[0_4px_12px_rgba(10,255,202,0.2)] active:scale-95 transition-all duration-250 cursor-pointer"
+            >
+              <p>{editingSchedule?.id ? "Update Deployment" : "Confirm Provision"}</p>
+            </div>
+
+            <div 
+              onClick={handleCancle} 
+              className="h-10 px-5 flex items-center justify-center rounded-xl text-xs font-bold tracking-wider uppercase text-white/50 bg-white/[0.02] border border-white/5 hover:bg-white/[0.06] hover:text-white/80 transition-all duration-200 cursor-pointer"
+            >
+              <p>Cancel</p>
+            </div>
           </div>
 
         </AnimatedContainer>
-        <AnimatePresence mode="wait">
+
+        <AnimatePresence >
           {mode && (
             <AIWindow
               userData={userData}

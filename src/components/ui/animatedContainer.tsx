@@ -18,7 +18,7 @@ const AnimatedContainer = ({ children, className, duration }: AnimatedContainerP
             initial={{ opacity: 0, scale: 0.95}}
             animate={{ opacity: 1, scale: 1}}
             transition={{ 
-                duration: duration ? duration : 0.6, 
+                duration: duration ? duration : 0.3, 
                 ease: "easeInOut",
                 type: "spring", 
                 stiffness: 320, 

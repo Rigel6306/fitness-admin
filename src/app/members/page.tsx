@@ -1,5 +1,6 @@
 'use client'
-import { useEffect, useState } from "react";
+
+import { useEffect, useState, useTransition } from "react";
 import { FaFilter } from "react-icons/fa6";
 import { RiSearch2Line } from "react-icons/ri";
 import { CiMobile1, CiMail } from "react-icons/ci";
@@ -10,173 +11,205 @@ import useUserClientContext from "@/src/hooks/useUserClientContext";
 import AddNewMemberModal from "./addNewMemberModal";
 import AnimatedContainer from "@/src/components/ui/animatedContainer";
 import GlassLiquidButton from "@/src/components/ui/liquidBtn";
-import LiquidOverlay, { LiquidOverlayVarient1 } from "@/src/components/ui/liquidOverlay";
+import { LiquidOverlayVarient1 } from "@/src/components/ui/liquidOverlay";
+
+type StatusFilterType = 'all' | 'active' | 'inactive';
+
 const Members = () => {
-    const [filterdUsers, setFilterdUsers] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [statusFilter, setStatusFilter] = useState<StatusFilterType>("all");
+    const [filteredUsers, setFilteredUsers] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [, startTransition] = useTransition();
+    
     const userData = useUserClientContext();
-
-    const getUserData = async () => {
-        setFilterdUsers(userData || []);
-    };
-
-    useEffect(() => {
-        getUserData();
-    }, [userData]);
-
-    const handleChange = (e) => {
-        if (!userData) return;
-        const filterdList = userData.filter((user) =>
-            user?.data?.name?.toLowerCase().includes(e.target.value.toLowerCase()) ||
-            user?.data?.contactNumber?.includes(e.target.value)
-        );
-        setFilterdUsers(filterdList);
-    };
-
     const router = useRouter();
 
-    const handleClick = (id) => {
+    // Consolidated client-side stream filtering logic matrix
+    useEffect(() => {
+        if (!userData) return;
+
+        const processFiltering = () => {
+            const result = userData.filter((user) => {
+                const matchesSearch = 
+                    user?.data?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    user?.data?.contactNumber?.includes(searchQuery);
+
+                const matchesStatus = 
+                    statusFilter === "all" ||
+                    (statusFilter === "active" && user?.data?.status === true) ||
+                    (statusFilter === "inactive" && user?.data?.status === false);
+
+                return matchesSearch && matchesStatus;
+            });
+            setFilteredUsers(result);
+        };
+
+        processFiltering();
+    }, [userData, searchQuery, statusFilter]);
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
+    };
+
+    const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        startTransition(() => {
+            setStatusFilter(e.target.value as StatusFilterType);
+        });
+    };
+
+    const handleClick = (id: string) => {
         router.push(`/members/${id}`);
     };
 
     return (
+        <div className="flex flex-col h-[calc(100vh-4rem)] px-4 sm:px-10 pb-6 text-white font-sans overflow-hidden select-none">
 
-        <div className="flex flex-col h-[calc(100vh-4rem)] px-4 sm:px-10 pb-6 text-white overflow-hidden">
-
-            {/* Header Section */}
+            {/* 1. Header Control Section */}
             <div className="heading flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 my-6 shrink-0">
-                <div className="headingTextContainer flex flex-col">
-                    <h1 className="text-2xl sm:text-3xl font-semibold text-[#E0E0E0]">Members</h1>
-                    <p className="text-sm text-[#B0B0B0]">Manage your gym members and their memberships</p>
+                <div className="headingTextContainer flex flex-col gap-0.5">
+                    <h1 className="text-2xl sm:text-3xl font-bold tracking-wide uppercase text-white/90">Members</h1>
+                    <p className="text-white/30 text-xs font-mono tracking-widest uppercase mt-0.5">
+                        Core // Manage gym rosters and profile databases
+                    </p>
                 </div>
                 <GlassLiquidButton
                     onClick={() => setIsModalOpen(true)}
                     bubbleGradient="from-white/10 to-white/3"
-
+                    className="h-10 rounded-xl px-5 border-none"
                 >
-                    <p className="font-bold text-sm sm:text-base">+ Add Member</p>
+                    <span className="font-bold text-xs tracking-wider uppercase text-white">+ Add Member</span>
                 </GlassLiquidButton>
             </div>
 
-            {/* Main Interactive Workstation Area */}
+            {/* 2. Main Interactive Workspace Station */}
             <div className="flex flex-col flex-1 min-h-0 w-full gap-4">
 
-                {/* Search & Filter Component Wrapper */}
-
-                <AnimatedContainer className="flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center items-center bg-black/10 backdrop-blur-md shadow-md shadow-white/5 w-full p-4 rounded-xl shrink-0 border border-white/5">
-
-                    {/* Search Input Container */}
-                    <div className="flex items-center w-full sm:flex-1 gap-2 p-2 bg-[#3f404046] rounded-md border border-white/5">
-                        <RiSearch2Line className="shrink-0" color="gray" size={18} />
+                {/* Search & Filter Controls Panel */}
+                <AnimatedContainer className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-between items-center bg-black/10 backdrop-blur-2xl p-4 rounded-2xl shrink-0 border border-t-white/10 border-x-white/5 border-b-white/0 shadow-[0_12px_24px_-10px_rgba(0,0,0,0.4)] relative overflow-hidden">
+                    <LiquidOverlayVarient1 className="backdrop-blur-none pointer-events-none" />
+                    
+                    {/* Input Wrapper Field */}
+                    <div className="relative z-10 flex items-center w-full sm:flex-1 gap-2.5 px-3 h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-[#0affca]/30 transition-colors duration-300">
+                        <RiSearch2Line className="text-white/30 shrink-0" size={16} />
                         <input
                             type="text"
-                            onChange={handleChange}
-                            className="text-gray-200 bg-transparent border-0 outline-none w-full text-sm placeholder:text-gray-500"
-                            placeholder="Member name or mobile number"
+                            value={searchQuery}
+                            onChange={handleSearchChange}
+                            className="text-white/80 bg-transparent border-none outline-none w-full text-xs font-medium tracking-wide placeholder:text-white/20 uppercase"
+                            placeholder="Search by name or contact parameter..."
                         />
                     </div>
 
-
-                    <div className="flex w-full sm:w-auto px-3 items-center gap-2 bg-[#3f404046] rounded-md border border-white/5 text-gray-300 shrink-0">
-                        <FaFilter className="text-gray-400" size={13} />
+                    {/* Dropdown Select Parameter Filter */}
+                    <div className="relative z-10 flex w-full sm:w-auto px-3.5 h-10 items-center gap-2.5 bg-white/[0.03] rounded-xl border border-white/5 text-white/50 focus-within:border-[#0affca]/30 transition-colors duration-300 shrink-0">
+                        <FaFilter className="text-white/20" size={11} />
                         <select
                             name="status"
-                            className="bg-transparent font-medium p-2 text-sm outline-none cursor-pointer w-full sm:w-auto text-gray-200 appearance-none pr-4"
+                            value={statusFilter}
+                            onChange={handleStatusChange}
+                            className="bg-transparent font-bold text-[11px] tracking-wider outline-none cursor-pointer w-full sm:w-40 text-white/70 uppercase appearance-none pr-6"
                             style={{
-
-                                backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%239ca3af' stroke-width='2' viewBox='0 0 24 24'><path d='M6 9l6 6 6-6'/></svg>")`,
+                                backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23ffffff' stroke-opacity='0.3' stroke-width='2' viewBox='0 0 24 24'><path d='M6 9l6 6 6-6'/></svg>")`,
                                 backgroundRepeat: 'no-repeat',
                                 backgroundPosition: 'right center',
                             }}
                         >
-
-                            <option value="all" className="bg-[#1e1f20] text-gray-200">All status</option>
-                            <option value="active" className="bg-[#1e1f20] text-gray-200">Active</option>
-                            <option value="inactive" className="bg-[#1e1f20] text-gray-200">Inactive</option>
+                            <option value="all" className="bg-[#121214] text-white/70 uppercase tracking-wider font-bold">All Status</option>
+                            <option value="active" className="bg-[#121214] text-white/70 uppercase tracking-wider font-bold">Active</option>
+                            <option value="inactive" className="bg-[#121214] text-white/70 uppercase tracking-wider font-bold">Inactive</option>
                         </select>
                     </div>
-
                 </AnimatedContainer>
-                {/* Main Table Wrapper Component */}
-                <AnimatedContainer className="flex flex-col flex-1 min-h-0 bg-black/10 backdrop-blur-md shadow-md shadow-white/5 w-full rounded-xl border border-white/5 overflow-hidden">
 
+                {/* 3. Main Operational Database Table Layout */}
+                <AnimatedContainer className="flex flex-col flex-1 min-h-0 bg-black/10 backdrop-blur-2xl shadow-[0_12px_32px_-10px_rgba(0,0,0,0.5)] w-full rounded-2xl border border-t-white/10 border-x-white/5 border-b-white/0 overflow-hidden relative">
+                    <LiquidOverlayVarient1 className="backdrop-blur-none pointer-events-none" />
 
-                    <div className="flex flex-col w-full h-full overflow-x-auto">
-                        <div className="min-w-[800px] flex flex-col h-full">
+                    <div className="flex flex-col w-full h-full overflow-x-auto relative z-10">
+                        <div className="min-w-[850px] flex flex-col h-full">
 
-                            {/* Sticky Table Header */}
-                            <div className="flex text-white gap-6 items-center justify-start w-full px-6 bg-white/5 backdrop-blur-md border-b border-white/10 py-3 shrink-0 sticky top-0 z-10">
-                                <p className="flex-[1.5] text-sm font-semibold tracking-wide text-gray-300">Member</p>
-                                <p className="flex-1 text-sm font-semibold tracking-wide text-gray-300">Contact</p>
-                                <p className="flex-1 text-sm font-semibold tracking-wide text-gray-300">Membership</p>
-                                <p className="w-24 text-center text-sm font-semibold tracking-wide text-gray-300">Status</p>
-                                <p className="flex-1 text-sm font-semibold tracking-wide text-gray-300">Join Date</p>
-                                <p className="w-16 text-end text-sm font-semibold tracking-wide text-gray-300">Action</p>
+                            {/* Sticky Functional Column Headers */}
+                            <div className="flex gap-6 items-center justify-start w-full px-6 bg-white/[0.02] border-b border-white/5 py-3.5 shrink-0 sticky top-0 z-10">
+                                <span className="flex-[1.5] text-[10px] font-bold tracking-widest uppercase text-white/30">Member Identity</span>
+                                <span className="flex-1 text-[10px] font-bold tracking-widest uppercase text-white/30">Contact Information</span>
+                                <span className="flex-1 text-[10px] font-bold tracking-widest uppercase text-white/30">Subscription Package</span>
+                                <span className="w-24 text-center text-[10px] font-bold tracking-widest uppercase text-white/30">Roster Status</span>
+                                <span className="flex-1 text-[10px] font-bold tracking-widest uppercase text-white/30">Join Frame</span>
+                                <span className="w-16 text-end text-[10px] font-bold tracking-widest uppercase text-white/30">Action</span>
                             </div>
 
-                            {/* Scrollable Table Body containing filterdUsers array layout */}
-                            <div className="flex flex-col w-full flex-1 overflow-y-auto divide-y divide-white/[0.03]">
-                                {filterdUsers.length > 0 ? (
-                                    filterdUsers.map((user, i) => (
+                            {/* Scrollable Document Core Content Feed */}
+                            <div className="flex flex-col w-full flex-1 overflow-y-auto divide-y divide-white/[0.02]">
+                                {filteredUsers.length > 0 ? (
+                                    filteredUsers.map((user, i) => (
                                         <div
                                             key={i}
                                             onClick={() => handleClick(user.data.membershipNumber)}
-                                            className="flex gap-6 items-center justify-start w-full px-6 py-3.5 hover:bg-white/[0.04] transition-colors cursor-pointer group"
+                                            className="flex gap-6 items-center justify-start w-full px-6 py-4 hover:bg-white/[0.03] border-l-2 border-l-transparent hover:border-l-[#0affca]/40 transition-all duration-200 cursor-pointer group"
                                         >
-                                            {/* Profile Info block */}
-                                            <div className="flex flex-[1.5] items-center gap-3 min-w-0">
-                                                <div className="avatar relative flex shrink-0 items-center justify-center h-9 w-9 rounded-full shadow-sm">
-                                                    <p className="text-white text-xs font-bold">{user?.data?.name?.slice(0, 2).toUpperCase()}</p>
-
-                                                   <LiquidOverlayVarient1/>
+                                            {/* Micro-Avatar Identity Module */}
+                                            <div className="flex flex-[1.5] items-center gap-3.5 min-w-0">
+                                                <div className="avatar relative flex shrink-0 items-center justify-center h-9 w-9 rounded-xl border border-white/5 shadow-inner overflow-hidden bg-white/[0.02]">
+                                                    <LiquidOverlayVarient1 className="pointer-events-none" />
+                                                    <span className="text-[#0affca] relative z-10 text-xs font-bold font-mono tracking-wider">
+                                                        {user?.data?.name?.slice(0, 2).toUpperCase()}
+                                                    </span>
                                                 </div>
-                                                <div className="info min-w-0">
-                                                    <p className="text-sm font-semibold truncate group-hover:text-blue-400 transition-colors">{user?.data?.name}</p>
-                                                    <p className="text-xs text-gray-400 truncate">{user?.data?.membershipNumber}</p>
+                                                <div className="info min-w-0 flex flex-col gap-0.5">
+                                                    <p className="text-sm font-semibold tracking-wide text-white/90 group-hover:text-[#0affca] transition-colors truncate">
+                                                        {user?.data?.name}
+                                                    </p>
+                                                    <p className="text-[10px] font-mono font-bold tracking-wider text-white/30 uppercase truncate">
+                                                        #{user?.data?.membershipNumber}
+                                                    </p>
                                                 </div>
                                             </div>
 
-                                            {/* Contact Details */}
-                                            <div className="flex flex-col flex-1 min-w-0 text-xs gap-0.5">
-                                                <div className="mobile flex gap-1.5 items-center text-gray-300 truncate">
-                                                    <CiMobile1 className="shrink-0 text-gray-400" size={14} />
+                                            {/* Contact Comms Breakdown Column */}
+                                            <div className="flex flex-col flex-1 min-w-0 text-[11px] font-medium gap-1">
+                                                <div className="mobile flex gap-2 items-center text-white/60 font-mono truncate">
+                                                    <CiMobile1 className="shrink-0 text-white/30" size={14} />
                                                     <span className="truncate">{user?.data?.contactNumber}</span>
                                                 </div>
-                                                <div className="email flex items-center gap-1.5 text-gray-400 truncate">
-                                                    <CiMail className="shrink-0 text-gray-500" size={14} />
-                                                    <span className="truncate">{user?.data?.email || "No email"}</span>
+                                                <div className="email flex items-center gap-2 text-white/40 truncate">
+                                                    <CiMail className="shrink-0 text-white/20" size={14} />
+                                                    <span className="truncate normal-case font-sans">{user?.data?.email || "No digital address"}</span>
                                                 </div>
                                             </div>
 
-                                            {/* Membership Plan column */}
-                                            <p className="flex-1 text-sm text-gray-300 truncate">
-                                                {user?.data?.packageName ? user.data.packageName : "Basic Membership"}
+                                            {/* Pack Tier */}
+                                            <p className="flex-1 text-xs font-bold uppercase tracking-wide text-white/70 truncate">
+                                                {user?.data?.packageName ? user.data.packageName : "Basic Access"}
                                             </p>
 
-                                            {/* Status Badge */}
+                                            {/* Dynamic Status Capsule Badge */}
                                             <div className="w-24 flex justify-center shrink-0">
-                                                <p className={`w-20 text-center py-1 text-xs rounded-full font-bold shadow-sm ${user?.data?.status
-                                                    ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
-                                                    : "text-rose-400 bg-rose-500/10 border border-rose-500/20"
-                                                    }`}>
+                                                <div className={`w-20 text-center py-1 text-[10px] font-bold tracking-widest uppercase rounded-md shadow-sm border ${
+                                                    user?.data?.status
+                                                        ? "text-[#0affca] bg-[#0affca]/5 border-[#0affca]/25"
+                                                        : "text-red-400 bg-red-500/5 border-red-500/25"
+                                                }`}>
                                                     {user?.data?.status ? "Active" : "Inactive"}
-                                                </p>
+                                                </div>
                                             </div>
 
-                                            {/* Date Column */}
-                                            <p className="flex-1 text-sm text-gray-400 truncate">
+                                            {/* Registry Date Marker */}
+                                            <p className="flex-1 text-xs font-semibold font-mono text-white/40 tracking-wider truncate">
                                                 {user?.data?.registerdAt ? user.data.registerdAt.toDate().toLocaleDateString() : 'N/A'}
                                             </p>
 
-                                            {/* Menu Action Trigger */}
-                                            <div className="w-16 flex justify-end text-gray-400 group-hover:text-white transition-colors shrink-0">
-                                                <PiDotsNineBold size={20} />
+                                            {/* System Grid Option Matrix Button */}
+                                            <div className="w-16 flex justify-end text-white/20 group-hover:text-[#0affca]/80 transition-colors shrink-0 pr-1">
+                                                <PiDotsNineBold size={18} />
                                             </div>
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="flex flex-col flex-1 items-center justify-center p-8 text-gray-400">
-                                        <p className="text-sm">No members found matching the current workspace criteria.</p>
+                                    <div className="flex flex-col flex-1 items-center justify-center p-12 text-center">
+                                        <p className="text-xs font-mono tracking-widest text-white/20 uppercase max-w-sm leading-relaxed">
+                                            No profile matrices discovered matching your filter criteria.
+                                        </p>
                                     </div>
                                 )}
                             </div>

@@ -7,12 +7,12 @@ export default function Home() {
   return (
     <div className="flex flex-col pb-4 px-10 h-[calc(100vh-80px)] overflow-hidden" >
       {/* heading */}
-      <div className="flex flex-col my-8">
-        <h1 className="font-semibold text-3xl text-heading ">Dashboard</h1>
-        <p className="text-[#999999]">Welcome back! Here's what's happening today.</p>
+      <div className="flex flex-col my-8 font-mono tracking-wider">
+        <h1 className="font-semibold text-xl text-heading uppercase">Dashboard</h1>
+        <p className="text-white/30">Welcome back! Here's what's happening today.</p>
       </div>
       {/* stats card */}
-      <div className="flex flex-col sm:flex-row gap-4 flex-shrink-0">
+      <div className="flex flex-col sm:flex-row gap-4">
         <StatCard icon={'user'} heading="Total Members" total={260} percentage={12.5} growth={true} />
         <StatCard icon={'dollor'} heading="Monthly Revenue" total={123000} percentage={11.5} growth={false} />
         <StatCard icon={'delayedPayments'} heading="Delayed Payments" total={260} percentage={16.5} growth={true} />
