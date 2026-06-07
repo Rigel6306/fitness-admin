@@ -1,6 +1,5 @@
 'use client'
 
-import CustomTabsWithTooltips from "../ui/tabsCard";
 import { useEffect, useState } from "react";
 import WorkoutsAddModal from "@/src/app/members/[id]/WorkoutAddModal";
 import { FaDumbbell } from "react-icons/fa6";
@@ -10,67 +9,65 @@ import { AnimatePresence } from "motion/react";
 import AnimatedContainer from "../ui/animatedContainer";
 import GlassLiquidButton from "../ui/liquidBtn";
 import { LiquidOverlayVarient1 } from "../ui/liquidOverlay";
-const WorkoutSchedule = ({ userData, userId }) => {
 
-    const [isModalOpen, setIsModalOpen] = useState(false)
-    const [schedules, setSchedules] = useState([])
-    const [isLoading, setIsLoading] = useState(false)
-    const [err, setErr] = useState(false)
-    const [editingSchedule, setEditingSchedule] = useState(null)
+const WorkoutSchedule = ({ userData, userId }) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [schedules, setSchedules] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [err, setErr] = useState(false);
+    const [editingSchedule, setEditingSchedule] = useState(null);
 
     const handleModal = () => {
-        setEditingSchedule(null)
-        setIsModalOpen(true)
-    }
+        setEditingSchedule(null);
+        setIsModalOpen(true);
+    };
 
     const handleEdit = async (schedule: any) => {
-        setEditingSchedule(schedule)
-        setIsModalOpen(true)
-    }
+        setEditingSchedule(schedule);
+        setIsModalOpen(true);
+    };
 
     const handleDelete = async (scheduleId: string) => {
         if (confirm("Are you sure you want to delete this schedule?")) {
             try {
-                await deleteSchedule(userId, scheduleId)
-                console.log("Schedule deleted successfully")
+                await deleteSchedule(userId, scheduleId);
+                console.log("Schedule deleted successfully");
             } catch (error) {
-                console.error("Error deleting schedule:", error)
+                console.error("Error deleting schedule:", error);
             }
         }
-    }
+    };
 
     useEffect(() => {
-        const unsubscribe = subscribeToUserSchedules(userId, setSchedules, setIsLoading, setErr)
-        return () => unsubscribe()
-    }, [userId])
-
+        const unsubscribe = subscribeToUserSchedules(userId, setSchedules, setIsLoading, setErr);
+        return () => unsubscribe();
+    }, [userId]);
 
     if (isLoading) {
         return (
-            <div><p>Loading</p></div>
-        )
+            <div className="flex items-center justify-center min-h-70">
+                <p className="text-white/40 tracking-widest font-mono text-sm animate-pulse">LOADING PROFILE DATA...</p>
+            </div>
+        );
     }
 
-    console.log("At Workout schedule", schedules)
-
     return (
-        <div className="flex-col  mt-4 ">
-            <div className="heading flex justify-between items-center my-4">
-
-
-
+        <div className="flex flex-col mt-4 w-full overflow-scroll">
+            {/* Header / Actions bar */}
+            <div className="flex justify-between items-center my-4">
+                <div className="flex flex-col">
+                    <h2 className="text-white/90 font-sans text-sm uppercase tracking-widest font-bold">Training Dashboard</h2>
+                    <p className="text-white/40 text-sm font-mono mt-0.5">Manage and track assigned workout patterns</p>
+                </div>
 
                 <GlassLiquidButton
                     onClick={handleModal}
-                    className="addbtn  backdrop-blur-md  p-2 rounded-2xl text-sm font-semibold cursor-pointer">
-                    <p >+ Add Schedule</p>
-
-
+                    className="addbtn backdrop-blur-md px-4 py-2.5 rounded-xl text-xs font-bold tracking-wide uppercase cursor-pointer transition-transform active:scale-95"
+                >
+                    + Add Schedule
                 </GlassLiquidButton>
-
-
-
             </div>
+
             <AnimatePresence>
                 {isModalOpen && (
                     <WorkoutsAddModal
@@ -81,101 +78,126 @@ const WorkoutSchedule = ({ userData, userId }) => {
                         editingSchedule={editingSchedule}
                     />
                 )}
-                {/* Workouts Plan Section */}
             </AnimatePresence>
-            <AnimatedContainer className="flex-col flex gap-10 flex-1  min-h-70 mt-4 rounded-2xl  border-t-white/30 border-b-white/5 border border-x-white/4  shadow-md shadow-white/5 ">
+
+            {/* FIXED TOP-TO-BOTTOM COLUMN FLOW */}
+            <AnimatedContainer className="flex flex-col gap-8 w-full mt-4 rounded-2xl">
                 {schedules && schedules.length > 0 ? (
                     schedules.map((schedule, index) => (
                         <div
-                            className="flex-col relative w-full flex bg-black/5 backdrop-blur-xl p-4 rounded-2xl shadow-md shadow-white/5"
+                            className="flex flex-col relative w-full backdrop-blur-2xl p-6 rounded-2xl border border-t-white/10 border-x-white/5 border-b-white/0 bg-black/10 shadow-[0_12px_24px_-10px_rgba(0,0,0,0.5)] overflow-hidden"
                             key={index}
                         >
+                            {/* Inner ambient card blur backing */}
+                            <div className="absolute inset-0 z-0 bg-linear-to-b from-white/[0.01] to-black/[0.05] pointer-events-none" />
 
-                            {/* workout plan heading */}
-                            <div className="heading flex-col bg-white/4    p-3  rounded-xl    border-t-white/30 border-b-white/5 border border-x-white/4 shadow-[0_8px_20px_-6px_rgba(255,255,255,0.05),inset_0_1px_1px_rgba(255,255,255,0.15)] ">
-                                <div className="flex justify-between items-center">
-                                    <p className="text-heading text-xl font-mono tracking-wider">{schedule.title.toUpperCase()}</p>
-                                    {/* Action Btns */}
-                                    <div className="flex gap-3 items-center">
-                                        {/* Edit Button (Cyan Accented Liquid Glass) */}
+                            {/* 1. Workout Plan Header Block */}
+                            <div className="relative z-10 flex flex-col gap-4 pb-4 border-b border-white/5">
+                                <div className="flex justify-between items-start gap-4">
+                                    <p className="text-white/90 text-lg font-bold font-sans tracking-wide uppercase">
+                                        {schedule.title}
+                                    </p>
+                                    
+                                    {/* Actions Buttons Group */}
+                                    <div className="flex gap-2 items-center shrink-0">
+                                        {/* Edit Button */}
                                         <div
-                                            className="group flex relative py-3 p-2 font-semibold w-20 items-center j bg-linear-to-b from-white/5 via-black/10 to-white/5  justify-center rounded-xl cursor-pointer select-none transition-transform active:scale-95 duration-200"
+                                            className="group flex relative py-2.5 px-3 font-semibold w-20 items-center justify-center rounded-xl cursor-pointer select-none transition-transform active:scale-95 duration-200"
                                             onClick={() => handleEdit(schedule)}
                                         >
-                                            {/* Liquid Skin Layer */}
-                                           <LiquidOverlayVarient1 className="rounded-xl transition-all duration-300   border-t-white/30 group-hover:from-white-/90 group-hover:to-white/10 group-hover:border-t-white-400/50 group-hover:shadow-[0_8px_13px_-4px_rgba(255,255,255,0.2)]" />
-
-                                            {/* Label with dynamic mix-blend-difference alignment */}
-                                            <p className="relative z-10 text-xs tracking-wider font-mono uppercase font-medium  text-white/70 transition-colors duration-300 group-hover:text-white group-hover:font-semibold ">
+                                            <LiquidOverlayVarient1 className="rounded-xl transition-all duration-300 bg-linear-to-b from-white/10 via-black/10 to-white/13 border-t-white/40 group-hover:from-white/20 group-hover:via-white/5 group-hover:to-white/10 group-hover:border-t-white/70 group-hover:shadow-[0_8px_14px_-4px_rgba(255,255,255,0.15)]" />
+                                            <p className="relative z-10 text-[11px] tracking-wider font-sans uppercase font-semibold text-white/70 transition-colors duration-300 group-hover:text-white">
                                                 Edit
                                             </p>
                                         </div>
 
-                                        {/* Delete Button (Vibrant Ruby-Red Accented Liquid Glass) */}
+                                        {/* Delete Button */}
                                         <div
-                                            className="group flex relative py-3 p-2 font-semibold w-20 items-center justify-center rounded-xl bg-linear-to-b from-white/5 via-black/10 to-white/5   cursor-pointer select-none transition-transform active:scale-95 duration-200"
+                                            className="group flex relative py-2.5 px-3 font-semibold w-20 items-center justify-center rounded-xl cursor-pointer select-none transition-transform active:scale-95 duration-200"
                                             onClick={() => handleDelete(schedule.id)}
                                         >
-                                            {/* Liquid Skin Layer */}
-                                            <LiquidOverlayVarient1 className="rounded-xl transition-all duration-300   border-t-red-600/50 group-hover:from-red-950/40 group-hover:to-red-500/20 group-hover:border-t-red-400/50 group-hover:shadow-[0_10px_20px_-4px_rgba(239,68,68,0.2)]" />
-
-                                            {/* Label */}
-                                            <p className="relative z-10 text-xs tracking-wider uppercase font-medium font-mono text-white/40 transition-colors duration-300 group-hover:text-red-400">
+                                            <LiquidOverlayVarient1 className="rounded-xl transition-all duration-300 bg-linear-to-b from-white/10 via-black/10 to-white/13 border-t-red-600/40 group-hover:from-red-950/40 group-hover:via-black/10 group-hover:to-red-500/20 group-hover:border-t-red-400/60 group-hover:shadow-[0_10px_20px_-4px_rgba(239,68,68,0.25)]" />
+                                            <p className="relative z-10 text-[11px] tracking-wider uppercase font-semibold font-sans text-white/40 transition-colors duration-300 group-hover:text-red-400">
                                                 Delete
                                             </p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="flex gap-10 mt-2 font-mono ">
-                                    <p className="text-sub">Frequency : {schedule.frequency}</p>
-                                    <p className="text-sub">Duration : {schedule.duration}</p>
-                                    <p className="text-sub">Created At: {schedule.createdAt?.toDate().toLocaleDateString()}</p>
+                                {/* Cleaned Metrics Bar */}
+                                <div className="grid grid-cols-3 gap-2 py-2 px-3 rounded-xl bg-white/[0.02] border border-white/5 text-[10px] font-medium uppercase tracking-wider font-sans text-white/40">
+                                    <div>
+                                        <span className="text-white/25 block text-[9px] font-bold mb-0.5">Frequency</span>
+                                        <span className="text-white/80 font-semibold font-mono">{schedule.frequency}</span>
+                                    </div>
+                                    <div>
+                                        <span className="text-white/25 block text-[9px] font-bold mb-0.5">Duration</span>
+                                        <span className="text-white/80 font-semibold font-mono">{schedule.duration}</span>
+                                    </div>
+                                    <div>
+                                        <span className="text-white/25 block text-[9px] font-bold mb-0.5">Created At</span>
+                                        <span className="text-white/60 font-semibold font-mono">{schedule.createdAt?.toDate().toLocaleDateString()}</span>
+                                    </div>
                                 </div>
-                                {/* focus List */}
-                                <div className="flex gap-3 mt-2">
+
+                                {/* Focus Target Tags */}
+                                <div className="flex flex-wrap gap-1.5">
                                     {schedule.focus.map((item, i) => (
-                                        <div className="bg-[#3d2c6e73] text-sub text-sm font-mono rounded-xl px-2 py-1 shadow-white/25 shadow-sm" key={i}>
+                                        <div 
+                                            className="bg-white/[0.03] text-[9px] uppercase tracking-widest font-bold font-sans text-[#0affca]/90 border border-t-white/15 border-x-white/5 border-b-transparent px-2.5 py-1 rounded-lg shadow-[inset_0_1px_1px_rgba(255,255,255,0.03)]" 
+                                            key={i}
+                                        >
                                             {item}
                                         </div>
                                     ))}
                                 </div>
                             </div>
 
-                            {schedule.workouts.map((workoutDaySchedule, i) => (
-                                <div key={i} className="mt-4 rounded-xl bg-white/4 p-4 font-mono">
-                                    <p className="text-heading text-xl mb-2">
-                                        Day-{workoutDaySchedule.day}
-                                    </p>
-                                    {workoutDaySchedule.schedule.map((workout, j) => (
-                                        <div className="flex justify-between gap-10  mt-2" key={j}>
-                                            <div className="flex   items-center justify-start gap-4 text-sub">
-                                                <FaDumbbell />
-                                                <p>{workout.name}</p>
-                                            </div>
+                            {/* 2. Workout Daily Breakdowns */}
+                            <div className="relative z-10 flex flex-col gap-3 mt-4">
+                                {schedule.workouts.map((workoutDaySchedule, i) => (
+                                    <div key={i} className="rounded-xl bg-white/[0.01] border border-white/5 p-4 flex flex-col gap-3">
+                                        <p className="text-[#0affca] tracking-widest font-sans uppercase font-bold text-xs border-b border-white/[0.03] pb-1.5">
+                                            Day {workoutDaySchedule.day}
+                                        </p>
+                                        
+                                        <div className="flex flex-col gap-2.5">
+                                            {workoutDaySchedule.schedule.map((workout, j) => (
+                                                <div className="flex justify-between items-center text-xs tracking-wide uppercase font-medium" key={j}>
+                                                    {/* Muscle Identity Mapping */}
+                                                    <div className="flex items-center gap-2.5 text-white/80">
+                                                        <FaDumbbell className="text-[11px] text-white/30" />
+                                                        <p className="font-sans font-semibold text-white/85">{workout.name}</p>
+                                                    </div>
 
-                                            <div className="flex gap-2 text-sub">
-                                                <p>{workout.reps.length} Sets:</p>
-                                                {workout.reps.map((rep, k) => (
-                                                    <p key={k}>{rep}</p>
-                                                ))}
-                                            </div>
+                                                    {/* Linear Set tracking layout */}
+                                                    <div className="flex items-center gap-2 font-mono text-[11px]">
+                                                        <span className="text-white/30 font-sans font-bold text-[10px] tracking-wider">{workout.reps.length} SETS:</span>
+                                                        <div className="flex items-center gap-1 bg-black/20 px-2 py-0.5 rounded-md border border-white/5">
+                                                            {workout.reps.map((rep, k) => (
+                                                                <span key={k} className="text-[#0affca] font-bold">
+                                                                    {rep}
+                                                                    {k < workout.reps.length - 1 && <span className="text-white/10 mx-1 font-normal">•</span>}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
-                                </div>
-                            ))}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     ))
                 ) : (
-                    <div className="flex">
-                        <p>No Schedule Created Yet</p>
+                    <div className="flex items-center justify-center min-h-40 border border-dashed border-white/10 rounded-2xl">
+                        <p className="text-white/30 text-xs font-mono tracking-widest uppercase">No Active Training Schedule Found</p>
                     </div>
                 )}
-
             </AnimatedContainer>
-
         </div>
     );
-}
+};
 
 export default WorkoutSchedule;
