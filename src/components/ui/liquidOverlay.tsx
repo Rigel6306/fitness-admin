@@ -1,3 +1,6 @@
+import { twMerge } from "tailwind-merge";
+import { memo } from "react";
+
 const LiquidOverlay = () => {
     return (
         <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl select-none pointer-events-none">
@@ -92,13 +95,21 @@ const LiquidOverlay = () => {
         </div>
     );
 }
+interface LiquidOverlayVarient1Props {
+    className?: string
+}
 
-export const LiquidOverlayVarient1 = () => {
+export const LiquidOverlayVarient1 = memo(({ className }: LiquidOverlayVarient1Props) => {
     return (
         <div
-            className={`absolute inset-0 z-0 rounded-2xl bg-linear-to-b from-white/1 to-black/2 border-t-white/30 border-b-white/5 border border-x-white/4 shadow-[0_8px_20px_-6px_$rgba(255,255,255,0.05) inset_0_1px_1px_rgba(255,255,255,0.15)] backdrop-blur-sm`}
+            className={twMerge(
+                "absolute inset-0 z-0 rounded-2xl  border-t-white/30 border-b-white/5 border border-x-white/4 shadow-[0_8px_20px_-6px_rgba(255,255,255,0.05),inset_0_1.2px_1px_rgba(255,255,255,0.15)] backdrop-blur-sm",
+                className
+            )}
         />
-    )
-}
+    );
+}, (prev, next) => prev.className === next.className);
+
+LiquidOverlayVarient1.displayName = 'LiquidOverlayVarient1';
 
 export default LiquidOverlay;

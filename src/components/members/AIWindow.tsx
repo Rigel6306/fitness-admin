@@ -95,12 +95,12 @@ const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayL
                     ease:'easeInOut'
                    
                }}
-               className="bg-[#000000]/50 w-[20vw]  h-[90vh] rounded-2xl p-6 shadow-lg flex flex-col items-center backdrop-blur-xl overflow-hidden" >
+               className="bg-[#000000]/50 w-[20vw]  h-[90vh] rounded-2xl p-6  flex flex-col items-center backdrop-blur-xl overflow-hidden  border-t-white/30 border-b-white/5 border border-x-white/4 shadow-[0_8px_20px_-6px_rgba(255,255,255,0.05),inset_0_1px_1px_rgba(255,255,255,0.15)]" >
 
                {isLoading && <LightRays color="#4fefcc5d" />}
                {isInitialLoad && <LightRays color="#4fefcc5d" />}
                {/* Heading Section */}
-               <div className="flex flex-col flex-1">
+               <div className="flex flex-col flex-1 ">
                     <div className="heading flex justify-center flex-col items-center">
                          <p className="text-md font-semibold text-heading">AI Schedule Assistant </p>
                          <p className="text-sm text-sub"> Im your AI companion</p>

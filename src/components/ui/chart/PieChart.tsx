@@ -42,7 +42,7 @@ const chartConfig = {
 
 export function ChartPieSimple() {
   return (
-    <AnimatedContainer className="flex h-full rounded-xl flex-col bg-black/10 backdrop-blur-md overflow-hidden shadow-md shadow-white/5 ">
+    <div className="flex h-full rounded-xl flex-col bg-black/10 backdrop-blur-md overflow-hidden shadow-md shadow-white/5 ">
       <h1 className="m-2 mx-10 text-lg text-[#F0F0F0] font-sans flex-shrink-0">Membership Distribution</h1>
       <CardContent className="flex-1 pb-0 min-h-0">
         <ChartContainer
@@ -59,6 +59,6 @@ export function ChartPieSimple() {
         </ChartContainer>
       </CardContent>
     
-    </AnimatedContainer>
+    </div>
   )
 }

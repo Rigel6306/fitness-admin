@@ -156,7 +156,7 @@ export function ChartAreaInteractive() {
 
   return (
 
-    <AnimatedContainer className="w-full h-full rounded-xl bg-black/10 backdrop-blur-md shadow-md shadow-white/5 " >
+    <div className="w-full h-full rounded-xl bg-black/10 backdrop-blur-md shadow-md shadow-white/5 " >
       <CardHeader className="flex items-center gap-2 space-y-0  py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
           <CardTitle className="m-2 mx-10 text-2xl text-[#F0F0F0] font-sans">Revenue & Member Growth</CardTitle>
@@ -261,7 +261,7 @@ export function ChartAreaInteractive() {
           </AreaChart>
         </ChartContainer>
       </CardContent>
-    </AnimatedContainer>
+    </div>
   
   )
 }

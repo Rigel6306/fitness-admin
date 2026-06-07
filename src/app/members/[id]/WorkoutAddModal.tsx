@@ -13,6 +13,7 @@ import { LightRays } from "@/src/components/ui/lightRays";
 import { Ripple } from "@/src/components/ui/ripple";
 import { AnimatePresence, LayoutGroup } from "motion/react";
 import AnimatedContainer from "@/src/components/ui/animatedContainer";
+import { LiquidOverlayVarient1 } from "@/src/components/ui/liquidOverlay";
 type Exercise = {
   id: number;
   name: string;
@@ -266,7 +267,9 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
       <div className="fixed inset-0 bg-gray-600/30 flex items-center justify-center z-150 gap-2">
         <AnimatedContainer
           duration={0.3}
-          className="bg-[#000000]/50 w-[90vw] max-w-4xl h-[90vh] rounded-2xl p-6 shadow-lg flex flex-col backdrop-blur-xl overflow-hidden">
+          className="bg-[#000000]/50 relative w-[90vw] max-w-4xl h-[90vh] rounded-2xl p-6 flex flex-col backdrop-blur-xl overflow-hidden  border-t-white/30 border-b-white/5 border border-x-white/4 shadow-[0_8px_20px_-6px_rgba(255,255,255,0.05),inset_0_1px_1px_rgba(255,255,255,0.15)]">
+
+      
 
           {isAiLoading && <LightRays color="#4fefcc5d" />}
 
