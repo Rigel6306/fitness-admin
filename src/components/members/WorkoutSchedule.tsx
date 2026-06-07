@@ -52,7 +52,7 @@ const WorkoutSchedule = ({ userData, userId }) => {
     }
 
     return (
-        <div className="flex flex-col mt-4 w-full overflow-scroll">
+        <div className="flex flex-col mt-4 w-full ">
             {/* Header / Actions bar */}
             <div className="flex justify-between items-center my-4">
                 <div className="flex flex-col">
@@ -81,20 +81,20 @@ const WorkoutSchedule = ({ userData, userId }) => {
             </AnimatePresence>
 
             {/* FIXED TOP-TO-BOTTOM COLUMN FLOW */}
-            <AnimatedContainer className="flex flex-col gap-8 w-full mt-4 rounded-2xl">
+            <div className="flex flex-col gap-8 w-full mt-4 rounded-2xl">
                 {schedules && schedules.length > 0 ? (
                     schedules.map((schedule, index) => (
-                        <div
+                        <AnimatedContainer
                             className="flex flex-col relative w-full backdrop-blur-2xl p-6 rounded-2xl border border-t-white/10 border-x-white/5 border-b-white/0 bg-black/10 shadow-[0_12px_24px_-10px_rgba(0,0,0,0.5)] overflow-hidden"
                             key={index}
                         >
                             {/* Inner ambient card blur backing */}
-                            <div className="absolute inset-0 z-0 bg-linear-to-b from-white/[0.01] to-black/[0.05] pointer-events-none" />
+                            <div className="absolute inset-0 z-0 bg-linear-to-b from-white/1 to-black/1 pointer-events-none" />
 
                             {/* 1. Workout Plan Header Block */}
                             <div className="relative z-10 flex flex-col gap-4 pb-4 border-b border-white/5">
                                 <div className="flex justify-between items-start gap-4">
-                                    <p className="text-white/90 text-lg font-bold font-sans tracking-wide uppercase">
+                                    <p className="text-white/90 text-lg font-bold font-sans tracking-wider uppercase">
                                         {schedule.title}
                                     </p>
                                     
@@ -105,7 +105,7 @@ const WorkoutSchedule = ({ userData, userId }) => {
                                             className="group flex relative py-2.5 px-3 font-semibold w-20 items-center justify-center rounded-xl cursor-pointer select-none transition-transform active:scale-95 duration-200"
                                             onClick={() => handleEdit(schedule)}
                                         >
-                                            <LiquidOverlayVarient1 className="rounded-xl transition-all duration-300 bg-linear-to-b from-white/10 via-black/10 to-white/13 border-t-white/40 group-hover:from-white/20 group-hover:via-white/5 group-hover:to-white/10 group-hover:border-t-white/70 group-hover:shadow-[0_8px_14px_-4px_rgba(255,255,255,0.15)]" />
+                                            <LiquidOverlayVarient1 className="rounded-xl transition-all duration-300  border-t-white/40 group-hover:from-white/20 group-hover:via-white/5 group-hover:to-white/10 group-hover:border-t-white/70 group-hover:shadow-[0_8px_14px_-4px_rgba(255,255,255,0.15)]" />
                                             <p className="relative z-10 text-[11px] tracking-wider font-sans uppercase font-semibold text-white/70 transition-colors duration-300 group-hover:text-white">
                                                 Edit
                                             </p>
@@ -113,11 +113,11 @@ const WorkoutSchedule = ({ userData, userId }) => {
 
                                         {/* Delete Button */}
                                         <div
-                                            className="group flex relative py-2.5 px-3 font-semibold w-20 items-center justify-center rounded-xl cursor-pointer select-none transition-transform active:scale-95 duration-200"
+                                            className="group  flex relative py-2.5 px-3 font-semibold w-20 items-center justify-center rounded-xl cursor-pointer select-none transition-transform active:scale-95 duration-200"
                                             onClick={() => handleDelete(schedule.id)}
                                         >
-                                            <LiquidOverlayVarient1 className="rounded-xl transition-all duration-300 bg-linear-to-b from-white/10 via-black/10 to-white/13 border-t-red-600/40 group-hover:from-red-950/40 group-hover:via-black/10 group-hover:to-red-500/20 group-hover:border-t-red-400/60 group-hover:shadow-[0_10px_20px_-4px_rgba(239,68,68,0.25)]" />
-                                            <p className="relative z-10 text-[11px] tracking-wider uppercase font-semibold font-sans text-white/40 transition-colors duration-300 group-hover:text-red-400">
+                                            <LiquidOverlayVarient1 className="rounded-xl transition-all duration-300  border-t-red-600/40 group-hover:from-red-950/40 group-hover:via-black/10 group-hover:to-red-500/20 group-hover:border-t-red-400/60 group-hover:shadow-[0_10px_20px_-4px_rgba(239,68,68,0.25)]" />
+                                            <p className="relative z-10 text-[11px] tracking-wider uppercase font-semibold font-sans text-white/70 transition-colors duration-300 group-hover:text-red-400">
                                                 Delete
                                             </p>
                                         </div>
@@ -127,16 +127,16 @@ const WorkoutSchedule = ({ userData, userId }) => {
                                 {/* Cleaned Metrics Bar */}
                                 <div className="grid grid-cols-3 gap-2 py-2 px-3 rounded-xl bg-white/[0.02] border border-white/5 text-[10px] font-medium uppercase tracking-wider font-sans text-white/40">
                                     <div>
-                                        <span className="text-white/25 block text-[9px] font-bold mb-0.5">Frequency</span>
-                                        <span className="text-white/80 font-semibold font-mono">{schedule.frequency}</span>
+                                        <span className="text-white/25 block text-xs font-bold mb-0.5">Frequency</span>
+                                        <span className="text-white/80 font-semibold text-sm font-mono">{schedule.frequency}</span>
                                     </div>
                                     <div>
-                                        <span className="text-white/25 block text-[9px] font-bold mb-0.5">Duration</span>
-                                        <span className="text-white/80 font-semibold font-mono">{schedule.duration}</span>
+                                        <span className="text-white/25 block text-xs font-bold mb-0.5">Duration</span>
+                                        <span className="text-white/80 font-semibold  text-sm font-mono">{schedule.duration}</span>
                                     </div>
                                     <div>
-                                        <span className="text-white/25 block text-[9px] font-bold mb-0.5">Created At</span>
-                                        <span className="text-white/60 font-semibold font-mono">{schedule.createdAt?.toDate().toLocaleDateString()}</span>
+                                        <span className="text-white/25 block text-xs font-bold mb-0.5">Created At</span>
+                                        <span className="text-white/60 font-semibold text-sm font-mono">{schedule.createdAt?.toDate().toLocaleDateString()}</span>
                                     </div>
                                 </div>
 
@@ -144,7 +144,7 @@ const WorkoutSchedule = ({ userData, userId }) => {
                                 <div className="flex flex-wrap gap-1.5">
                                     {schedule.focus.map((item, i) => (
                                         <div 
-                                            className="bg-white/[0.03] text-[9px] uppercase tracking-widest font-bold font-sans text-[#0affca]/90 border border-t-white/15 border-x-white/5 border-b-transparent px-2.5 py-1 rounded-lg shadow-[inset_0_1px_1px_rgba(255,255,255,0.03)]" 
+                                            className="bg-white/3 text-[11px] uppercase tracking-widest font-bold font-sans text-[#0affca]/90 border border-t-white/15 border-x-white/5 border-b-transparent px-2.5 py-1 rounded-lg shadow-[inset_0_1px_1px_rgba(255,255,255,0.03)]" 
                                             key={i}
                                         >
                                             {item}
@@ -154,10 +154,10 @@ const WorkoutSchedule = ({ userData, userId }) => {
                             </div>
 
                             {/* 2. Workout Daily Breakdowns */}
-                            <div className="relative z-10 flex flex-col gap-3 mt-4">
+                            <div className="relative flex flex-col gap-3 mt-4">
                                 {schedule.workouts.map((workoutDaySchedule, i) => (
                                     <div key={i} className="rounded-xl bg-white/[0.01] border border-white/5 p-4 flex flex-col gap-3">
-                                        <p className="text-[#0affca] tracking-widest font-sans uppercase font-bold text-xs border-b border-white/[0.03] pb-1.5">
+                                        <p className="text-[#0affca] tracking-widest font-sans uppercase font-bold text-sm border-b border-white/3 pb-1.5">
                                             Day {workoutDaySchedule.day}
                                         </p>
                                         
@@ -166,13 +166,13 @@ const WorkoutSchedule = ({ userData, userId }) => {
                                                 <div className="flex justify-between items-center text-xs tracking-wide uppercase font-medium" key={j}>
                                                     {/* Muscle Identity Mapping */}
                                                     <div className="flex items-center gap-2.5 text-white/80">
-                                                        <FaDumbbell className="text-[11px] text-white/30" />
-                                                        <p className="font-sans font-semibold text-white/85">{workout.name}</p>
+                                                        <FaDumbbell className="text-lg text-white/30" />
+                                                        <p className="font-sans font-semibold text-sm text-white/85">{workout.name}</p>
                                                     </div>
 
                                                     {/* Linear Set tracking layout */}
                                                     <div className="flex items-center gap-2 font-mono text-[11px]">
-                                                        <span className="text-white/30 font-sans font-bold text-[10px] tracking-wider">{workout.reps.length} SETS:</span>
+                                                        <span className="text-white/30 font-sans font-bold text-sm tracking-wider">{workout.reps.length} SETS:</span>
                                                         <div className="flex items-center gap-1 bg-black/20 px-2 py-0.5 rounded-md border border-white/5">
                                                             {workout.reps.map((rep, k) => (
                                                                 <span key={k} className="text-[#0affca] font-bold">
@@ -188,14 +188,14 @@ const WorkoutSchedule = ({ userData, userId }) => {
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </AnimatedContainer>
                     ))
                 ) : (
                     <div className="flex items-center justify-center min-h-40 border border-dashed border-white/10 rounded-2xl">
                         <p className="text-white/30 text-xs font-mono tracking-widest uppercase">No Active Training Schedule Found</p>
                     </div>
                 )}
-            </AnimatedContainer>
+            </div>
         </div>
     );
 };

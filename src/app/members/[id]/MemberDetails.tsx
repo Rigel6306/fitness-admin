@@ -80,19 +80,19 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
         <div className="flex gap-4">
           <button
             onClick={() => setIsModalOpen(true)}
-            className="flex gap-2 cursor-pointer items-center justify-center bg-linear-to-b from-white/8 via-black/30 to-white/5  backdrop-blur-md shadow-md shadow-white/5 px-4 h-10 rounded-sm hover:bg-white/15"
+            className="group gap-2 flex relative h-10 px-4 font-semibold  items-center justify-center cursor-pointer select-none transition-transform active:scale-95 duration-200"
           >
-            <LiquidOverlayVarient1 className="backdrop-blur-none rounded-sm" />
+            <LiquidOverlayVarient1 className="backdrop-blur-none rounded-sm transition-all duration-300  border-t-white/40 group-hover:from-white/20 group-hover:via-white/5 group-hover:to-white/10 group-hover:border-t-white/70 group-hover:shadow-[0_8px_14px_-4px_rgba(255,255,255,0.15)]" />
             <BiSolidEdit color="light" />
-            <span className="font-semibold">Edit</span>
+            <span className="font-semibold text-xs">Edit</span>
           </button>
           <button
             onClick={handleDelete}
-            className="flex cursor-pointer gap-2 items-center justify-center bg-linear-to-b from-white/8 via-black/30 to-white/5  backdrop-blur-md shadow-md shadow-white/5 px-4 h-10 rounded-sm hover:bg-white/15"
+            className="group flex gap-2 relative h-10  px-2 font-semibold  items-center justify-center  cursor-pointer select-none transition-transform active:scale-95 duration-200"
           >
-             <LiquidOverlayVarient1 className="backdrop-blur-none rounded-sm" />
+             <LiquidOverlayVarient1 className="backdrop-blur-none rounded-sm transition-all duration-300  border-t-red-600/40 group-hover:from-red-950/40 group-hover:via-black/10 group-hover:to-red-500/20 group-hover:border-t-red-400/60 group-hover:shadow-[0_10px_20px_-4px_rgba(239,68,68,0.25)]" />
             <MdDelete color="crimson" />
-            <span className="font-semibold">Delete</span>
+            <span className="font-semibold text-xs">Delete</span>
           </button>
         </div>
       </div>
