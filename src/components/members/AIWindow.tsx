@@ -52,6 +52,7 @@ const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayL
           promptType = "noScheduleNoPrompt";
      }
 
+     console.log("Prompt Type", promptType)
      const handleGenerateSchedule = async () => {
           setIsLoading(true);
           setIsAiLoading(true);
@@ -80,7 +81,7 @@ const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayL
                     setTimeout(() => {
                          setFocusList(prev => ([...prev, ...responce.data.data.data.focus.map(item => ({ name: item, selected: true }))]));
                          setWorkoutPlanInfo(responce.data.data.data);
-
+                         
                          const desc1 = responce?.data?.data?.description;
                          const desc2 = responce?.data?.data?.data?.description
                          if (desc1 && desc1.trim() !== "") {
@@ -88,12 +89,13 @@ const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayL
                          } else if (desc2 && desc2.trim() !== "") {
                               setAiDescription(desc2);
                          }
-
-                         setAiDescription(responce.data.data.description);
+                         console.log("AI responce",responce.data.data.data)
+                         console.log("AI REsponce Description", )
                          setWorkoutDayList(workoutsWithStringReps);
+                         setPrompt('')
                          setIsAiLoading(false);
                          setIsLoading(false);
-                    }, 3000);
+                    }, 1000);
                }
           } catch (error) {
                console.error("AI Generation Failed:", error);
@@ -202,7 +204,7 @@ const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayL
                                    />
                                    <div className="flex justify-end w-full border-t border-white/5 pt-1.5 mt-1">
                                         <span className="text-[8px] font-mono text-white/30 uppercase flex items-center gap-1">
-                                             <RiMessage3Line size={10} /> Prompter Active
+                                             <RiMessage3Line size={10} /> Feel free to say anything
                                         </span>
                                    </div>
                               </div>
@@ -215,9 +217,9 @@ const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayL
                     <button
                          onClick={handleGenerateSchedule}
                          disabled={isLoading}
-                         className="w-40 h-10 bg-black/5 hover:bg-white/50 border border-[#5e1c82fc] hover:border-white active:scale-[0.98] transition-all duration-500 cursor-pointer flex items-center justify-center rounded-xl group"
+                         className="w-40 h-10 bg-black/5 hover:bg-[#5e1c82fc]/50 border border-[#5e1c82fc] hover:border-white active:scale-[0.98] transition-all duration-500 cursor-pointer flex items-center justify-center rounded-xl group"
                     >
-                         <p className="text-xs font-bold tracking-wider uppercase text-white group-hover:text-black transition-colors  transition-all duration-300  ">
+                         <p className="text-xs font-bold tracking-wider uppercase text-white group-hover:text-white transition-colors  transition-all duration-300  ">
                               {aiDescription ? "Re-Generate" : "Generate"}
                          </p>
                     </button>

@@ -24,6 +24,8 @@ below
 
 scheduleData = ${scheduleData}
 
+*Make sure to INCLUDE the data Included with the scheduleData provided above in your generated Plan.
+
 Example structure:
 {data:{
   "title": "example schedule",
@@ -44,16 +46,18 @@ Example structure:
 description:"Your Discription about the plan"
 }
 `,
-      withScheduleAndPrompt: `Generate a weekly workout plan for a user with height ${height}cm, weight ${weight}kg, goal ${goals}, and experience level ${experienceLevel}.ADMIN HAS GIVEN SPECIFIC INSTRUCTIONS mentioned within quotes.consider them with highest Priority " ${customPrompt} "  
+      withScheduleAndPrompt: `Generate a workout plan for a Gym user with height ${height}cm, weight ${weight}kg, goal ${goals}, and experience level ${experienceLevel}.*ADMIN HAS GIVEN SPECIFIC INSTRUCTIONS mentioned within quotes.consider them with highest Priority " ${customPrompt} "* 
+      
               You are also given an existing JSON object called scheduleData.  
-              - Keep all fields and values from scheduleData exactly as provided.  
-              - Merge your plan with scheduleData by adding new workouts, days, or focus items if needed.  
-              - Do not remove or overwrite any of the admin’s data.  
-              - Correct spelling mistakes silently.  
-              - maximum of 3 days. NO MORE THAN 3 DAYS
+               * Keep all fields and values from scheduleData exactly as provided.  
+               * Merge your plan with scheduleData by adding new workouts, days, or focus items if needed.  
+               * Do not remove or overwrite any of the admin’s data. 
+               * Correct spelling mistakes silently.  
               - Return ONLY a valid JSON object,   no code fences.add a little discription about the workout plan in the description filed 
               below
+
               scheduleData = ${scheduleData}
+              *Make sure to INCLUDE the data Included with the scheduleData provided above in your generated Plan.
 
               Example structure:
               {data:{
@@ -79,7 +83,8 @@ description:"Your Discription about the plan"
               `,
 
 
-      noScheduleButPrompt: `Generate a weekly workout plan for a user with height ${height}cm, weight ${weight}kg, goal ${goals}, and experience level ${experienceLevel}. ADMIN HAS GIVEN SPECIFIC INSTRUCTIONS mentioned within quotes.consider them with highest Priority " ${customPrompt} ". Generate a weekly workout plan as a valid JSON object.
+      noScheduleButPrompt: `Generate a weekly workout plan for a user with height ${height}cm, weight ${weight}kg, goal ${goals}, and experience level ${experienceLevel}. 
+      *ADMIN HAS GIVEN SPECIFIC INSTRUCTIONS mentioned within quotes.consider them with highest Priority " ${customPrompt} ".* Generate a weekly workout plan as a valid JSON object.
 Return ONLY the JSON,  no code fences.add a little discription about the workout plan in the description filed below
 Structure: {data:{
             title: 'Basic Schedule',
