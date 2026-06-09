@@ -45,7 +45,7 @@ export const CustomTabsWithTooltips = ({ setMode }: CustomTabsProps) => {
           }}
           transition={{
            
-            duration: 0.9,
+            duration: 0.7,
             ease: [0.19, 1, 1.22, 1]
           }}
         >
@@ -88,7 +88,7 @@ export const CustomTabsWithTooltips = ({ setMode }: CustomTabsProps) => {
                 {isActive && (
                   <motion.div
                     layoutId="activeTabSelectionBubble"
-                    className="absolute inset-0 z-0 rounded-xl bg-linear-to-b from-white/16 to-white/3 border border-t-white/35 border-x-white/20 border-b-white/10 shadow-[0_8px_20px_-6px_rgba(255,255,255,0.14),inset_0_1px_1px_rgba(255,255,255,0.25),inset_0_-1px_8px_rgba(255,255,255,0.03)] backdrop-blur-[2px]"
+                    className="absolute inset-0 z-0 rounded-xl bg-linear-to-b from-white/4 via-black10 to-white/3 border border-t-white/35 border-x-white/20 border-b-white/10 shadow-[0_8px_20px_-6px_rgba(255,255,255,0.14),inset_0_1px_1px_rgba(255,255,255,0.25),inset_0_-1px_8px_rgba(255,255,255,0.03)] backdrop-blur-[1px]"
                     animate={{
                        scaleX: [0.85, 1.15, 0.95, 1],
                        scaleY: [1.1, 0.9, 1.05, 1]
@@ -97,9 +97,9 @@ export const CustomTabsWithTooltips = ({ setMode }: CustomTabsProps) => {
                         layout: {
                           delay:0.34,
                             type: "spring",
-                            stiffness: 220, 
-                            damping: 25,    
-                            mass: 1.3,      
+                            stiffness: 250, 
+                            damping: 22,    
+                            mass: 1,      
                         },
                         default: {
                             duration: 0.55,

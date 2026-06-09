@@ -13,6 +13,7 @@ import { Ripple } from "@/src/components/ui/ripple";
 import { AnimatePresence, LayoutGroup } from "motion/react";
 import AnimatedContainer from "@/src/components/ui/animatedContainer";
 import { LiquidOverlayVarient1 } from "@/src/components/ui/liquidOverlay";
+import { HiSparkles } from "react-icons/hi2";
 
 type Exercise = {
   id: number;
@@ -264,9 +265,10 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
       
 
           {isAiLoading && <LightRays color="#4fefcc5d" />}
+          {/* <LightRays color="#4fefcc5d" /> */}
 
           {/* Header */}
-          <div className="relative z-10 flex justify-between items-start border-b border-white/5 pb-4 shrink-0">
+          <div className="relative z-10 flex justify-between items-start  border-white/5 pb-4 shrink-0">
             <div className="flex flex-col gap-0.5">
               <h2 className="text-xl font-bold tracking-wide uppercase text-white/90">
                 {editingSchedule?.id ? "Edit Workout Schedule" : "Add Workout Schedule"}
@@ -278,16 +280,16 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
             <button
               type="button"
               onClick={handleCancle}
-              className="text-white/40 hover:text-white/90 text-xs font-mono tracking-wider uppercase bg-white/[0.03] border border-white/5 px-2.5 py-1.5 rounded-xl cursor-pointer transition-all duration-200"
+              className="text-white/40 hover:text-white/90 text-xs font-mono tracking-wider uppercase bg-white/3 border border-white/5 px-2.5 py-1.5 rounded-xl cursor-pointer transition-all duration-200"
             >
               ✕
             </button>
           </div>
 
           {/* AI Assistance Switcher Panel */}
-          <div className="relative z-10 flex flex-col items-center my-4 bg-white/[0.02] border border-white/5 p-3 rounded-2xl shrink-0">
+          <div className="relative z-10 flex flex-col items-center my-4  border-white/5 p-3 rounded-2xl shrink-0">
             <span className="text-[9px] font-bold font-mono tracking-widest uppercase text-white/30 mb-2">
-              Intelligence Stream Optimization Route
+              How would you like to manage?
             </span>
             <CustomTabsWithTooltips setMode={setMode} />
           </div>
@@ -367,8 +369,8 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
                     onClick={() => handleFocusSelect(index)}
                     className={`px-3.5 py-1.5 cursor-pointer rounded-xl text-[11px] font-bold tracking-wide uppercase transition-all duration-300 border ${
                       focusItem.selected 
-                        ? "bg-[#0affca] text-black border-[#0affca]/20 shadow-[0_2px_8px_rgba(10,255,202,0.15)]" 
-                        : "bg-white/[0.02] text-white/50 border-white/5 hover:bg-white/[0.05] hover:text-white/80"
+                        ? "bg-[#5d278753] text-white border-white/20 shadow-[0_2px_8px_rgba(10,255,202,0.15)]" 
+                        : "bg-white/[0.02] text-white/50 border-white/5 hover:bg-white/5 hover:text-white/80"
                     }`}
                   >
                     {focusItem.name}
@@ -385,7 +387,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
 
               {isAiLoading ? (
                 <div className="flex h-40 max-h-40 relative items-center justify-center bg-white/[0.01] border border-white/5 rounded-2xl overflow-hidden">
-                  <Ripple />
+                   <HiSparkles size={40} className="text-[#0affca] text-xs animate-ping" />
                 </div>
               ) : (
                 <AddWorkoutsForm 
@@ -404,9 +406,9 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
                     e.stopPropagation();
                     handleAddDay();
                   }}
-                  className="w-full py-3 bg-white/[0.02] border border-dashed border-white/10 hover:border-white/20 text-white/60 hover:text-white/90 text-xs font-bold font-mono tracking-wider uppercase rounded-xl cursor-pointer transition-all duration-200 mt-2"
+                  className="w-full py-3 bg-white/2 border border-dashed border-white/10 hover:border-white/20 text-white/60 hover:text-white/90 text-xs font-bold font-mono tracking-wider uppercase rounded-xl cursor-pointer transition-all duration-200 mt-2"
                 >
-                  + Append New Training Day Roster
+                  + Add Workout Plan
                 </button>
               )}
             </div>
@@ -417,16 +419,16 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
             {validationError && (
               <div className="flex flex-1 items-center px-4 rounded-xl bg-red-950/20 border border-red-500/10">
                 <p className="text-[#f31936] text-[11px] font-mono font-bold uppercase tracking-wider">
-                  Error // {validationError}
+                  ERROR :- {validationError}
                 </p>
               </div>
             )}
             
             <div 
               onClick={handleConfirm}
-              className="h-10 px-6 flex items-center justify-center rounded-xl text-xs font-bold tracking-wider uppercase text-black bg-[#0ae2ff7a] border border-[#0affca]/20 hover:bg-[#0ae2ffad] shadow-[0_4px_12px_rgba(10,255,202,0.2)] active:scale-95 transition-all duration-250 cursor-pointer"
+              className="h-10 px-6 flex items-center justify-center rounded-xl text-xs font-bold tracking-wider uppercase text-blackbg-[#0000007a] border border-[#fffff]/20 hover:bg-[#4c4c4dad]  shadow-[0_4px_12px_rgba(10,255,202,0.2)] active:scale-95 transition-all duration-250 cursor-pointer"
             >
-              <p>{editingSchedule?.id ? "Update Deployment" : "Confirm Provision"}</p>
+              <p>{editingSchedule?.id ? "Update" : "Confirm "}</p>
             </div>
 
             <div 
@@ -443,6 +445,9 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
           {mode && (
             <AIWindow
               userData={userData}
+              workoutPlanInfo = {workoutPlanInfo}
+              workoutDayList={workoutDayList}
+              focusList={focusList}
               setWorkoutPlanInfo={setWorkoutPlanInfo}
               setIsAiLoading={setIsAiLoading}
               setWorkoutDayList={setWorkoutDayList}

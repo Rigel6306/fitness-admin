@@ -90,7 +90,7 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
                 className="bg-black/60 relative w-[90vw] max-w-4xl h-[90vh] rounded-2xl p-6 md:p-8 flex flex-col backdrop-blur-xl overflow-hidden border border-t-white/10 border-x-white/5 border-b-white/0 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.7)]"
             >
                 {/* Accent Background Highlights */}
-                <div className="absolute -top-12 -right-12 w-48 h-48 bg-[#0affca]/[0.02] blur-3xl rounded-full pointer-events-none" />
+                <div className="absolute -top-12 -right-12 w-48 h-48 bg-[#0affca]/2 blur-3xl rounded-full pointer-events-none" />
 
                 {/* Heading Block Section */}
                 <div className="relative z-10 flex justify-between items-start border-b border-white/5 pb-4 shrink-0">
@@ -104,7 +104,7 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
                     </div>
                     <button 
                         type="button"
-                        className="text-white/40 hover:text-white/90 text-xs font-mono tracking-wider uppercase bg-white/[0.03] border border-white/5 px-2.5 py-1.5 rounded-xl cursor-pointer transition-all duration-200"
+                        className="text-white/40 hover:text-white/90 text-xs font-mono tracking-wider uppercase bg-white/3 border border-white/5 px-2.5 py-1.5 rounded-xl cursor-pointer transition-all duration-200"
                         onClick={() => setIsModalOpen(false)}
                     >
                         ✕
@@ -115,22 +115,22 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
                 <div className="relative z-10 flex-1 flex flex-col gap-6 overflow-y-auto pr-1 py-4 scrollbar-thin">
                     
                     {/* Current Meta Blueprint Display Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-xl bg-white/[0.01] border border-white/5 shrink-0">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-xl bg-white/1 border border-white/5 shrink-0">
                         <div className="flex flex-col gap-2">
                             <div className="flex gap-2 items-baseline text-xs">
                                 <span className="font-mono text-[10px] uppercase text-white/30 w-36">User Name :</span>
                                 <span className="font-semibold text-white/80 uppercase tracking-wide">{userInputs.name}</span>
                             </div>
                             <div className="flex gap-2 items-baseline text-xs">
-                                <span className="font-mono text-[10px] uppercase text-white/30 w-36">Age Allocation :</span>
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-36">Age :</span>
                                 <span className="font-semibold text-white/80">{userInputs.age} Years</span>
                             </div>
                             <div className="flex gap-2 items-baseline text-xs">
-                                <span className="font-mono text-[10px] uppercase text-white/30 w-36">E-mail Routing :</span>
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-36">E-mail :</span>
                                 <span className="font-mono text-[11px] text-white/60 lowercase">{userInputs.email}</span>
                             </div>
                             <div className="flex gap-2 items-baseline text-xs">
-                                <span className="font-mono text-[10px] uppercase text-white/30 w-36">Contact Line :</span>
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-36">Contact Number :</span>
                                 <span className="font-mono text-[11px] text-white/80 tracking-wide">{userInputs.contactNumber}</span>
                             </div>
                             <div className="flex gap-2 items-baseline text-xs">
@@ -141,23 +141,23 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
 
                         <div className="flex flex-col gap-2 border-t md:border-t-0 md:border-l border-white/5 pt-2 md:pt-0 md:pl-4">
                             <div className="flex gap-2 items-baseline text-xs">
-                                <span className="font-mono text-[10px] uppercase text-white/30 w-32">Gender Vector :</span>
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-32">Gender :</span>
                                 <span className="font-semibold text-white/80 uppercase tracking-wider">{userInputs.gender}</span>
                             </div>
                             <div className="flex gap-2 items-baseline text-xs">
-                                <span className="font-mono text-[10px] uppercase text-white/30 w-32">Height Metric :</span>
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-32">Height :</span>
                                 <span className="font-semibold text-white/80 font-mono">{userInputs.height} CM</span>
                             </div>
                             <div className="flex gap-2 items-baseline text-xs">
-                                <span className="font-mono text-[10px] uppercase text-white/30 w-32">Weight Metric :</span>
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-32">Weight :</span>
                                 <span className="font-semibold text-white/80 font-mono">{userInputs.weight} KG</span>
                             </div>
                             <div className="flex gap-2 items-baseline text-xs">
-                                <span className="font-mono text-[10px] uppercase text-white/30 w-32">Package Module :</span>
-                                <span className="font-semibold text-white/80 uppercase text-[11px] tracking-wide text-white/70">{userInputs.packageName}</span>
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-32">Package :</span>
+                                <span className="font-semibold  uppercase text-[11px] tracking-wide text-white/70">{userInputs.packageName}</span>
                             </div>
                             <div className="flex gap-2 items-baseline text-xs">
-                                <span className="font-mono text-[10px] uppercase text-white/30 w-32">Roster Status :</span>
+                                <span className="font-mono text-[10px] uppercase text-white/30 w-32"> Status :</span>
                                 <span className={`px-2 py-0.5 rounded text-[9px] font-bold font-mono uppercase tracking-widest ${userInputs.status ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-red-500/10 text-red-400 border border-red-500/20"}`}>
                                     {userInputs.status ? "Active" : "Inactive"}
                                 </span>
@@ -173,7 +173,7 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
                             {/* Input Field - Name */}
                             <div className="flex flex-col gap-1.5">
                                 <label htmlFor={`${baseId}-name`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">User Name</label>
-                                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
+                                <div className="relative flex items-center h-10 bg-white/3 rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
                                     <input 
                                         id={`${baseId}-name`}
                                         type="text" 
@@ -187,8 +187,8 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
 
                             {/* Input Field - Age */}
                             <div className="flex flex-col gap-1.5">
-                                <label htmlFor={`${baseId}-age`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Age Allocation</label>
-                                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
+                                <label htmlFor={`${baseId}-age`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Age </label>
+                                <div className="relative flex items-center h-10 bg-white/3 rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
                                     <input 
                                         id={`${baseId}-age`}
                                         type="number" 
@@ -202,8 +202,8 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
 
                             {/* Input Field - Email (Readonly) */}
                             <div className="flex flex-col gap-1.5 opacity-60 select-none cursor-not-allowed">
-                                <label htmlFor={`${baseId}-email`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/20">E-mail Routing (Locked)</label>
-                                <div className="relative flex items-center h-10 bg-white/[0.01] rounded-xl border border-white/5 cursor-not-allowed">
+                                <label htmlFor={`${baseId}-email`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/20">E-mail (Locked)</label>
+                                <div className="relative flex items-center h-10 bg-white/1 rounded-xl border border-white/5 cursor-not-allowed">
                                     <input 
                                         id={`${baseId}-email`}
                                         type="text" 
@@ -218,7 +218,7 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
                             {/* Input Field - Contact */}
                             <div className="flex flex-col gap-1.5">
                                 <label htmlFor={`${baseId}-contact`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Contact Number</label>
-                                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
+                                <div className="relative flex items-center h-10 bg-white/3 rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
                                     <input 
                                         id={`${baseId}-contact`}
                                         type="tel" 
@@ -233,7 +233,7 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
                             {/* Input Field - Membership Number */}
                             <div className="flex flex-col gap-1.5">
                                 <label htmlFor={`${baseId}-memNum`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Membership Code</label>
-                                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
+                                <div className="relative flex items-center h-10 bg-white/3 rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
                                     <input 
                                         id={`${baseId}-memNum`}
                                         type="text" 
@@ -250,8 +250,8 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
                         <div className="flex flex-col gap-4">
                             {/* Input Selector - Gender */}
                             <div className="flex flex-col gap-1.5">
-                                <label htmlFor={`${baseId}-gender`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Gender Identity</label>
-                                <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300 px-2">
+                                <label htmlFor={`${baseId}-gender`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Gender</label>
+                                <div className="relative flex items-center h-10 bg-white/3 rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300 px-2">
                                     <select
                                         id={`${baseId}-gender`}
                                         value={userInputs.gender}
@@ -296,7 +296,7 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
 
                             {/* Input Selector - Membership Package */}
                             <div className="flex flex-col gap-1.5">
-                                <label htmlFor={`${baseId}-package`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Subscription Package Matrix</label>
+                                <label htmlFor={`${baseId}-package`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Package</label>
                                 <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300 px-2">
                                     <select
                                         id={`${baseId}-package`}
@@ -315,7 +315,7 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
 
                             {/* Input Selector - Status */}
                             <div className="flex flex-col gap-1.5">
-                                <label htmlFor={`${baseId}-status`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Deployment Status</label>
+                                <label htmlFor={`${baseId}-status`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer">Status</label>
                                 <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300 px-2">
                                     <select
                                         id={`${baseId}-status`}
@@ -340,12 +340,12 @@ const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
                         onClick={handleConfirm}
                         className="h-10 px-6 rounded-xl text-xs font-bold tracking-wider uppercase text-black bg-[#0ae2ff7a] border border-[#0affca]/20 hover:bg-[#0ae2ffad] shadow-[0_4px_12px_rgba(10,255,202,0.2)] active:scale-95 transition-all duration-250 cursor-pointer"
                     >
-                        Commit Changes
+                        Update
                     </button>
                     <button
                         type="button"
                         onClick={() => setIsModalOpen(false)}
-                        className="h-10 px-5 rounded-xl text-xs font-bold tracking-wider uppercase text-white/50 bg-white/[0.02] border border-white/5 hover:bg-white/[0.06] hover:text-white/80 transition-all duration-200 cursor-pointer"
+                        className="h-10 px-5 rounded-xl text-xs font-bold tracking-wider uppercase text-white/50 bg-white/2 border border-white/5 hover:bg-white/6 hover:text-white/80 transition-all duration-200 cursor-pointer"
                     >
                         Cancel
                     </button>

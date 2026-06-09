@@ -35,7 +35,7 @@ export const Ripple = React.memo(function Ripple({
     <div
       ref={containerRef}
       className={twMerge(
-        "pointer-events-none absolute inset-0 mask-[linear-gradient(to_bottom,white,transparent)] select-none",
+        "pointer-events-none absolute inset-0 mask-[linear-gradient(to_bottom,blue,transparent)] select-none",
         className
       )}
       {...props}
@@ -50,7 +50,7 @@ export const Ripple = React.memo(function Ripple({
         return (
           <div
             key={i}
-            className="animate-ripple bg-[#307fff]  absolute rounded-full border shadow-xl"
+            className="animate-ripple bg-[#0cceff]  absolute rounded-full border shadow-xl"
             style={
               {
                 "--i": i,

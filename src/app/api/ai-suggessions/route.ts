@@ -3,7 +3,7 @@ import OpenAI from "openai";
 
 export async function POST(req: NextRequest) {
   try {
-    const { height, weight, goals, experienceLevel, promptType, scheduleData } = await req.json();
+    const { height, weight, goals, experienceLevel, promptType, customPrompt, scheduleData } = await req.json();
 
     const openai = new OpenAI({
       apiKey: process.env.OPEN_AI_API_KEY,
@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
 
     const prompts = {
 
-    withSchedule: `Generate a weekly workout plan for a user with height ${height}cm, weight ${weight}kg, goal ${goals}, and experience level ${experienceLevel}.  
+      withScheduleNoPropmt: `Generate a weekly workout plan for a user with height ${height}cm, weight ${weight}kg, goal ${goals}, and experience level ${experienceLevel}.  
 
 You are also given an existing JSON object called scheduleData.  
 - Keep all fields and values from scheduleData exactly as provided.  
@@ -44,8 +44,74 @@ Example structure:
 description:"Your Discription about the plan"
 }
 `,
+      withScheduleAndPrompt: `Generate a weekly workout plan for a user with height ${height}cm, weight ${weight}kg, goal ${goals}, and experience level ${experienceLevel}.ADMIN HAS GIVEN SPECIFIC INSTRUCTIONS mentioned within quotes.consider them with highest Priority " ${customPrompt} "  
+              You are also given an existing JSON object called scheduleData.  
+              - Keep all fields and values from scheduleData exactly as provided.  
+              - Merge your plan with scheduleData by adding new workouts, days, or focus items if needed.  
+              - Do not remove or overwrite any of the admin’s data.  
+              - Correct spelling mistakes silently.  
+              - maximum of 3 days. NO MORE THAN 3 DAYS
+              - Return ONLY a valid JSON object,   no code fences.add a little discription about the workout plan in the description filed 
+              below
+              scheduleData = ${scheduleData}
 
-    noShedule: `Generate a weekly workout plan for a user with height ${172}cm, weight ${90}kg, goal ${"weight loss"}, and experience level ${"1 year"}. Generate a weekly workout plan as a valid JSON object.
+              Example structure:
+              {data:{
+                "title": "example schedule",
+                "frequency": "day after day",
+                "workoutsCount": 10,
+                "workouts": [
+                  {
+                    "day": 1,
+                    "schedule": [
+                      { "id": 1, "name": "Leg Extension", "reps": [10, 8, 6] },
+                      { "id": 2, "name": "Barbell Shoulder Press", "reps": [10, 8, 6] }
+                    ]
+                  }
+                ],
+                "duration": 3,
+                "focus": ["Chest", "Shoulders", "Arms"]
+              },
+              description:"Your Discription about the plan"
+              }
+
+               MAKE SURE TO ADD A DESCRIPTION to the description .
+              `,
+
+
+      noScheduleButPrompt: `Generate a weekly workout plan for a user with height ${height}cm, weight ${weight}kg, goal ${goals}, and experience level ${experienceLevel}. ADMIN HAS GIVEN SPECIFIC INSTRUCTIONS mentioned within quotes.consider them with highest Priority " ${customPrompt} ". Generate a weekly workout plan as a valid JSON object.
+Return ONLY the JSON,  no code fences.add a little discription about the workout plan in the description filed below
+Structure: {data:{
+            title: 'Basic Schedule',
+            frequency: 'day after day',
+            workoutsCount: 10,
+            workouts: [
+                {
+                    day: 1,
+                    schedule:
+                        [{ id: 1, name: "Leg Extension", reps: [10, 8, 6] },
+                        { id: 2, name: "Barbell Shoulder Press", reps: [10, 8, 6] },
+                        { id: 3, name: "Dumbbell Side Lateral", reps: [10, 8, 6] },
+                        { id: 4, name: "Bent-Over Side Lateral", reps: ["10-12", "10-12", "10-12"] },
+                        { id: 5, name: "Flat Bench Press", reps: [10, 8, 6] },
+                        { id: 6, name: "Straight-Arm Pullover", reps: [12, 12, 12] },
+                        { id: 7, name: "Lat Pulldown", reps: [12, 10, 8] },
+                        { id: 8, name: "Barbell Curl", reps: [10, 8, 6] },
+                        { id: 9, name: "Triceps Extension", reps: [10, 8, 6] },
+                        { id: 10, name: "Forearm Exercise", reps: [15, 15, 15] }]
+                }
+
+            ],
+            duration: 3,
+            focus: ["Balanced full-body workout with emphasis on chest", "Shoulders", "Arms", "Basic strength"]
+        },
+        description:"Your Discription about the plan"   
+        }
+        MAKE SURE TO ADD A DESCRIPTION to the description .
+        `,
+
+
+      noScheduleNoPrompt: `Generate a weekly workout plan for a user with height ${height}cm, weight ${weight}kg, goal ${goals}, and experience level ${experienceLevel}. Generate a weekly workout plan as a valid JSON object.
 Return ONLY the JSON,  no code fences.add a little discription about the workout plan in the description filed below
 Structure: {data:{
             title: 'Basic Schedule',
@@ -75,9 +141,9 @@ Structure: {data:{
             
         }`
 
-  }
+    }
 
-
+    console.log("At backend", promptType, prompts[promptType as keyof typeof prompts])
     let response;
     try {
       response = await openai.responses.create({
@@ -154,4 +220,3 @@ Structure: {data:{
 
 
 
- 

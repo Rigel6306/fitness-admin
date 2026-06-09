@@ -1,84 +1,106 @@
-'use client'
+"use client";
 import { CustomTabsWithTooltips } from "@/src/components/ui/tabsCard";
 import { Ripple } from "../ui/ripple";
 import { LightRays } from "../ui/lightRays";
 import { TypingAnimation } from "../ui/typingAnimation";
 import { TextAnimate } from "../ui/textAnimation";
-import axios from 'axios'
+import axios from 'axios';
 import { useState } from "react";
-import { motion } from 'motion/react'
+import { motion, AnimatePresence } from 'motion/react';
 import AnimatedContainer from "../ui/animatedContainer";
-import { RiCpuLine } from "react-icons/ri";
+import { RiCpuLine, RiMessage3Line } from "react-icons/ri";
 import { HiSparkles } from "react-icons/hi2";
 
 type props = {
      userData: { data: any },
      setIsAiLoading: any,
      setWorkoutPlanInfo: any,
-     setWorkoutDayList: any
+     workoutPlanInfo: any,
+     focusList: any,
+     workoutDayList: any,
+     setWorkoutDayList: any,
      setFocusList: any
-}
+};
 
-const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayList, setFocusList }: props) => {
+const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayList, workoutPlanInfo, focusList, workoutDayList, setFocusList }: props) => {
 
-     // Handling ai-suggession api call
-     const { data } = userData
-     const [isLoading, setIsLoading] = useState(false)
-     const [aiDescription, setAiDescription] = useState('')
-     const [isInitialLoad, setIsInitialLoad] = useState(true)
+     const { data } = userData;
+     const [isLoading, setIsLoading] = useState(false);
+     const [aiDescription, setAiDescription] = useState('');
+     const [prompt, setPrompt] = useState('');
 
-     setTimeout(() => {
-          setIsInitialLoad(false)
-     }, 1800)
+     let scheduleData = {
+          ...workoutPlanInfo,
+          focus: focusList
+               .filter(i => i.selected)
+               .map(i => i.name),
+          workouts: workoutDayList,
+          workoutsCount: workoutDayList[0]?.schedule.length
+     };
+
+     const hasSchedule = scheduleData.workouts && scheduleData.workouts.length > 0;
+     const hasPrompt = prompt.trim() !== '';
+
+     let promptType: string;
+     if (hasSchedule && hasPrompt) {
+          promptType = "withScheduleAndPrompt";
+     } else if (hasSchedule) {
+          promptType = "withScheduleNoPropmt";
+     } else if (hasPrompt) {
+          promptType = "noScheduleButPrompt";
+     } else {
+          promptType = "noScheduleNoPrompt";
+     }
 
      const handleGenerateSchedule = async () => {
-          setIsLoading(true)
-          setIsAiLoading(true)
-         
-          const responce = await axios.post("http://localhost:3000/api/ai-suggessions", {
-               height: data.height,
-               weight: data.weight,
-               goals: "weight Loose",
-               experienceLevel: "2",
-               promptType: "withSchedule",
-               scheduleData: {
-                    title: "NEW Schedule",
-                    frequency: "1 day per week",
-                    workoutsCount: 10,
-                    workouts: [
-                         {
-                              day: 1,
-                              schedule: [
-                                   { id: 1, name: "Leg Extension", reps: [10, 8, 6] },
-                                   { "id": 2, name: "Barbell Shoulder Press", reps: [10, 8, 6] }
-                              ]
-                         }
-                    ],
-                    duration: 3,
-                    focus: ["Chest", "Shoulders", "Arms"]
-               }
-          })
-          const { success } = responce.data
-         
-          if (success) {
-               // Transform reps from numbers to strings
-               const workoutsWithStringReps = responce.data.data.data.workouts.map((day: any) => ({
-                    ...day,
-                    schedule: day.schedule.map((exercise: any) => ({
-                         ...exercise,
-                         reps: exercise.reps.map((rep: any) => String(rep))
-                    }))
-               }))
+          setIsLoading(true);
+          setIsAiLoading(true);
 
-               console.log("Ai Response data checking",  responce.data.data.data)
-               setFocusList(prev=>([...prev,...responce.data.data.data.focus.map(item=>({name:item,selected:true}))]))
-               setWorkoutPlanInfo(responce.data.data.data)
-               setAiDescription(responce.data.data.description)
-               setWorkoutDayList(workoutsWithStringReps)
-               setIsAiLoading(false)
-               setIsLoading(false)
+          try {
+               const responce = await axios.post("http://localhost:3000/api/ai-suggessions", {
+                    height: data.height,
+                    weight: data.weight,
+                    goals: "weight Loose",
+                    experienceLevel: "2",
+                    promptType: promptType,
+                    customPrompt: prompt,
+                    scheduleData: scheduleData
+               });
+               const { success } = responce.data;
+
+               if (success) {
+                    const workoutsWithStringReps = responce.data.data.data.workouts.map((day: any) => ({
+                         ...day,
+                         schedule: day.schedule.map((exercise: any) => ({
+                              ...exercise,
+                              reps: exercise.reps.map((rep: any) => String(rep))
+                         }))
+                    }));
+
+                    setTimeout(() => {
+                         setFocusList(prev => ([...prev, ...responce.data.data.data.focus.map(item => ({ name: item, selected: true }))]));
+                         setWorkoutPlanInfo(responce.data.data.data);
+
+                         const desc1 = responce?.data?.data?.description;
+                         const desc2 = responce?.data?.data?.data?.description
+                         if (desc1 && desc1.trim() !== "") {
+                              setAiDescription(desc1);
+                         } else if (desc2 && desc2.trim() !== "") {
+                              setAiDescription(desc2);
+                         }
+
+                         setAiDescription(responce.data.data.description);
+                         setWorkoutDayList(workoutsWithStringReps);
+                         setIsAiLoading(false);
+                         setIsLoading(false);
+                    }, 3000);
+               }
+          } catch (error) {
+               console.error("AI Generation Failed:", error);
+               setIsLoading(false);
+               setIsAiLoading(false);
           }
-     }
+     };
 
      return (
           <motion.div
@@ -94,70 +116,114 @@ const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayL
                     duration: 0.3,
                     ease: 'easeInOut'
                }}
-               className="bg-black/60 w-[20vw] h-[90vh] rounded-2xl p-6 flex flex-col items-center backdrop-blur-xl overflow-hidden border border-t-white/10 border-x-white/5 border-b-white/0 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.8)] relative" 
+               className="bg-black/60 w-[22vw] min-w-70 h-[90vh] rounded-2xl p-5 flex flex-col items-center backdrop-blur-xl overflow-hidden border-t-white/30 border-b-white/5 border border-x-white/4 shadow-[0_8px_20px_-6px_rgba(255,255,255,0.05),inset_0_1px_1px_rgba(255,255,255,0.15)]"
           >
-               {/* Decorative Ambient Underlays */}
-               <div className="absolute -bottom-16 -left-16 w-36 h-36 bg-[#0affca]/[0.015] blur-3xl rounded-full pointer-events-none" />
 
-               {/* Your Original Background Render Signals */}
-               {isLoading && <LightRays color="#0affca22" />}
-               {isInitialLoad && <LightRays color="#0affca22" />}
-
-               {/* Heading Section */}
-               <div className="relative z-10 flex flex-col flex-1 items-center w-full shrink-0">
-                    <div className="heading flex justify-center flex-col items-center border-b border-white/5 pb-4 w-full">
-                         <div className="p-2 mb-2 bg-[#0c6955]/20 border border-[#0affca]/20 rounded-xl text-[#0affca] shadow-[0_0_15px_rgba(10,255,202,0.1)] flex items-center justify-center">
-                              <RiCpuLine size={16} className={isLoading ? "animate-spin" : "animate-pulse"} />
+               <LightRays />
+               {/* Headless Branding Block - Contrast Fixed to White/Cyan */}
+               <div className="relative z-10 flex flex-col items-center w-full shrink-0 mb-4">
+                    <div className="heading flex justify-center flex-col items-center border-b border-white/5 pb-3 w-full">
+                         <div className="flex items-center gap-2">
+                              <p className="text-xs font-bold tracking-wider uppercase text-black/90">
+                                   AI Schedule Assistant
+                              </p>
                          </div>
-                         <p className="text-sm font-bold tracking-wider uppercase text-white/90 flex items-center gap-1.5 justify-center">
-                              AI Schedule Assistant <HiSparkles className="text-[#0affca] text-xs" />
+                         <p className="text-black font-bold text-[8px] font-mono tracking-widest uppercase mt-1">
+                              I GOT YA
                          </p>
-                         <p className="text-white/30 text-[9px] font-mono tracking-widest uppercase mt-0.5">
-                              Engine // Intelligent Companion
-                         </p>
-                    </div>
-
-                    {/* Ripple Container Box */}
-                    <div className="flex h-40 w-40 max-h-40 relative rounded-full items-center justify-center overflow-hidden pointer-events-none z-0 mt-4">
-                         <Ripple />
                     </div>
                </div>
 
-               {/* Center Dynamic Response Workspace Section */}
+               {/* Center Dynamic Response Workspace Section - Dynamic Centering Engine */}
                {isLoading ? (
-                    <div className="relative z-10 flex flex-col flex-2 items-center justify-center text-center p-4 bg-white/[0.01] border border-white/5 rounded-xl w-full my-4">
-                         <p className="text-xs font-bold font-mono tracking-wider uppercase text-[#0affca] animate-pulse">Processing Parameters...</p>
-                         <p className="text-[11px] text-white/40 font-medium mt-1">Synchronizing neural prescription splits.</p>
+                    <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center p-5 bg-white/2 border border-white/5 rounded-xl w-full my-auto">
+                         <p className="text-xs font-bold font-mono tracking-wider uppercase text-[#0affca] animate-pulse">Hold Tight...</p>
+                         <p className="text-[11px] text-white/40 font-medium mt-1 mb-4">I'm Working on it.</p>
+                         <div className="flex h-32 w-32 relative rounded-full items-center justify-center overflow-hidden pointer-events-none opacity-60">
+                              <Ripple />
+                         </div>
                     </div>
                ) : (
-                    <div className="relative z-10 flex flex-col flex-2 items-center text-wrap px-4 text-justify w-full my-4 overflow-y-auto scrollbar-none">
-                         {aiDescription ? (
-                              <div className="p-3.5 bg-white/[0.01] border border-white/5 rounded-xl w-full">
-                                   <TextAnimate animation="blurIn" as="h1" className="leading-relaxed text-[11px] text-white/60 text-justify font-medium">
-                                        {`Hey there. I just created your schedule. ${aiDescription}`}
-                                   </TextAnimate>
-                              </div>
-                         ) : (
-                              <div className="p-3.5 bg-white/[0.01] border border-dashed border-white/5 rounded-xl text-center w-full py-8">
-                                   <p className="text-[11px] text-white/30 font-medium leading-relaxed">
-                                        No schedule generated inside this viewport yet. Deploy directives below.
+                    <div className="relative z-10 flex-1 flex flex-col gap-4 w-full my-auto overflow-y-auto scrollbar-none justify-center py-2">
+
+                         {/* AI Description Response Module */}
+                         <AnimatePresence mode="popLayout">
+                              {aiDescription && (
+                                   <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="p-3.5 bg-[#0c6955]/10 border border-[#0affca]/20 rounded-xl w-full shrink-0 shadow-[0_0_20px_rgba(10,255,202,0.02)]"
+                                   >
+                                        <div className="flex items-center gap-1.5 mb-2 border-b border-white/5 pb-1.5">
+                                             <HiSparkles className="text-[#0affca] animate-spin" size={12} />
+                                             <span className="text-[9px] font-mono tracking-wider text-white/70 uppercase">Hear's What i did </span>
+                                        </div>
+                                        {/* Fixed alignment wrapper block */}
+                                        <div className="w-full text-left text-wrap whitespace-pre-wrap break-words">
+                                             <TextAnimate
+                                                  animation="blurIn"
+                                                  as="p"
+                                                  className="leading-relaxed text-[11px] text-white/80 font-medium tracking-wide"
+                                             >
+                                                  {`I just created your schedule. ${aiDescription}`}
+                                             </TextAnimate>
+                                        </div>
+                                   </motion.div>
+                              )}
+                         </AnimatePresence>
+
+                         {/* Initial Input & Welcome Module */}
+                         <div className="w-full flex flex-col gap-3.5 bg-white/[0.02] border border-white/10 rounded-xl p-4 shadow-[inset_0_1px_2px_rgba(255,255,255,0.02)]">
+
+                              {/* Status / Instruction Header */}
+                              <div className="flex flex-col gap-1 text-left w-full border-b border-white/5 pb-2.5">
+                                   <div className="flex items-center gap-1.5">
+                                        <span className="w-2.5 h-2.5 rounded-full bg-[#0affca] animate-pulse shadow-[0_0_8px_#0affca]" />
+                                        <p className="text-[9px] font-mono tracking-widest text-[#0affca] uppercase">
+                                             {aiDescription ? "Anything else?" : "Hi. Hope you doing good."}
+                                        </p>
+                                   </div>
+                                   <p className="text-[10px] text-white/50 font-medium leading-normal mt-0.5">
+                                        {aiDescription
+                                             ? " Let me know what to change and I'll adjust it instantly."
+                                             : "Want me to handle it? or just tell me what's on your mind, i'll follow your lead."
+                                        }
                                    </p>
                               </div>
-                         )}
+
+                              {/* Enhanced Styled Input Container */}
+                              <div className="relative flex flex-col bg-black/40 rounded-xl border border-white/5 focus-within:border-[#0affca]/30 focus-within:shadow-[0_0_12px_rgba(10,255,202,0.05)] transition-all duration-300 p-2.5">
+                                   <textarea
+                                        name="title"
+                                        onChange={(e) => { setPrompt(e.target.value) }}
+                                        value={prompt}
+                                        placeholder={aiDescription ? "e.g., Swap the leg exercises to Wednesday, add more arm volume..." : "e.g., Target upper chest growth, short rest periods, 45 minute block limits..."}
+                                        className="w-full h-20 text-white/90 bg-transparent border-none outline-none text-[11px] font-medium tracking-wide placeholder:text-white/20 resize-none scrollbar-none leading-normal"
+                                   />
+                                   <div className="flex justify-end w-full border-t border-white/5 pt-1.5 mt-1">
+                                        <span className="text-[8px] font-mono text-white/30 uppercase flex items-center gap-1">
+                                             <RiMessage3Line size={10} /> Prompter Active
+                                        </span>
+                                   </div>
+                              </div>
+                         </div>
                     </div>
                )}
 
                {/* Button Trigger Controls Section */}
                <div className="relative z-10 border-t border-white/5 pt-4 w-full shrink-0 flex items-center justify-center">
-                    <div 
-                         className="w-full h-10 bg-[#0ae2ff7a] border border-[#0affca]/20 hover:bg-[#0ae2ffad] shadow-[0_4px_12px_rgba(10,255,202,0.15)] active:scale-[0.98] transition-all duration-250 cursor-pointer flex items-center justify-center rounded-xl"
+                    <button
                          onClick={handleGenerateSchedule}
+                         disabled={isLoading}
+                         className="w-40 h-10 bg-black/5 hover:bg-white/50 border border-[#5e1c82fc] hover:border-white active:scale-[0.98] transition-all duration-500 cursor-pointer flex items-center justify-center rounded-xl group"
                     >
-                         <p className="text-xs font-bold tracking-wider uppercase text-black">Generate Schedule</p>
-                    </div>
+                         <p className="text-xs font-bold tracking-wider uppercase text-white group-hover:text-black transition-colors  transition-all duration-300  ">
+                              {aiDescription ? "Re-Generate" : "Generate"}
+                         </p>
+                    </button>
                </div>
           </motion.div>
      );
-}
+};
 
 export default AIWindow;

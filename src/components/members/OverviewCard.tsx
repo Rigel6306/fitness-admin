@@ -137,7 +137,7 @@ const OverviewCard = ({ userInfo }) => {
                                 <FaChalkboardUser size={17} />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-white/30 text-[10px] font-bold tracking-widest uppercase font-sans">Tier Level</span>
+                                <span className="text-white/30 text-[10px] font-bold tracking-widest uppercase font-sans">Package</span>
                                 <span className="text-white/90 font-bold font-sans text-sm uppercase tracking-wider mt-0.5">{userInfo.packageName}</span>
                             </div>
                         </div>

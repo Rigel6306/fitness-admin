@@ -31,7 +31,7 @@ const GlassLiquidButton = ({
   const containerBg = "bg-transparent"; 
   
   // The overlay handles all structural glass styles safely
-  const overlayBg = "from-white/15 to-white/5 border-t-white/30 border-b-white/5";
+  const overlayBg = "from-white/10 via-black/5 to-white/10 border-t-white/30 border-b-white/5";
   const shadowColor =  "rgba(255,255,255,0.05)";
 
   return (
@@ -41,7 +41,7 @@ const GlassLiquidButton = ({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         // Added overflow-visible to ensure the wobble isn't clipped by the parent frame
-        className={`btnContainer flex gap-2 ${containerBg} rounded-4xl py-2 px-5 items-center justify-center relative origin-center text-white border border-transparent cursor-pointer select-none overflow-visible ${className}`}
+        className={`btnContainer flex gap-2 ${containerBg}  rounded-4xl py-2 px-5 items-center justify-center relative origin-center text-white border border-transparent cursor-pointer select-none overflow-visible  ${className}`}
         
         // Synchronized the parent container's micro-stretch to scale with the child cleanly
         animate={{
@@ -70,7 +70,7 @@ const GlassLiquidButton = ({
         {/* Liquid Glass Bubble Overlay - Now entirely handles the glass visualization */}
         <motion.div
           layoutId="liquidGlassBubbleOverlay"
-          className={`absolute inset-0 z-0 rounded-4xl bg-linear-to-b ${overlayBg} border border-x-white/10 shadow-[0_8px_20px_-6px_${shadowColor},inset_0_1px_1px_rgba(255,255,255,0.15)] backdrop-blur-md`}
+          className={`absolute inset-0 z-0 rounded-xl bg-linear-to-b from-white/10 via-black/10 to-white/13 border border-t-white/35 border-x-white/20 border-b-white/10 shadow-[0_8px_20px_-6px_rgba(255,255,255,0.14),inset_0_1px_1px_rgba(255,255,255,0.25),inset_0_-1px_8px_rgba(255,255,255,0.03)] backdrop-blur-[2px]`}
           initial={{ opacity: 0.6 }}
           animate={{
             opacity: isHovered ? 1 : 0.6,

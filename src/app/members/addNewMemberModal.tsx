@@ -137,7 +137,7 @@ const AddNewMemberModal = ({ setIsModalOpen }: AddNewMemberModalProps) => {
                                 value={userInputs.name}
                                 onChange={(e) => handleInputs("name", e.target.value)}
                                 className="absolute inset-0 w-full h-full px-3 text-white/80 bg-transparent border-none outline-none text-xs font-semibold tracking-wide placeholder:text-white/25 uppercase"
-                                placeholder="John Doe"
+                                placeholder="Rex Wikumpaala"
                             />
                         </div>
                     </div>

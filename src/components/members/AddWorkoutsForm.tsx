@@ -69,10 +69,10 @@ const AddWorkoutsForm = ({
             {day.schedule.map((exercise, exerciseIndex) => (
               <div 
                 key={exercise.id} 
-                className="bg-white/[0.02] border border-white/5 flex gap-3 rounded-xl p-3 items-center relative group transition-all duration-200 focus-within:border-white/10"
+                className="bg-white/2 border border-white/5 flex gap-3 rounded-xl p-3 items-center relative group transition-all duration-200 focus-within:border-white/10"
               >
                 {/* Index badge */}
-                <div className="w-5 h-5 flex items-center justify-center rounded-md bg-white/[0.04] text-[10px] font-mono font-bold text-white/40 border border-white/5">
+                <div className="w-5 h-5 flex items-center justify-center rounded-md bg-white/4 text-[10px] font-mono font-bold text-white/40 border border-white/5">
                   {String(exerciseIndex + 1).padStart(2, '0')}
                 </div>
 
@@ -126,7 +126,7 @@ const AddWorkoutsForm = ({
             }}
             className="w-full py-2.5 bg-[#060608]/20 border border-dashed border-white/5 hover:border-white/20 text-white/40 hover:text-white/90 text-[11px] font-bold font-mono tracking-wider uppercase rounded-xl cursor-pointer transition-all duration-200 text-center"
           >
-            + Inject Routine Sub-Movement
+            + Add a Workout
           </div>
         </div>
       ))}
