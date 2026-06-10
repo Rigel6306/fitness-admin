@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@google/genai": "^2.8.0",
     "ai": "^6.0.177",
     "axios": "^1.16.1",
     "class-variance-authority": "^0.7.1",
