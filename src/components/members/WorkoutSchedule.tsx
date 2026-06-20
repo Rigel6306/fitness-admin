@@ -14,7 +14,7 @@ const WorkoutSchedule = ({ userData, userId }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [schedules, setSchedules] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [err, setErr] = useState(false);
+    const [err, setErr] = useState<string | null>(null);
     const [editingSchedule, setEditingSchedule] = useState(null);
 
     const handleModal = () => {

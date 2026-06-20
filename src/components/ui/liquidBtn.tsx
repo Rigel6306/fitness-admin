@@ -8,6 +8,7 @@ interface GlassLiquidButtonProps {
   children: ReactNode;
   icon?: ReactNode;
   className?: string;
+   bubbleGradient?: string;
   /**
    * Optional theme for the button.
    * 'white' for frosted glass, 'black' for dark smoky glass.

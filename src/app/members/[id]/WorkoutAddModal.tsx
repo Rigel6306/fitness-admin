@@ -20,6 +20,7 @@ type Exercise = {
 };
 
 type WorkoutDay = {
+  
   day: number;
   schedule: Exercise[];
 };
@@ -27,7 +28,7 @@ type WorkoutDay = {
 type Props = {
   isModalOpen: boolean;
   setIsModalOpen: (open: boolean) => void;
-  userData: {},
+  userData: { data: any };
   userId: string;
   editingSchedule?: any;
 };
@@ -406,7 +407,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
                 </div>
               ) : (
                 <AddWorkoutsForm
-                  workoutDayList={workoutDayList}
+                  workoutDayList={workoutDayList as any}
                   handleRemoveDay={handleRemoveDay}
                   handleExerciseChange={handleExerciseChange}
                   handleRemoveExercise={handleRemoveExercise}

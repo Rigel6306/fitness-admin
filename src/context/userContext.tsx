@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useEffect, useState } from "react";
-import { subscribeToCollection } from "@/util/getCollection";
+import { subscribeToCollection } from "@/util/getUser";
 interface User {
   id: string
   data: any

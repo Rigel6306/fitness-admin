@@ -3,7 +3,7 @@
 import { useEffect, useState, type CSSProperties } from "react"
 import { motion, useAnimation } from "motion/react"
 import { twMerge } from "tailwind-merge"
-
+import { Variants } from "motion/react";
 interface EtherealFogLoaderProps extends React.HTMLAttributes<HTMLDivElement> {
   value: number // Progress from 0 to 100
   max?: number
@@ -140,7 +140,7 @@ export function EtherealFogLoader({
                 const driftX = 25 + Math.random() * 35
                 const driftY = 10 + Math.random() * 16
 
-                const cloudVariants = {
+                const cloudVariants:Variants = {
                   loop: {
                     opacity: [0.2, cloud.intensity, cloud.intensity * 0.6, 0.1, 0.2],
                     x: [-driftX * 0.1, driftX, -driftX * 0.3, driftX * 0.6, -driftX * 0.1],

@@ -4,11 +4,20 @@ import { useState, useId } from "react";
 import z, { email } from "zod";
 import AnimatedContainer from "@/src/components/ui/animatedContainer";
 
-const MemberInfoEditModal = ({ isModalOpen, setIsModalOpen, userData }) => {
+interface MemberInfoEditModalProps {
+  isModalOpen: boolean;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  userData: {
+      id: string;
+      data: Record<string, any>;
+  };
+}
+
+const MemberInfoEditModal :React.FC<MemberInfoEditModalProps>= ({ isModalOpen, setIsModalOpen, userData }) => {
     const baseId = useId();
     const [userInputs, setUserInputs] = useState({ ...userData.data })
 
-    const handleInputs = (field, value) => {
+    const handleInputs = (field:any, value:any) => {
         if (field === 'status') {
             setUserInputs((prev) => ({ ...prev, [field]: value === "active" ? true : false }))
             return

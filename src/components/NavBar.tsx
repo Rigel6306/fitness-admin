@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { useState, useEffect, useRef } from "react";
-
+import { Variants } from "motion/react";
 const NavBar = () => {
     const pathname = usePathname();
 
@@ -32,7 +32,7 @@ const NavBar = () => {
     }, [activeIndex]);
 
     // Container variant that dynamically reacts to the movement direction
-    const containerVariants = {
+    const containerVariants :Variants = {
         animate: (dir: number) => ({
             scaleX: dir === 0 ? 1 : [1, dir * 0.02 + 1, dir * -0.01 + 1, 1], // Skews subtly in the direction of movement
             scaleY: dir === 0 ? 1 : [1, 0.92, 1.01, 1],

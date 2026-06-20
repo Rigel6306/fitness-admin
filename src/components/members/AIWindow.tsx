@@ -92,7 +92,7 @@ const AIWindow = ({ userData, setIsAiLoading, setWorkoutPlanInfo, setWorkoutDayL
           }, 150);
 
           try {
-               const responce = await axios.post("http://localhost:3000/api/ai-suggessions", {
+               const responce = await axios.post("/api/ai-suggessions", {
                     height: data.height,
                     weight: data.weight,
                     goals: "weight Loose",
