@@ -113,7 +113,7 @@ const AddNewMemberModal = ({ setIsModalOpen }: AddNewMemberModalProps) => {
                     </div>
                     <button 
                         type="button"
-                        className="text-white/40 hover:text-white/90 text-xs font-mono tracking-wider uppercase bg-white/[0.03] border border-white/5 px-2.5 py-1.5 rounded-xl cursor-pointer transition-all duration-200" 
+                        className="text-white/40 hover:text-white/90 text-xs font-mono tracking-wider uppercase bg-white/3 border border-white/5 px-2.5 py-1.5 rounded-xl cursor-pointer transition-all duration-200" 
                         onClick={() => setIsModalOpen(false)}
                     >
                         ✕
@@ -128,8 +128,8 @@ const AddNewMemberModal = ({ setIsModalOpen }: AddNewMemberModalProps) => {
                         <label htmlFor={`${baseId}-name`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 flex items-center gap-2 cursor-pointer select-none">
                             <BiUser size={13} className="text-white/30" /> Full Name
                         </label>
-                        <div className={`relative flex items-center h-10 bg-white/[0.03] rounded-xl border transition-all duration-300 ${
-                            validInput.name ? "border-[#0affca]/40 bg-[#0affca]/[0.01]" : "border-white/5 focus-within:border-white/20"
+                        <div className={`relative flex items-center h-10 bg-white/3 rounded-xl border transition-all duration-300 ${
+                            validInput.name ? "border-[#0affca]/40 bg-[#0affca]/1" : "border-white/5 focus-within:border-white/20"
                         }`}>
                             <input
                                 id={`${baseId}-name`}
@@ -145,10 +145,10 @@ const AddNewMemberModal = ({ setIsModalOpen }: AddNewMemberModalProps) => {
                     {/* Identity - Membership Badge ID Number */}
                     <div className="flex flex-col gap-1.5">
                         <label htmlFor={`${baseId}-membershipNumber`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 flex items-center gap-2 cursor-pointer select-none">
-                            <FaRegIdCard size={13} className="text-white/30" /> Roster Index Number
+                            <FaRegIdCard size={13} className="text-white/30" /> Membership Number
                         </label>
-                        <div className={`relative flex items-center h-10 bg-white/[0.03] rounded-xl border transition-all duration-300 ${
-                            validInput.membershipNumber ? "border-[#0affca]/40 bg-[#0affca]/[0.01]" : "border-white/5 focus-within:border-white/20"
+                        <div className={`relative flex items-center h-10 bg-white/3 rounded-xl border transition-all duration-300 ${
+                            validInput.membershipNumber ? "border-[#0affca]/40 bg-[#0affca]/1" : "border-white/5 focus-within:border-white/20"
                         }`}>
                             <input
                                 id={`${baseId}-membershipNumber`}
@@ -167,8 +167,8 @@ const AddNewMemberModal = ({ setIsModalOpen }: AddNewMemberModalProps) => {
                         <label htmlFor={`${baseId}-email`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 flex items-center gap-2 cursor-pointer select-none">
                             <MdOutlineAlternateEmail size={13} className="text-white/30" /> Email Address
                         </label>
-                        <div className={`relative flex items-center h-10 bg-white/[0.03] rounded-xl border transition-all duration-300 ${
-                            validInput.email ? "border-[#0affca]/40 bg-[#0affca]/[0.01]" : "border-white/5 focus-within:border-white/20"
+                        <div className={`relative flex items-center h-10 bg-white/3 rounded-xl border transition-all duration-300 ${
+                            validInput.email ? "border-[#0affca]/40 bg-[#0affca]/1" : "border-white/5 focus-within:border-white/20"
                         }`}>
                             <input
                                 id={`${baseId}-email`}
@@ -184,10 +184,10 @@ const AddNewMemberModal = ({ setIsModalOpen }: AddNewMemberModalProps) => {
                     {/* Contact - Mobile Dial Link */}
                     <div className="flex flex-col gap-1.5">
                         <label htmlFor={`${baseId}-contactNumber`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 flex items-center gap-2 cursor-pointer select-none">
-                            <CiMobile1 size={13} className="text-white/30" /> Primary Mobile
+                            <CiMobile1 size={13} className="text-white/30" /> Contact Number
                         </label>
-                        <div className={`relative flex items-center h-10 bg-white/[0.03] rounded-xl border transition-all duration-300 ${
-                            validInput.contactNumber ? "border-[#0affca]/40 bg-[#0affca]/[0.01]" : "border-white/5 focus-within:border-white/20"
+                        <div className={`relative flex items-center h-10 bg-white/3 rounded-xl border transition-all duration-300 ${
+                            validInput.contactNumber ? "border-[#0affca]/40 bg-[#0affca]/1" : "border-white/5 focus-within:border-white/20"
                         }`}>
                             <input
                                 id={`${baseId}-contactNumber`}
@@ -204,10 +204,10 @@ const AddNewMemberModal = ({ setIsModalOpen }: AddNewMemberModalProps) => {
                     {/* Demographics - Age Profile */}
                     <div className="flex flex-col gap-1.5">
                         <label htmlFor={`${baseId}-age`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 flex items-center gap-2 cursor-pointer select-none">
-                            <PiCalendarStarFill size={13} className="text-white/30" /> Age Profile
+                            <PiCalendarStarFill size={13} className="text-white/30" /> Age
                         </label>
-                        <div className={`relative flex items-center h-10 bg-white/[0.03] rounded-xl border transition-all duration-300 ${
-                            validInput.age ? "border-[#0affca]/40 bg-[#0affca]/[0.01]" : "border-white/5 focus-within:border-white/20"
+                        <div className={`relative flex items-center h-10 bg-white/3 rounded-xl border transition-all duration-300 ${
+                            validInput.age ? "border-[#0affca]/40 bg-[#0affca]/1" : "border-white/5 focus-within:border-white/20"
                         }`}>
                             <input
                                 id={`${baseId}-age`}
@@ -223,9 +223,9 @@ const AddNewMemberModal = ({ setIsModalOpen }: AddNewMemberModalProps) => {
                     {/* Demographics - Gender Classification Dropdown */}
                     <div className="flex flex-col gap-1.5">
                         <label htmlFor={`${baseId}-gender`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 flex items-center gap-2 cursor-pointer select-none">
-                            <BsGenderAmbiguous size={13} className="text-white/30" /> Gender Vector
+                            <BsGenderAmbiguous size={13} className="text-white/30" /> Gender 
                         </label>
-                        <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-[#0affca]/20 transition-all duration-300">
+                        <div className="relative flex items-center h-10 bg-white/3 rounded-xl border border-white/5 focus-within:border-[#0affca]/20 transition-all duration-300">
                             <select
                                 id={`${baseId}-gender`}
                                 value={userInputs.gender}
@@ -237,8 +237,8 @@ const AddNewMemberModal = ({ setIsModalOpen }: AddNewMemberModalProps) => {
                                     backgroundPosition: 'calc(100% - 12px) center',
                                 }}
                             >
-                                <option value="male" className="bg-[#121214] text-white/70">Male Identifier</option>
-                                <option value="female" className="bg-[#121214] text-white/70">Female Identifier</option>
+                                <option value="male" className="bg-[#121214] text-white/70">Male </option>
+                                <option value="female" className="bg-[#121214] text-white/70">Female </option>
                             </select>
                         </div>
                     </div>
@@ -246,10 +246,10 @@ const AddNewMemberModal = ({ setIsModalOpen }: AddNewMemberModalProps) => {
                     {/* Biometrics - Geometric Height Index */}
                     <div className="flex flex-col gap-1.5">
                         <label htmlFor={`${baseId}-height`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 flex items-center gap-2 cursor-pointer select-none">
-                            <RiLineHeight size={13} className="text-white/30" /> Height Metric
+                            <RiLineHeight size={13} className="text-white/30" /> Height 
                         </label>
-                        <div className={`relative flex items-center h-10 bg-white/[0.03] rounded-xl border transition-all duration-300 ${
-                            validInput.height ? "border-[#0affca]/40 bg-[#0affca]/[0.01]" : "border-white/5 focus-within:border-white/20"
+                        <div className={`relative flex items-center h-10 bg-white/3 rounded-xl border transition-all duration-300 ${
+                            validInput.height ? "border-[#0affca]/40 bg-[#0affca]/1" : "border-white/5 focus-within:border-white/20"
                         }`}>
                             <input
                                 id={`${baseId}-height`}
@@ -265,10 +265,10 @@ const AddNewMemberModal = ({ setIsModalOpen }: AddNewMemberModalProps) => {
                     {/* Biometrics - Mass Weight Index */}
                     <div className="flex flex-col gap-1.5">
                         <label htmlFor={`${baseId}-weight`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 flex items-center gap-2 cursor-pointer select-none">
-                            <LuWeight size={13} className="text-white/30" /> Mass Weight
+                            <LuWeight size={13} className="text-white/30" />Weight
                         </label>
-                        <div className={`relative flex items-center h-10 bg-white/[0.03] rounded-xl border transition-all duration-300 ${
-                            validInput.weight ? "border-[#0affca]/40 bg-[#0affca]/[0.01]" : "border-white/5 focus-within:border-white/20"
+                        <div className={`relative flex items-center h-10 bg-white/3 rounded-xl border transition-all duration-300 ${
+                            validInput.weight ? "border-[#0affca]/40 bg-[#0affca]/1" : "border-white/5 focus-within:border-white/20"
                         }`}>
                             <input
                                 id={`${baseId}-weight`}
@@ -284,9 +284,9 @@ const AddNewMemberModal = ({ setIsModalOpen }: AddNewMemberModalProps) => {
                     {/* Subscription Package Program Route Selection */}
                     <div className="flex flex-col gap-1.5 md:col-span-2">
                         <label htmlFor={`${baseId}-packageName`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 flex items-center gap-2 cursor-pointer select-none">
-                            <FaChalkboardUser size={13} className="text-white/30" /> Operations Membership Route
+                            <FaChalkboardUser size={13} className="text-white/30" /> Package
                         </label>
-                        <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-[#0affca]/20 transition-all duration-300">
+                        <div className="relative flex items-center h-10 bg-white/3 rounded-xl border border-white/5 focus-within:border-[#0affca]/20 transition-all duration-300">
                             <select
                                 id={`${baseId}-packageName`}
                                 value={userInputs.packageName}
@@ -313,7 +313,7 @@ const AddNewMemberModal = ({ setIsModalOpen }: AddNewMemberModalProps) => {
                     <button
                         type="button"
                         onClick={() => setIsModalOpen(false)}
-                        className="h-10 px-5 rounded-xl text-xs font-bold tracking-wider uppercase text-white/50 bg-white/[0.02] border border-white/5 hover:bg-white/[0.06] hover:text-white/80 transition-all duration-200 cursor-pointer"
+                        className="h-10 px-5 rounded-xl text-xs font-bold tracking-wider uppercase text-white/50 bg-white/2 border border-white/5 hover:bg-white/6 hover:text-white/80 transition-all duration-200 cursor-pointer"
                     >
                         Cancel
                     </button>
@@ -322,7 +322,7 @@ const AddNewMemberModal = ({ setIsModalOpen }: AddNewMemberModalProps) => {
                         onClick={handleConfirm}
                         className="h-10 px-6 rounded-xl text-xs font-bold tracking-wider uppercase text-black bg-[#0c6955] border border-[#0affca]/20 hover:bg-[#00f0bd] shadow-[0_4px_12px_rgba(10,255,202,0.2)] active:scale-95 transition-all duration-250 cursor-pointer"
                     >
-                        Confirm Provision
+                        Confirm 
                     </button>
                 </div>
             </AnimatedContainer>

@@ -51,7 +51,7 @@ const AddWorkoutsForm = ({
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-3 bg-[#0affca] rounded-sm shadow-[0_0_8px_rgba(10,255,202,0.4)]" />
               <p className="font-bold font-mono text-xs uppercase tracking-wider text-white/80">
-                Training Day Matrix {day.day}
+                Training Day {day.day}
               </p>
             </div>
 
@@ -60,7 +60,7 @@ const AddWorkoutsForm = ({
               onClick={() => handleRemoveDay(dayIndex)}
               className="text-white/30 hover:text-red-400 text-[10px] font-mono tracking-wider uppercase bg-white/[0.02] border border-white/5 hover:border-red-500/20 px-2 py-1 rounded-lg cursor-pointer transition-all duration-200"
             >
-              ✕ Purge Block
+              ✕ Remove Block
             </button>
           </div>
 
@@ -80,7 +80,7 @@ const AddWorkoutsForm = ({
                 <div className="relative flex-1 h-9 bg-[#060608]/40 rounded-lg border border-white/5 focus-within:border-white/20 transition-all duration-300">
                   <input
                     type="text"
-                    placeholder="Exercise Designation"
+                    placeholder="Exercise name"
                     required
                     value={exercise.name}
                     onChange={(e) =>

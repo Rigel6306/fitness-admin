@@ -12,6 +12,7 @@ export const updateDocument = async (docId:string,collectionName:string, updated
     const docRef = doc(db,collectionName,docId)
     await updateDoc(docRef,updatedData);
     console.log("Doc Updated Successfully")
+    return 'success'
   }
   catch(error){
     throw new Error("Error Occured")

@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { addNewPaymentDoc } from "@/util/addPayment";
-import { FaPray } from "react-icons/fa";
-import { error } from "console";
+import { updateDocument } from "@/util/updateDoc";
 export async function OPTIONS() {
   // Handle preflight requests for CORS
-  return NextResponse.json({}, {
+  return NextResponse.json(null, {
     status: 200,
     headers: {
       // whitelist your tunnel domain
@@ -18,9 +17,11 @@ export async function OPTIONS() {
 export const POST = async (req: NextRequest) => {
   try {
 
-    const getValues = (key: string) => formData.get(key)?.toString() || ''
 
     const formData = await req.formData();
+    console.log(formData)
+    const getValues = (key: string) => formData.get(key)?.toString() || ''
+
 
     const merchant_id = getValues("merchant_id");
     const order_id = getValues("order_id");
@@ -32,8 +33,16 @@ export const POST = async (req: NextRequest) => {
     const payment_id = getValues('payment_id')
     const status_message = getValues('status_message')
     const payment_method = getValues('method')
-    console.log(formData)
+    const custom2String = formData.get('custom_2').toString()
+  
+    //extract custom 2 details
+    const cleanString = custom2String.trim().slice(1, -1);
+    const jsonFormat = cleanString.replace(/([a-zA-Z0-9_]+)=([^,]*)/g, '"$1":"$2"');
+    const userInfo = JSON.parse(`{${jsonFormat}}`);
 
+    console.log("User info at payment endpoing", userInfo)
+
+    
     const localMerchantSecret = process.env.PAYHERE_MERCHANT_SECRET;
     const hashedSecret = crypto
       .createHash("md5")
@@ -65,17 +74,30 @@ export const POST = async (req: NextRequest) => {
           amount: payhere_amount,
           currency: payhere_currency,
           status_message,
-          payment_method
+          payment_method,
+          userName:`${userInfo.first_name} ${userInfo.last_name}`,
+          phone:userInfo.phone,
+          email:userInfo.email
+       
         })
 
+        const today = new Date()
+        const validUntil = new Date();
+        validUntil.setDate(today.getDate() + 30);
+       
+          await updateDocument(user_id, 'users', {
+            lastPaymentAt: today,
+            membershipValidUntil: validUntil,
+            status: true
+          })
         return new NextResponse("Payment Processed Successfully", { status: 200 })
 
       } catch (err) {
         console.error("Database update failed:", err)
-        return new NextResponse("Internal Server Error", {status:500})
+        return new NextResponse("Internal Server Error", { status: 500 })
       }
     }
-    return new NextResponse("Notification Recevied Non-Success", {status:200})
+    return new NextResponse("Notification Recevied Non-Success", { status: 200 })
   } catch (error) {
     return NextResponse.json({ error: "Invalid request" }, {
       status: 400,

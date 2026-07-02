@@ -3,32 +3,29 @@
 import { useState } from "react"
 import { motion, LayoutGroup } from "motion/react"
 
+
+type Tab = {
+  id:string,
+  label:string,
+  description?:string
+}
 interface CustomTabsProps {
-  setMode: (mode: boolean) => void
+  setMode: (mode: boolean) => void,
+  tabs:Tab[]
+
 }
 
-export const CustomTabsWithTooltips = ({ setMode }: CustomTabsProps) => {
+export const CustomTabsWithTooltips = ({ setMode,tabs }: CustomTabsProps) => {
   const [hovered, setHovered] = useState<string | null>(null)
-  const [type, setType] = useState("noAi")
+  const [type, setType] = useState(tabs[0].id)
 
-  const tabs = [
-    {
-      id: "noAi",
-      label: "Fully Manual Mode",
-      description: "No AI suggestions and spellcheck.",
-    },
-    {
-      id: "ai",
-      label: "AI Assist Mode",
-      description: "AI Assist by providing suggestions and spellcheck.",
-    },
-  ]
+
 
   // Find active index to trigger your keyframe container pulse layout
   const activeIndex = tabs.findIndex((tab) => tab.id === type)
 
   const handleNavClick = (id: string) => {
-    id === "ai" ? setMode(true) : setMode(false)
+    id === tabs[1].id ? setMode(true) : setMode(false)
     setType(id)
   }
 
@@ -95,7 +92,7 @@ export const CustomTabsWithTooltips = ({ setMode }: CustomTabsProps) => {
                     }}
                     transition={{
                         layout: {
-                          delay:0.34,
+                          delay:0,
                             type: "spring",
                             stiffness: 250, 
                             damping: 22,    

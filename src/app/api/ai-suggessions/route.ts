@@ -2,7 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { GoogleGenAI } from "@google/genai";
 import { WorkoutPlanSchema } from "@/src/const/prompts";
-
+export const OPTIONS = async () => {
+    return new NextResponse(null, {
+        status: 204,
+        headers: {
+            'Access-Control-Allow-Origin': '*', // Allows requests from your phone
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+    });
+};
 export async function POST(req: NextRequest) {
 
   const { height, weight, goals, experienceLevel, promptType, customPrompt, scheduleData, type } = await req.json();

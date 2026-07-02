@@ -8,6 +8,17 @@ module.exports = {
   ],
   theme: {
     extend: {
+
+      keyframes: {
+        scanline: {
+          "0%": { top: "0%" },
+          "50%": { top: "calc(100% - 1px)" },
+          "100%": { top: "0%" },
+        },
+      },
+      animation: {
+        scanline: "scanline 2s ease-in-out infinite",
+      },
       colors: {
         card: "#2c2c2c93",
         accent: "#FF6B6B",

@@ -49,6 +49,19 @@ const AUTOFILL_OVERRIDE = {
   transition: "background-color 5000s ease-in-out 0s",
 };
 
+  const tabs = [
+    {
+      id: "noAi",
+      label: "Fully Manual Mode",
+      description: "No AI suggestions and spellcheck.",
+    },
+    {
+      id: "ai",
+      label: "AI Assist Mode",
+      description: "AI Assist by providing suggestions and spellcheck.",
+    },
+  ]
+
 const INITIAL_FOCUS_LIST = [
   { name: 'Shoulders', selected: false },
   { name: 'Chest', selected: false },
@@ -284,7 +297,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
                 {editingSchedule?.id ? "Edit Workout Schedule" : "Add Workout Schedule"}
               </h2>
               <p className="text-white/30 text-[10px] font-mono tracking-widest uppercase mt-0.5">
-                Roster // {editingSchedule?.id ? "Modify existing physical prescription program" : "Architect comprehensive training matrix routine"}
+               {editingSchedule?.id ? "Modify existing training schedule" : "Create a comprehensive training schedule"}
               </p>
             </div>
             <button
@@ -301,7 +314,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
             <span className="text-[9px] font-bold font-mono tracking-widest uppercase text-white/30 mb-2">
               How would you like to manage?
             </span>
-            <CustomTabsWithTooltips setMode={setMode} />
+            <CustomTabsWithTooltips setMode={setMode} tabs={tabs} />
           </div>
 
           {/* Main Content Workspace Form (Optimized Scrolling Container) */}
@@ -331,7 +344,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
               {/* Field - Frequency */}
               <div className="flex flex-col gap-1.5">
                 <label htmlFor={`${baseId}-frequency`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer select-none">
-                  Frequency Velocity
+                  Frequency 
                 </label>
                 <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
                   <input
@@ -350,7 +363,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
               {/* Field - Duration */}
               <div className="flex flex-col gap-1.5">
                 <label htmlFor={`${baseId}-duration`} className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40 cursor-pointer select-none">
-                  Timeline Duration
+                  Duration
                 </label>
                 <div className="relative flex items-center h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-white/20 transition-all duration-300">
                   <input
@@ -370,7 +383,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
             {/* Target Focus Areas */}
             <div className="flex flex-col gap-2 shrink-0">
               <span className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40">
-                Target Biometric Focus Matrices
+                Target Focus Matrices
               </span>
               <div className="flex flex-wrap gap-2">
                 {focusList.map((focusItem, index) => (
@@ -392,7 +405,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
             {/* Dynamic Training Modules */}
             <div className="flex flex-col gap-3 min-h-[160px]">
               <span className="text-[10px] font-bold font-mono tracking-wider uppercase text-white/40">
-                Workout Sequence Calendar Blocks
+                Workout Schedule Calendar Blocks
               </span>
 
               {isAiLoading ? (
@@ -451,7 +464,7 @@ const WorkoutsAddModal = ({ isModalOpen, setIsModalOpen, userData, userId, editi
             <button
               type="button"
               onClick={handleCancle}
-              className="h-10 px-5 flex items-center justify-center rounded-xl text-xs font-bold tracking-wider uppercase text-white/50 bg-white/[0.02] border border-white/5 hover:bg-white/[0.06] hover:text-white/80 transition-all duration-200 cursor-pointer"
+              className="h-10 px-5 flex items-center justify-center rounded-xl text-xs font-bold tracking-wider uppercase text-white/50 bg-white/[0.02] border border-white/5 hover:bg-white/6 hover:text-white/80 transition-all duration-200 cursor-pointer"
             >
               Cancel
             </button>
