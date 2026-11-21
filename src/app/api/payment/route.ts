@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-import { addNewPaymentDoc } from "@/util/addPayment";
+import { addNewPaymentDoc } from "@/util/payment";
 import { updateDocument } from "@/util/updateDoc";
 export async function OPTIONS() {
   // Handle preflight requests for CORS
@@ -77,7 +77,8 @@ export const POST = async (req: NextRequest) => {
           payment_method,
           userName:`${userInfo.first_name} ${userInfo.last_name}`,
           phone:userInfo.phone,
-          email:userInfo.email
+          email:userInfo.email,
+          packageName:userInfo.packageName
        
         })
 

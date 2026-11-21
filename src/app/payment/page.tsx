@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useState } from 'react';
-import { motion ,AnimatePresence} from 'motion/react';
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { getPayments } from '@/util/payment';
 import CashAtDeskModal from './cashAtDeskModal';
 import {
     RiCoinsLine,
@@ -15,14 +16,8 @@ import {
     RiCloseLine
 } from "react-icons/ri";
 
-// Mock Data matching your fitness gym theme
-const initialPayments = [
-    { id: "TXN-9082", name: "charitha", plan: "Workouts only", amount: 25000.00, status: "completed", date: "2026-06-08", avatar: "⚡" },
-    { id: "TXN-8921", name: "Rigel Wikumpala", plan: "Zumba and workouts", amount: 3500.00, status: "completed", date: "2026-06-07", avatar: "🏋️‍♀️" },
-    { id: "TXN-8810", name: "Zendaya wijesinghe", plan: "Workouts only", amount: 2500.00, status: "pending", date: "2026-06-06", avatar: "🤖" },
-    { id: "TXN-8765", name: "Charitha Iravana", plan: "Zumba only", amount: 4000.00, status: "failed", date: "2026-06-05", avatar: "🏃‍♀️" },
-    { id: "TXN-8654", name: "Fuck off", plan: "Workouts + treadmill", amount: 3500.00, status: "completed", date: "2026-06-04", avatar: "🔥" },
-];
+
+
 
 const initialNotifications = [
     { id: 1, type: "alert", text: "Card expired  (Basic Tier).", time: "2 hours ago" },
@@ -32,25 +27,55 @@ const initialNotifications = [
 
 
 export default function PaymentManagement() {
-    const [payments, setPayments] = useState(initialPayments);
+
     const [notifications, setNotifications] = useState(initialNotifications);
     const [filter, setFilter] = useState('all');
+    const [filteredPayments, setFilterdPayments] = useState([])
     const [search, setSearch] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [payments, setPayments] = useState([])
+
     // Filter Logic
-    const filteredPayments = payments.filter(p => {
-        const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.id.toLowerCase().includes(search.toLowerCase());
-        if (filter === 'all') return matchesSearch;
-        return p.status === filter && matchesSearch;
-    });
+    useEffect(() => {
+        setFilterdPayments(payments)
+    }, [payments])
+
+
+    const filterQuery = (value) => {
+
+
+        setSearch(value)
+        const filterdList = payments.filter(p => {
+            const matchesSearch = p.userName.toLowerCase().includes(search.toLowerCase()) || p.docId.toLowerCase().includes(search.toLowerCase());
+            if (filter === 'all') return matchesSearch;
+            return p.status === filter && matchesSearch;
+        });
+        setFilterdPayments(filterdList)
+
+    }
+
+    const [loading, setLoading] = useState(false)
+    const [err, setErr] = useState('')
+
+    useEffect(() => {
+        const unsubscribe = getPayments(setPayments, setLoading, setErr)
+
+        return () => {
+            unsubscribe()
+        }
+    }, [])
+
+
+
+    console.log("Payments", payments)
 
     return (
         <div className="w-full min-h-screen text-white p-4 md:p-8 font-sans isolate">
             {/* Top Bar Matrix */}
             <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                 <div>
-                    <h1 className="text-xl font-black tracking-wide uppercase text-white">Ledge Terminal</h1>
-                    <p className="text-[#0affca] text-[10px] font-mono tracking-widest uppercase">Gym Revenue & Subscription Management</p>
+                    <h1 className="text-xl font-black tracking-wide uppercase text-white">Revenue Management</h1>
+                    <p className="text-[#0affca] text-[10px] font-mono tracking-widest uppercase">Revenue & Subscription Management</p>
                 </div>
 
                 {/* Micro Search Input Wrapped in Glass */}
@@ -61,9 +86,9 @@ export default function PaymentManagement() {
             <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 {[
                     { title: "Gross Revenue", value: "RS 4,890.00", sub: "+14% this week", icon: RiCoinsLine, color: "text-[#0affca]", bg: "bg-[#0c6955]/10 border-[#0affca]/20" },
-                    { title: "Completed Collects", value: "92", sub: "98.2% success rate", icon: RiUserReceivedLine, color: "text-[#0affca]", bg: "bg-white/[0.02] border-white/5" },
-                    { title: "Pending Pipelines", value: "RS 98.00", sub: "2 members pending", icon: RiTimeLine, color: "text-[#ffaa00]", bg: "bg-white/[0.02] border-white/5" },
-                    { title: "Failed Gates", value: "1 Active", sub: "Action required", icon: RiAlertLine, color: "text-[#ff007f]", bg: "bg-[#ff0055]/5 border-[#ff0055]/20" }
+                    { title: "Completed payments", value: "92", sub: "98.2% success rate", icon: RiUserReceivedLine, color: "text-[#0affca]", bg: "bg-white/[0.02] border-white/5" },
+                    { title: "Pending payments", value: "RS 98.00", sub: "2 members pending", icon: RiTimeLine, color: "text-[#ffaa00]", bg: "bg-white/[0.02] border-white/5" },
+                    { title: "Failed payments", value: "1 Active", sub: "Action required", icon: RiAlertLine, color: "text-[#ff007f]", bg: "bg-[#ff0055]/5 border-[#ff0055]/20" }
                 ].map((card, i) => (
                     <div key={i} className={`p-4 rounded-xl border backdrop-blur-md flex flex-col justify-between ${card.bg}`}>
                         <div className="flex justify-between items-start mb-2">
@@ -84,7 +109,7 @@ export default function PaymentManagement() {
                 {/* LEFT: Ledger Ledger Table (8 Columns Space) */}
                 <div className="lg:col-span-8 bg-black/20 backdrop-blur-md rounded-2xl border border-white/10 p-4 md:p-6 shadow-2xl">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-white/5 pb-4">
-                        <h2 className="text-xs font-bold tracking-wider uppercase text-white/80">Transaction Registry</h2>
+                        <h2 className="text-xs font-bold tracking-wider uppercase text-white/80">Transactions</h2>
 
                         {/* Segment Filters */}
                         <div className="flex gap-1.5 p-0.5 bg-black/40 border border-white/5 rounded-lg text-[10px] font-mono">
@@ -106,7 +131,7 @@ export default function PaymentManagement() {
                             type="text"
                             placeholder="Search roster or txn..."
                             value={search}
-                            onChange={(e) => setSearch(e.target.value)}
+                            onChange={(e) => filterQuery(e.target.value)}
                             className="w-full bg-transparent border-none outline-none py-2.5 text-xs text-white placeholder:text-white/20 font-mono"
                         />
                     </div>
@@ -117,7 +142,7 @@ export default function PaymentManagement() {
                             <thead>
                                 <tr className="border-b border-white/5 text-[9px] font-mono tracking-widest text-white/40 uppercase">
                                     <th className="pb-3 font-normal">Member</th>
-                                    <th className="pb-3 font-normal">Plan Profile</th>
+                                    <th className="pb-3 font-normal">Profile</th>
                                     <th className="pb-3 font-normal">Amount</th>
                                     <th className="pb-3 font-normal">Status</th>
                                     <th className="pb-3 font-normal text-right">Date</th>
@@ -131,31 +156,29 @@ export default function PaymentManagement() {
                                         </td>
                                     </tr>
                                 ) : filteredPayments.map((p) => (
-                                    <tr key={p.id} className="hover:bg-white/1 transition-colors group">
+                                    <tr key={p.docId} className="hover:bg-white/1 transition-colors group">
                                         <td className="py-3.5 flex items-center gap-3">
-                                            <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center border border-white/5 text-sm">
-                                                {p.avatar}
-                                            </div>
+
                                             <div>
-                                                <p className="font-bold text-white/90 group-hover:text-[#0affca] transition-colors">{p.name}</p>
-                                                <p className="text-[9px] font-mono text-white/30 uppercase">{p.id}</p>
+                                                <p className="font-bold text-white/90 group-hover:text-[#0affca] transition-colors">{p.userName}</p>
+                                                <p className="text-[9px] font-mono text-white/30 uppercase">{p.order_id}</p>
                                             </div>
                                         </td>
-                                        <td className="py-3.5 text-white/70">{p.plan}</td>
-                                        <td className="py-3.5 font-mono font-bold text-white/90">RS {p.amount.toFixed(2)}</td>
+                                        <td className="py-3.5 text-white/70">{p.packageName}</td>
+                                        <td className="py-3.5 font-mono font-bold text-white/90">RS {Number(p.amount).toFixed(2)}</td>
                                         <td className="py-3.5">
-                                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[9px] font-mono tracking-wide uppercase ${p.status === 'completed' ? 'bg-[#0c6955]/10 text-[#0affca] border border-[#0affca]/20' :
+                                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[9px] font-mono tracking-wide uppercase ${p.status_message.toLowerCase().includes('success') ? 'bg-[#0c6955]/10 text-[#0affca] border border-[#0affca]/20' :
                                                 p.status === 'pending' ? 'bg-[#ffaa00]/5 text-[#ffaa00] border border-[#ffaa00]/20' :
                                                     'bg-[#ff0055]/5 text-[#ff007f] border border-[#ff0055]/20'
                                                 }`}>
                                                 <span className={`w-1 h-1 rounded-full RS {
-                                                    p.status === 'completed' ? 'bg-[#0affca]' :
+                                                    p.status_message.includes('success') ? 'bg-[#0affca]' :
                                                     p.status === 'pending' ? 'bg-[#ffaa00]' : 'bg-[#ff007f]'
                                                 }`} />
-                                                {p.status}
+                                                {p.status_message.toLowerCase().includes('success')?"Payment Success":p.status_message}
                                             </span>
                                         </td>
-                                        <td className="py-3.5 text-right font-mono text-white/40 text-[11px]">{p.date}</td>
+                                        <td className="py-3.5 text-right font-mono text-white/40 text-[11px]">{p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString() : ''}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -166,8 +189,8 @@ export default function PaymentManagement() {
                 {/* RIGHT: Notifications & Live Feed System (4 Columns Space) */}
                 <div className="lg:col-span-4 flex flex-col gap-6">
                     {/* Cash payment Btn */}
-                    <div className="bg-black/30 backdrop-blur-md  rounded-2xl border border-[#0affca]/10 p-5 shadow-2xl bg-linear-to-br from-[#00000023] to-[#70ff1033] flex items-center justify-center cursor-pointer"
-                    onClick={()=>{setIsModalOpen(true)}}
+                    <div className="bg-black/10 backdrop-blur-md  rounded-2xl border border-white/10 p-5 shadow-2xl  flex items-center justify-center cursor-pointer"
+                        onClick={() => { setIsModalOpen(true) }}
                     >
                         <p>Accept Cash At Desk Payment</p>
                     </div>
@@ -229,11 +252,11 @@ export default function PaymentManagement() {
 
                 </div>
             </div>
-                               
-        {
-            isModalOpen && <CashAtDeskModal setIsModalOpen={setIsModalOpen}/>
-        }
-            
+
+            {
+                isModalOpen && <CashAtDeskModal setIsModalOpen={setIsModalOpen} />
+            }
+
         </div>
     );
 }

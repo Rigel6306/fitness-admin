@@ -55,7 +55,7 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
   const components = {
     overview: <OverviewCard userInfo={userData.data} />,
     workout: <WorkoutSchedule userData={userData} userId={userData.id} />,
-    analytics: <Analytics />
+    analytics: <Analytics userId={userData.id} />
   };
 
   const activeIndex = TABS.findIndex(tab => tab.id === type);
@@ -113,7 +113,7 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
         {/* Membership Card */}
         <AnimatedContainer className="flex items-center justify-start p-4 gap-4 rounded-2xl bg-black/10 border border-white/5 backdrop-blur-2xl shadow-lg relative overflow-hidden h-24">
           <LiquidOverlayVarient1 className="backdrop-blur-none pointer-events-none" />
-          <div className="relative z-10 flex items-center justify-center w-11 h-11 rounded-xl bg-white/[0.03] border border-white/5 text-white/40">
+          <div className="relative z-10 flex items-center justify-center w-11 h-11 rounded-xl bg-white/3 border border-white/5 text-white/40">
             <FaChalkboardUser size={22} />
           </div>
           <div className="relative z-10 flex flex-col">
@@ -125,7 +125,7 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
         {/* Active Status Card */}
         <AnimatedContainer className="flex items-center justify-start p-4 gap-4 rounded-2xl bg-black/10 border border-white/5 backdrop-blur-2xl shadow-lg relative overflow-hidden h-24">
           <LiquidOverlayVarient1 className="backdrop-blur-none pointer-events-none" />
-          <div className="relative z-10 flex items-center justify-center w-11 h-11 rounded-xl bg-white/[0.03] border border-white/5 text-[#0affca]/70">
+          <div className="relative z-10 flex items-center justify-center w-11 h-11 rounded-xl bg-white/3 border border-white/5 text-[#0affca]/70">
             <MdOutlineSportsGymnastics size={22} />
           </div>
           <div className="relative z-10 flex flex-col">
@@ -140,7 +140,7 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
         {/* Join Date Card */}
         <AnimatedContainer className="flex items-center justify-start p-4 gap-4 rounded-2xl bg-black/10 border border-white/5 backdrop-blur-2xl shadow-lg relative overflow-hidden h-24">
           <LiquidOverlayVarient1 className="backdrop-blur-none pointer-events-none" />
-          <div className="relative z-10 flex items-center justify-center w-11 h-11 rounded-xl bg-white/[0.03] border border-white/5 text-white/40">
+          <div className="relative z-10 flex items-center justify-center w-11 h-11 rounded-xl bg-white/3 border border-white/5 text-white/40">
             <CgCalendarToday size={20} />
           </div>
           <div className="relative z-10 flex flex-col">
@@ -152,7 +152,7 @@ const MemberDetails = ({ id }: MemberDetailsProps) => {
         {/* Payments Card */}
         <AnimatedContainer className="flex items-center justify-start p-4 gap-4 rounded-2xl bg-black/10 border border-white/5 backdrop-blur-2xl shadow-lg relative overflow-hidden h-24">
           <LiquidOverlayVarient1 className="backdrop-blur-none pointer-events-none" />
-          <div className="relative z-10 flex items-center justify-center w-11 h-11 rounded-xl bg-white/[0.03] border border-white/5 text-[#0affca]/70">
+          <div className="relative z-10 flex items-center justify-center w-11 h-11 rounded-xl bg-white/3 border border-white/5 text-[#0affca]/70">
             <FaSackDollar size={18} />
           </div>
           <div className="relative z-10 flex flex-col">

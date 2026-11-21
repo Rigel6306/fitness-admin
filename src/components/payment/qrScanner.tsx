@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { BrowserMultiFormatReader, NotFoundException } from "@zxing/library";
 import { MdFlashlightOn, MdFlashlightOff, MdCameraswitch } from "react-icons/md";
 import { HiOutlineQrCode } from "react-icons/hi2";
-import { addNewCashPaymentDoc } from "@/util/addPayment";
+import { addNewCashPaymentDoc } from "@/util/payment";
 import useUserClientContext from "@/src/hooks/useUserClientContext";
 
 type ScanStatus = "idle" | "scanning" | "success" | "error";

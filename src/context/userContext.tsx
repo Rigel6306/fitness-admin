@@ -10,6 +10,7 @@ interface User {
 export const UserContext = createContext<User[]>([]);
 
 export const UserContextWrapper = ({ children }: { children: React.ReactNode }) => {
+  
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [users, setUsers] = useState<User[]>([]);

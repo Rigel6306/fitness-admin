@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { FaFilter } from "react-icons/fa6";
 import { RiSearch2Line } from "react-icons/ri";
 import { CiMobile1, CiMail } from "react-icons/ci";
@@ -18,35 +18,32 @@ type StatusFilterType = 'all' | 'active' | 'inactive';
 const Members = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [statusFilter, setStatusFilter] = useState<StatusFilterType>("all");
-    const [filteredUsers, setFilteredUsers] = useState([]);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [, startTransition] = useTransition();
-    
+
     const userData = useUserClientContext();
     const router = useRouter();
 
-    // Consolidated client-side stream filtering logic matrix
-    useEffect(() => {
-        if (!userData) return;
+    //filtering serch query
+    const filteredUsers = useMemo(() => {
+        const users = (userData ?? []);
+        const q = searchQuery.trim().toLowerCase();
 
-        const processFiltering = () => {
-            const result = userData.filter((user) => {
-                const matchesSearch = 
-                    user?.data?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    user?.data?.contactNumber?.includes(searchQuery);
-
-                const matchesStatus = 
+        return users
+            .filter(({ data }) => {
+                const matchesSearch =
+                    !q ||
+                    data?.name?.toLowerCase().includes(q) ||
+                    data?.contactNumber?.includes(q) ||
+                    String(data?.membershipNumber ?? "").includes(q);
+                const matchesStatus =
                     statusFilter === "all" ||
-                    (statusFilter === "active" && user?.data?.status === true) ||
-                    (statusFilter === "inactive" && user?.data?.status === false);
-
+                    (statusFilter === "active" ? data?.status === true : data?.status === false);
                 return matchesSearch && matchesStatus;
-            });
-            setFilteredUsers(result);
-        };
-
-        processFiltering();
+            })
     }, [userData, searchQuery, statusFilter]);
+
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(e.target.value);
@@ -88,9 +85,9 @@ const Members = () => {
                 {/* Search & Filter Controls Panel */}
                 <AnimatedContainer className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-between items-center bg-black/10 backdrop-blur-2xl p-4 rounded-2xl shrink-0 border border-t-white/10 border-x-white/5 border-b-white/0 shadow-[0_12px_24px_-10px_rgba(0,0,0,0.4)] relative overflow-hidden">
                     <LiquidOverlayVarient1 className="backdrop-blur-none pointer-events-none" />
-                    
+
                     {/* Input Wrapper Field */}
-                    <div className="relative z-10 flex items-center w-full sm:flex-1 gap-2.5 px-3 h-10 bg-white/[0.03] rounded-xl border border-white/5 focus-within:border-[#0affca]/30 transition-colors duration-300">
+                    <div className="relative z-10 flex items-center w-full sm:flex-1 gap-2.5 px-3 h-10 bg-white/3 rounded-xl border border-white/5 focus-within:border-[#0affca]/30 transition-colors duration-300">
                         <RiSearch2Line className="text-white/30 shrink-0" size={16} />
                         <input
                             type="text"
@@ -102,7 +99,7 @@ const Members = () => {
                     </div>
 
                     {/* Dropdown Select Parameter Filter */}
-                    <div className="relative z-10 flex w-full sm:w-auto px-3.5 h-10 items-center gap-2.5 bg-white/[0.03] rounded-xl border border-white/5 text-white/50 focus-within:border-[#0affca]/30 transition-colors duration-300 shrink-0">
+                    <div className="relative z-10 flex w-full sm:w-auto px-3.5 h-10 items-center gap-2.5 bg-white/3 rounded-xl border border-white/5 text-white/50 focus-within:border-[#0affca]/30 transition-colors duration-300 shrink-0">
                         <FaFilter className="text-white/20" size={11} />
                         <select
                             name="status"
@@ -127,30 +124,30 @@ const Members = () => {
                     <LiquidOverlayVarient1 className="backdrop-blur-none pointer-events-none" />
 
                     <div className="flex flex-col w-full h-full overflow-x-auto relative z-10">
-                        <div className="min-w-[850px] flex flex-col h-full">
+                        <div className="min-w-212.5 flex flex-col h-full">
 
                             {/* Sticky Functional Column Headers */}
-                            <div className="flex gap-6 items-center justify-start w-full px-6 bg-white/[0.02] border-b border-white/5 py-3.5 shrink-0 sticky top-0 z-10">
-                                <span className="flex-[1.5] text-[10px] font-bold tracking-widest uppercase text-white/30">Member Identity</span>
-                                <span className="flex-1 text-[10px] font-bold tracking-widest uppercase text-white/30">Contact Information</span>
+                            <div className="flex gap-6 items-center justify-start w-full px-6 bg-white/2 border-b border-white/5 py-3.5 shrink-0 sticky top-0 z-10">
+                                <span className="flex-[1.5] text-[10px] font-bold tracking-widest uppercase text-white/30">Member </span>
+                                <span className="flex-1 text-[10px] font-bold tracking-widest uppercase text-white/30">Contact </span>
                                 <span className="flex-1 text-[10px] font-bold tracking-widest uppercase text-white/30">Subscription Package</span>
-                                <span className="w-24 text-center text-[10px] font-bold tracking-widest uppercase text-white/30">Roster Status</span>
-                                <span className="flex-1 text-[10px] font-bold tracking-widest uppercase text-white/30">Join Frame</span>
+                                <span className="w-24 text-center text-[10px] font-bold tracking-widest uppercase text-white/30">Status</span>
+                                <span className="flex-1 text-[10px] font-bold tracking-widest uppercase text-white/30">join date</span>
                                 <span className="w-16 text-end text-[10px] font-bold tracking-widest uppercase text-white/30">Action</span>
                             </div>
 
                             {/* Scrollable Document Core Content Feed */}
-                            <div className="flex flex-col w-full flex-1 overflow-y-auto divide-y divide-white/[0.02]">
+                            <div className="flex flex-col w-full flex-1 overflow-y-auto divide-y divide-white/2">
                                 {filteredUsers.length > 0 ? (
                                     filteredUsers.map((user, i) => (
                                         <div
                                             key={i}
                                             onClick={() => handleClick(user.data.membershipNumber)}
-                                            className="flex gap-6 items-center justify-start w-full px-6 py-4 hover:bg-white/[0.03] border-l-2 border-l-transparent hover:border-l-[#0affca]/40 transition-all duration-200 cursor-pointer group"
+                                            className="flex gap-6 items-center justify-start w-full px-6 py-4 hover:bg-white/3 border-l-2 border-l-transparent hover:border-l-[#0affca]/40 transition-all duration-200 cursor-pointer group"
                                         >
                                             {/* Micro-Avatar Identity Module */}
                                             <div className="flex flex-[1.5] items-center gap-3.5 min-w-0">
-                                                <div className="avatar relative flex shrink-0 items-center justify-center h-9 w-9 rounded-xl border border-white/5 shadow-inner overflow-hidden bg-white/[0.02]">
+                                                <div className="avatar relative flex shrink-0 items-center justify-center h-9 w-9 rounded-xl border border-white/5 shadow-inner overflow-hidden bg-white/2">
                                                     <LiquidOverlayVarient1 className="pointer-events-none" />
                                                     <span className="text-[#0affca] relative z-10 text-xs font-bold font-mono tracking-wider">
                                                         {user?.data?.name?.slice(0, 2).toUpperCase()}
@@ -185,11 +182,10 @@ const Members = () => {
 
                                             {/* Dynamic Status Capsule Badge */}
                                             <div className="w-24 flex justify-center shrink-0">
-                                                <div className={`w-20 text-center py-1 text-[10px] font-bold tracking-widest uppercase rounded-md shadow-sm border ${
-                                                    user?.data?.status
+                                                <div className={`w-20 text-center py-1 text-[10px] font-bold tracking-widest uppercase rounded-md shadow-sm border ${user?.data?.status
                                                         ? "text-[#0affca] bg-[#0affca]/5 border-[#0affca]/25"
                                                         : "text-red-400 bg-red-500/5 border-red-500/25"
-                                                }`}>
+                                                    }`}>
                                                     {user?.data?.status ? "Active" : "Inactive"}
                                                 </div>
                                             </div>
